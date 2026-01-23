@@ -1,54 +1,17 @@
-<div align="center">
+# Sheltra
 
-# RefugeeSkillMap
-
-### *Beyond Shelter: Mapping Skills to Sustainable Livelihoods*
-
-[![Figma](https://img.shields.io/badge/Figma-Design-F24E1E?style=for-the-badge&logo=figma&logoColor=white)](https://www.figma.com/make/C3ybGvEwfawZjC6KTOSUdo/RefugeeSkillMap-Web-Application-UI?p=f&t=xxMgFypa39U9B45a-0)
-[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/)
-[![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-
-**Empowering refugees with verified skill profiles to access ethical employment, training, and dignified opportunities — without official documents.**
-
-[View Live Demo](#) • [Figma Design](https://www.figma.com/make/C3ybGvEwfawZjC6KTOSUdo/RefugeeSkillMap-Web-Application-UI?p=f&t=xxMgFypa39U9B45a-0) • [Documentation](#)
-
-</div>
+**Beyond Shelter: Mapping Skills to Sustainable Livelihoods**
 
 ---
 
 ## Team Members
 
-<table>
-<tr>
-<td align="center">
-<strong>Syed Mohammed Sazid Ullah</strong><br>
-<sub>Lead & Full Stack Developer</sub><br>
-<code>20230104062</code><br>
-sazid.cse.20230104062@aust.edu
-</td>
-<td align="center">
-<strong>Abrar Ahmed Cy</strong><br>
-<sub>Frontend Developer</sub><br>
-<code>20230104063</code><br>
-abrar.cse.20230104063@aust.edu
-</td>
-</tr>
-<tr>
-<td align="center">
-<strong>Irfan Zahir</strong><br>
-<sub>Backend Developer</sub><br>
-<code>20230104064</code><br>
-irfan.cse.20230104064@aust.edu
-</td>
-<td align="center">
-<strong>Md Tawsif Bin Mannan</strong><br>
-<sub>Backend Developer</sub><br>
-<code>20230104066</code><br>
-towsif.cse.20230104066@aust.edu
-</td>
-</tr>
-</table>
+| Name | ID | Email | Role |
+|------|-------|-------|------|
+| Syed Mohammed Sazid Ullah | 20230104062 | sazid.cse.20230104062@aust.edu | Lead and Full Stack |
+| Abrar Ahmed Cy | 20230104063 | abrar.cse.20230104063@aust.edu | Frontend Developer |
+| Irfan Zahir | 20230104064 | irfan.cse.20230104064@aust.edu | Backend Developer |
+| Md Tawsif Bin Mannan | 20230104066 | towsif.cse.20230104066@aust.edu | Backend Developer |
 
 ---
 
@@ -56,281 +19,184 @@ towsif.cse.20230104066@aust.edu
 
 ### Objective
 
-**RefugeeSkillMap** is an **impact-first digital platform** that enables refugees and displaced people to create **portable, NGO-verified digital skill profiles** without relying on official documents. The system connects verified refugees to ethical jobs, training, and apprenticeships using **AI-powered skill matching**, while ensuring privacy, dignity, and measurable social impact.
-
-<div align="center">
-
-### Aligned with UN Sustainable Development Goals
-
-![SDG 8](https://img.shields.io/badge/SDG_8-Decent_Work-A21942?style=for-the-badge)
-![SDG 10](https://img.shields.io/badge/SDG_10-Reduced_Inequalities-DD1367?style=for-the-badge)
-
-</div>
+The objective of **Sheltra** is to develop an impact-first digital platform that enables refugees and displaced people to create portable, NGO-verified digital skill and identity profiles without relying on official documents. The system connects verified refugees to ethical jobs, training, and apprenticeships using AI-powered skill matching, while ensuring privacy, dignity, and measurable social impact aligned with **SDG 8** (Decent Work) and **SDG 10** (Reduced Inequalities).
 
 ### Target Audience
 
-<table>
-<tr>
-<td align="center"><strong>Refugees</strong><br><sub>Seeking dignified employment</sub></td>
-<td align="center"><strong>NGO Workers</strong><br><sub>Managing verifications</sub></td>
-<td align="center"><strong>Employers</strong><br><sub>Ethical hiring opportunities</sub></td>
-<td align="center"><strong>Donors</strong><br><sub>Monitoring impact</sub></td>
-</tr>
-</table>
+- **Refugees & displaced people** seeking dignified employment and skill recognition
+- **NGOs & case workers** managing verification, training, and placements
+- **Employers** interested in ethical hiring of verified refugee talent
+- **Donors & government agencies** monitoring impact and inclusion outcomes
 
 ---
 
 ## Tech Stack
 
-<div align="center">
+### 1. Frontend
+- **ReactJS**
+- **TailwindCSS / MUI**
+- **Client-Side Rendering (CSR)**
 
-### Frontend
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![MUI](https://img.shields.io/badge/Material--UI-0081CB?style=for-the-badge&logo=material-ui&logoColor=white)
+### 2. Backend
+- **PHP Laravel**
+- **RESTful API** architecture
 
-### Backend
-![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+### 3. Database
+- **MySQL**
+  - Stores refugee profiles, skills, verifications, placements, audit logs, and impact data.
 
-### Database
-![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+### 4. AI Integration
+- **Gemini AI Flash** – skill-based job and training matching
+- **face-api.js** – optional face identity verification (privacy-first)
 
-### AI & Tools
-![Google Gemini](https://img.shields.io/badge/Google_Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white)
-![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+### 5. Supporting Tools
+- **JWT Authentication**
+- **Docker** (containerization)
+- **Role-Based Access Control (RBAC)**
+- **Vercel / Netlify** (hosting)
 
-### Deployment
-![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
-![Netlify](https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)
+---
 
-</div>
+**[View Figma Design](https://www.figma.com/make/C3ybGvEwfawZjC6KTOSUdo/Sheltra-Web-Application-UI?p=f&t=xxMgFypa39U9B45a-0)**
 
 ---
 
 ## Project Features
 
-### Core Features
+### 1. Main Features
+- Refugee skill profile creation without official documents
+- NGO verification workflow for trust and accountability
+- Role-based dashboards (Refugee, NGO, Employer, Admin)
+- Ethical employer access with safeguards
 
-```mermaid
-graph LR
-    A[Refugee] --> B[Create Profile]
-    B --> C[NGO Verification]
-    C --> D[AI Matching]
-    D --> E[Job Opportunities]
+### 2. AI-Integrated Features
+- Skill-based matching using **Gemini AI Flash**
+- Smart recommendations for jobs, training, and apprenticeships
+- Impact analytics and visualization using React Charts
+
+> **Note:** AI features support matching and analysis only and do not make legal or employment decisions.
+
+### 3. CRUD Operations
+- **Refugees:** Create/update skill profiles and availability
+- **NGOs:** Verify skills, manage cases, track placements
+- **Employers:** Post jobs, view verified talent, submit feedback
+- **Admins:** Manage users, NGOs, audit logs
+
+---
+
+## Key API Endpoints (Approx.)
+
 ```
-
-<table>
-<tr>
-<td width="50%">
-
-#### For Refugees
-- Profile creation without documents
-- Skill portfolio management
-- Personalized job recommendations
-- Multi-language support
-
-</td>
-<td width="50%">
-
-#### For NGO Workers
-- Skill verification system
-- Case management tools
-- Placement tracking
-- Impact reporting
-
-</td>
-</tr>
-<tr>
-<td>
-
-#### For Employers
-- Access verified talent pool
-- Job posting interface
-- Feedback system
-- Ethical hiring safeguards
-
-</td>
-<td>
-
-#### For Admins
-- User management
-- Organization oversight
-- Analytics dashboard
-- Audit logs
-
-</td>
-</tr>
-</table>
-
-### AI-Powered Intelligence
-
-> **Powered by Gemini AI Flash**
-
-- **Smart Skill Matching** - AI-driven job and training recommendations
-- **Impact Analytics** - Real-time visualization of social impact metrics
-- **Intelligent Search** - Natural language job discovery
-- **Training Suggestions** - Personalized upskilling pathways
-
-> **Ethical AI Usage**: AI features support matching and analysis only — never making legal or employment decisions.
-
-### CRUD Operations
-
-| Role | Create | Read | Update | Delete |
-|------|--------|------|--------|--------|
-| **Refugees** | Yes | Yes | Yes | No |
-| **NGOs** | Yes | Yes | Yes | Yes |
-| **Employers** | Yes | Yes | Yes | Yes |
-| **Admins** | Yes | Yes | Yes | Yes |
-
----🌟 Conclusion
-
-<div align="center">
-
-**RefugeeSkillMap** transforms undocumented refugee skills into verified opportunities, enabling:
-
-🎯 **Dignified Employment** • 💪 **Reduced Aid Dependency** • 📊 **Measurable Social Impact**
-
-By combining ethical design, AI-powered matching, and NGO-driven trust, we demonstrate how technology can support **sustainable livelihoods beyond humanitarian shelter**.
-
----
-
-### 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-### License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-### Contact
-
-For questions or collaboration opportunities, reach out to the team lead:
-- **Email**: sazid.cse.20230104062@aust.edu
-- **Figma**: [View Design System](https://www.figma.com/make/C3ybGvEwfawZjC6KTOSUdo/RefugeeSkillMap-Web-Application-UI?p=f&t=xxMgFypa39U9B45a-0)
-
----
-
-<sub>Built with care for refugees worldwide | © 2026 RefugeeSkillMap Team</sub>
-
-</div> RESTful Endpoints
-
-```http
-# Authentication
-POST   /api/auth/login                    # User authentication
-POST   /api/auth/register                 # New user registration
-POST   /api/auth/logout                   # User logout
-
-# Refugee Operations
-POST   /api/refugees/profile              # Create skill profile
-GET    /api/refugees/opportunities        # Fetch matching jobs
-PUT    /api/refugees/profile/{id}         # Update profile
-
-# NGO Operations
-POST   /api/ngo/verify/{refugee_id}       # Verify refugee skills
-GET    /api/ngo/cases                     # View assigned cases
-POST   /api/ngo/placement                 # Record placement
-
-# Employer Operations
-GET    /api/employer/talent               # Browse verified talent
-POST   /api/employer/jobs                 # Post new job
-PUT    /api/employer/jobs/{id}            # Update job listing
-
-# Admin Operations
-GET    /api/admin/impact-metrics          # System-wide analytics
-GET    /api/admin/users                   # User management
-POST   /api/admin/audit                   # Generate audit report
+POST   /auth/login
+POST   /refugees/profile
+GET    /refugees/opportunities
+POST   /ngo/verify/{refugee_id}
+GET    /employer/talent
+POST   /employer/jobs
+GET    /admin/impact-metrics
 ```
 
 ---
 
 ## Project Phases
 
-<table>
-<tr>
-<td align="center" width="33%">
+### Phase 1: Frontend Development
+- UI/UX design in Figma
+- React-based dashboards and workflows
+- Role-based routing and layouts
 
-### Phase 1
-**Frontend Development**
+### Phase 2: Backend & Database
+- Laravel development
+- MySQL schema implementation
+- AI integration and authentication
 
-- UI/UX Design
-- React Dashboards
-- Role-based Routing
-- Responsive Layouts
-
-</td>
-<td align="center" width="33%">
-
-### Phase 2
-**Backend & Database**
-
-- Laravel API Development
-- MySQL Schema
-- AI Integration
-- JWT Authentication
-
-</td>
-<td align="center" width="33%">
-
-### Phase 3
-**Deployment & Testing**
-
-- Cloud Deployment
-- Security Testing
-- Integration Testing
-- Performance Optimization
-
-</td>
-</tr>
-</table>
+### Phase 3: Deployment & Testing
+- Vercel/Netlify deployment
+- Security and privacy testing
+- Final system integration
 
 ---
 
-## Milestones & Timeline
-
-```mermaid
-gantt
-    title RefugeeSkillMap Development Timeline
-    dateFormat  YYYY-MM-DD
-    section Milestone 1
-    Core System Setup           :2026-01-23, 30d
-    Authentication System       :2026-01-23, 15d
-    Basic Dashboards           :2026-02-07, 15d
-    
-    section Milestone 2
-    AI Skill Matching          :2026-02-22, 25d
-    Employer Portal            :2026-02-22, 20d
-    Placement Tracking         :2026-03-14, 15d
-    
-    section Milestone 3
-    Analytics Dashboard        :2026-03-29, 20d
-    Testing & QA              :2026-04-18, 15d
-    Final Deployment          :2026-05-03, 10d
-```
+## Milestones
 
 ### Milestone 1: Core System Setup
 - User roles and authentication
-- Refugee profile system
-- NGO verification workflow
-- Basic dashboard interfaces
+- Refugee profile and NGO verification system
+- Basic dashboards
 
 ### Milestone 2: Matching & Placement
-- AI-powered skill matching engine
+- AI-powered skill matching
 - Employer onboarding and job posting
-- Placement tracking and analytics
-- Notification system
+- Placement tracking
 
 ### Milestone 3: Impact & Finalization
 - Analytics dashboards
 - SDG-aligned reporting
-- Security auditing
 - Testing, optimization, and deployment
+
+---
+
+## Future Goals
+
+### Phase 1: Platform Enhancement
+- **Mobile Application Development**
+  - Native iOS and Android apps for better accessibility
+  - Offline mode for refugees in low-connectivity areas
+  - Push notifications for job matches and opportunities
+
+- **Advanced AI Features**
+  - Natural language processing for skill extraction from user descriptions
+  - Predictive analytics for employment success rates
+  - Multilingual chatbot for refugee support and guidance
+
+### Phase 2: Ecosystem Expansion
+- **Blockchain Integration**
+  - Immutable skill verification records
+  - Portable digital credentials across borders
+  - Transparent impact tracking
+
+- **Training Platform**
+  - Integrated e-learning modules
+  - Skill development courses
+  - Certification programs with industry partners
+
+- **Community Features**
+  - Peer-to-peer mentorship network
+  - Success stories and testimonials
+  - Community forums and support groups
+
+### Phase 3: Global Scale
+- **International Partnerships**
+  - Collaboration with UNHCR and international NGOs
+  - Integration with government employment systems
+  - Corporate social responsibility partnerships
+
+- **Regional Customization**
+  - Multi-country support with localized regulations
+  - Regional language support (Arabic, French, Spanish, etc.)
+  - Cultural adaptation for different refugee contexts
+
+- **Impact Measurement**
+  - Real-time SDG impact dashboard
+  - Longitudinal studies on employment outcomes
+  - Third-party audit and verification system
+  - Annual impact reports for stakeholders
+
+### Phase 4: Innovation & Research
+- **Research Initiatives**
+  - Partnership with academic institutions
+  - Data-driven policy recommendations
+  - Best practices documentation
+
+- **Technology Innovation**
+  - AI bias detection and mitigation
+  - Enhanced privacy-preserving technologies
+  - Decentralized identity solutions
 
 ---
 
 ## Conclusion
 
-**RefugeeSkillMap** transforms undocumented refugee skills into verified opportunities, enabling dignified employment, reduced aid dependency, and measurable social impact. By combining ethical design, AI-powered matching, and NGO-driven trust, the platform demonstrates how technology can support sustainable livelihoods beyond humanitarian shelter.
+**Sheltra** transforms undocumented refugee skills into verified opportunities, enabling dignified employment, reduced aid dependency, and measurable social impact. By combining ethical design, AI-powered matching, and NGO-driven trust, the platform demonstrates how technology can support sustainable livelihoods beyond humanitarian shelter.
 
 ---

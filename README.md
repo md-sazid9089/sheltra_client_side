@@ -57,7 +57,7 @@ The objective of **Sheltra** is to develop an impact-first digital platform that
 
 ---
 
-**[View Figma Design](https://www.figma.com/make/C3ybGvEwfawZjC6KTOSUdo/Sheltra-Web-Application-UI?p=f&t=xxMgFypa39U9B45a-0)**
+**[View Figma Design](https://theory-mood-00077277.figma.site)**
 
 ---
 

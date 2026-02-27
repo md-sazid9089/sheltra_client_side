@@ -9,12 +9,5 @@ class Attendance extends Model
 {
     use HasFactory;
 
-    protected $table = 'attendances';
-
-    protected $fillable = ['session_id', 'roll'];
-
-    public function session()
-    {
-        return $this->belongsTo(Session::class);
-    }
+    //
 }

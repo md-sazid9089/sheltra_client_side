@@ -5,6 +5,7 @@ import AdminPanel from './pages/AdminPanel';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleGuard from './components/RoleGuard';
+import AppShell from './components/AppShell';
 
 function App() {
   return (
@@ -19,7 +20,9 @@ function App() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <AppShell>
+                <Dashboard />
+              </AppShell>
             </ProtectedRoute>
           }
         />
@@ -30,7 +33,9 @@ function App() {
           element={
             <ProtectedRoute>
               <RoleGuard allowedRoles={['admin', 'Administrator']}>
-                <AdminPanel />
+                <AppShell>
+                  <AdminPanel />
+                </AppShell>
               </RoleGuard>
             </ProtectedRoute>
           }

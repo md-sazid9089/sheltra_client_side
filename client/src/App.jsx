@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import RefugeeDashboard from './pages/RefugeeDashboard';
+import RefugeeProfile from './pages/RefugeeProfile';
 import AdminPanel from './pages/AdminPanel';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -24,6 +25,19 @@ function App() {
               <RoleGuard allowedRoles={['refugee']}>
                 <AppShell>
                   <RefugeeDashboard />
+                </AppShell>
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['refugee']}>
+                <AppShell>
+                  <RefugeeProfile />
                 </AppShell>
               </RoleGuard>
             </ProtectedRoute>

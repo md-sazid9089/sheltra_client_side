@@ -1,10 +1,33 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+
 function App() {
   return (
-    <div>
-      <h1>Sheltra</h1>
-      <p>Beyond Shelter: Mapping Skills to Sustainable Livelihoods</p>
-    </div>
-  )
+    <Router>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/"
+          element={
+            <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
+              <div className="text-center">
+                <h1 className="text-5xl font-bold text-gray-900 mb-4">Sheltra</h1>
+                <p className="text-xl text-gray-600 mb-8">
+                  Beyond Shelter: Mapping Skills to Sustainable Livelihoods
+                </p>
+                <a
+                  href="/login"
+                  className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200"
+                >
+                  Go to Login
+                </a>
+              </div>
+            </div>
+          }
+        />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

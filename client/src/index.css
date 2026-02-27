@@ -1,40 +1,14 @@
-:root {
-  font-family: 'Josefin Sans', serif;
-  line-height: 1.5;
-  font-weight: 400;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+
 body {
-  font-family: 'Josefin Sans', serif;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
 }
 
-.layout {
-  display: flex;
-  flex-direction: column;
+#root {
   min-height: 100vh;
-}
-
-header {
-  padding: 1em;
-}
-
-main {
-  flex: 1;
-  padding: 1em;
-}
-footer {
-  padding: 1em;
-  text-align: center;
-}
-
-@media (min-width: 576px) {
-  .w-lg-400 {
-    width: 400px;
-  }
-}
-
-@media (min-width: 576px) {
-  .navbar-mx {
-    padding-left: 300px;
-    padding-right: 300px;
-  }
 }

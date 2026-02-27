@@ -1,11 +1,42 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
+import Dashboard from './pages/Dashboard';
+import AdminPanel from './pages/AdminPanel';
+import UnauthorizedPage from './pages/UnauthorizedPage';
+import ProtectedRoute from './components/ProtectedRoute';
+import RoleGuard from './components/RoleGuard';
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin-Only Protected Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['admin', 'Administrator']}>
+                <AdminPanel />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Home Route */}
         <Route
           path="/"
           element={

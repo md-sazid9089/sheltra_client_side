@@ -4,6 +4,7 @@
 export const roleMenuConfig = {
     refugee: [
         { label: 'Dashboard', path: '/dashboard', icon: 'home' },
+        { label: 'Opportunities', path: '/opportunities', icon: 'briefcase' },
         { label: 'My Sessions', path: '/sessions', icon: 'calendar' },
         { label: 'Profile', path: '/profile', icon: 'user' },
         { label: 'Settings', path: '/settings', icon: 'settings' },

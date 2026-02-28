@@ -6,6 +6,7 @@ import RefugeeProfile from './pages/RefugeeProfile';
 import Opportunities from './pages/Opportunities';
 import Placements from './pages/Placements';
 import AdminPanel from './pages/AdminPanel';
+import AdminUsers from './pages/AdminUsers';
 import TalentPool from './pages/TalentPool';
 import EmployerFeedback from './pages/EmployerFeedback';
 import UnauthorizedPage from './pages/UnauthorizedPage';
@@ -112,6 +113,20 @@ function App() {
               <RoleGuard allowedRoles={['admin', 'Administrator']}>
                 <AppShell>
                   <AdminPanel />
+                </AppShell>
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin Users Management Route */}
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['admin', 'Administrator']}>
+                <AppShell>
+                  <AdminUsers />
                 </AppShell>
               </RoleGuard>
             </ProtectedRoute>

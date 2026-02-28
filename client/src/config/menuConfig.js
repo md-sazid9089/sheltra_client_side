@@ -17,6 +17,7 @@ export const roleMenuConfig = {
     ],
     employer: [
         { label: 'Dashboard', path: '/dashboard', icon: 'home' },
+        { label: 'Talent Pool', path: '/talent-pool', icon: 'users' },
         { label: 'Job Postings', path: '/jobs', icon: 'briefcase' },
         { label: 'Candidates', path: '/candidates', icon: 'users' },
         { label: 'Applications', path: '/applications', icon: 'document' },

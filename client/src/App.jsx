@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard';
 import RefugeeDashboard from './pages/RefugeeDashboard';
 import RefugeeProfile from './pages/RefugeeProfile';
 import AdminPanel from './pages/AdminPanel';
+import TalentPool from './pages/TalentPool';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleGuard from './components/RoleGuard';
@@ -38,6 +39,20 @@ function App() {
               <RoleGuard allowedRoles={['refugee']}>
                 <AppShell>
                   <RefugeeProfile />
+                </AppShell>
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Talent Pool Route - Employer */}
+        <Route
+          path="/talent-pool"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['employer']}>
+                <AppShell>
+                  <TalentPool />
                 </AppShell>
               </RoleGuard>
             </ProtectedRoute>

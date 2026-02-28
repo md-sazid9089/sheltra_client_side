@@ -7,6 +7,7 @@ import Opportunities from './pages/Opportunities';
 import Placements from './pages/Placements';
 import AdminPanel from './pages/AdminPanel';
 import TalentPool from './pages/TalentPool';
+import EmployerFeedback from './pages/EmployerFeedback';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleGuard from './components/RoleGuard';
@@ -83,6 +84,20 @@ function App() {
               <RoleGuard allowedRoles={['employer']}>
                 <AppShell>
                   <TalentPool />
+                </AppShell>
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Employer Feedback Route */}
+        <Route
+          path="/feedback"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['employer']}>
+                <AppShell>
+                  <EmployerFeedback />
                 </AppShell>
               </RoleGuard>
             </ProtectedRoute>

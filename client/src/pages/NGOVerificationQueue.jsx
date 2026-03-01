@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { apiClient, handleApiError } from '../api';
 import SkeletonLoader from '../components/SkeletonLoader';
 import SkillVerificationModal from '../components/SkillVerificationModal';
 import EmptyState from '../components/EmptyState';
@@ -12,6 +13,7 @@ export default function NGOVerificationQueue() {
     const [showVerificationModal, setShowVerificationModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const toast = useToast();
+    const navigate = useNavigate();
 
     // Fetch pending verifications
     useEffect(() => {
@@ -21,11 +23,11 @@ export default function NGOVerificationQueue() {
     const fetchPendingVerifications = async () => {
         setIsLoading(true);
         try {
-            // Replace with actual API call: GET /api/ngo/verifications/pending
-            // const response = await axios.get('/api/ngo/verifications/pending');
+            // ── Real API call (uses centralized apiClient with auth & error normalisation) ──
+            // const response = await apiClient.get('/ngo/verifications/pending');
             // setPendingVerifications(response.data);
 
-            // Simulate API delay
+            // ── Mock data (remove when backend is ready) ──
             await new Promise(resolve => setTimeout(resolve, 1500));
 
             // Mock data
@@ -162,8 +164,9 @@ export default function NGOVerificationQueue() {
 
             setPendingVerifications(mockData);
         } catch (error) {
-            console.error('Error fetching pending verifications:', error);
-            toast.error('Failed to load pending verifications. Please try again.');
+            // Centralized error handling — surfaces user-friendly toasts for
+            // 401 (redirect to login), 403 (redirect to /unauthorized), and network errors
+            handleApiError(error, toast, { navigate });
         } finally {
             setIsLoading(false);
         }

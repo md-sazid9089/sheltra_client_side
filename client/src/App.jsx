@@ -21,9 +21,11 @@ import ProtectedRoute from './components/ProtectedRoute';
 import RoleGuard from './components/RoleGuard';
 import AppShell from './components/AppShell';
 import { ToastProvider } from './components/Toast';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   return (
+    <ErrorBoundary>
     <ToastProvider>
     <Router>
       <Routes>
@@ -261,6 +263,7 @@ function App() {
       </Routes>
     </Router>
     </ToastProvider>
+    </ErrorBoundary>
   );
 }
 

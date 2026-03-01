@@ -9,6 +9,7 @@ import AdminPanel from './pages/AdminPanel';
 import AdminUsers from './pages/AdminUsers';
 import TalentPool from './pages/TalentPool';
 import EmployerFeedback from './pages/EmployerFeedback';
+import EmployerOnboarding from './pages/EmployerOnboarding';
 import NGOVerificationQueue from './pages/NGOVerificationQueue';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -101,6 +102,18 @@ function App() {
                 <AppShell>
                   <EmployerFeedback />
                 </AppShell>
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Employer Onboarding Route */}
+        <Route
+          path="/employer/onboarding"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['employer']}>
+                <EmployerOnboarding />
               </RoleGuard>
             </ProtectedRoute>
           }

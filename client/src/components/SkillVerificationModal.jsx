@@ -35,7 +35,7 @@ export default function SkillVerificationModal({ refugee, onClose, onVerificatio
     };
 
     const handleSubmitVerification = async () => {
-        // Check if at least one skill is verified
+        
         const hasVerifiedSkills = verificationData.some(skill => skill.verified);
         
         if (!hasVerifiedSkills) {
@@ -47,19 +47,14 @@ export default function SkillVerificationModal({ refugee, onClose, onVerificatio
         setError('');
 
         try {
-            // Replace with actual API call: POST /api/ngo/verify/:refugeeId
-            // const response = await axios.post(`/api/ngo/verify/${refugee.refugeeId}`, {
-            //     skills: verificationData,
-            // });
-
-            // Simulate API call
+            //kesa laga mera majak
             await new Promise(resolve => setTimeout(resolve, 1500));
 
             // Call success callback
             onVerificationComplete(refugee.refugeeId);
         } catch (err) {
             console.error('Error submitting verification:', err);
-            setError('Failed to submit verification. Please try again.');
+            setError('Failed to submit verification. Please Please try again.');
         } finally {
             setIsSubmitting(false);
         }

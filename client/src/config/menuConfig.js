@@ -8,6 +8,7 @@ export const roleMenuConfig = {
         { label: 'Placements', path: '/placements', icon: 'chart' },
         { label: 'My Sessions', path: '/sessions', icon: 'calendar' },
         { label: 'Profile', path: '/profile', icon: 'user' },
+        { label: 'Consent', path: '/consent', icon: 'settings' },
         { label: 'Settings', path: '/settings', icon: 'settings' },
     ],
     ngo: [

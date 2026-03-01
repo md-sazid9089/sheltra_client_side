@@ -15,6 +15,7 @@ import EmployerOnboarding from './pages/EmployerOnboarding';
 import EmployerJobPosting from './pages/EmployerJobPosting';
 import EmployerJobsList from './pages/EmployerJobsList';
 import NGOVerificationQueue from './pages/NGOVerificationQueue';
+import ConsentManagement from './pages/ConsentManagement';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleGuard from './components/RoleGuard';
@@ -77,6 +78,20 @@ function App() {
               <RoleGuard allowedRoles={['refugee']}>
                 <AppShell>
                   <Placements />
+                </AppShell>
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Consent Management Route - Refugee */}
+        <Route
+          path="/consent"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['refugee']}>
+                <AppShell>
+                  <ConsentManagement />
                 </AppShell>
               </RoleGuard>
             </ProtectedRoute>

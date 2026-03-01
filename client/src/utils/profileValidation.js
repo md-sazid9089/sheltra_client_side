@@ -125,3 +125,67 @@ export const validateCompanyProfile = (data) => {
 
     return errors;
 };
+
+/**
+ * Validate job posting data for employers
+ */
+export const validateJobPosting = (data) => {
+    const errors = {};
+
+    // Title Validation
+    if (!data.title?.trim()) {
+        errors.title = 'Job title is required';
+    } else if (data.title.trim().length < 3) {
+        errors.title = 'Job title must be at least 3 characters';
+    } else if (data.title.trim().length > 100) {
+        errors.title = 'Job title must not exceed 100 characters';
+    }
+
+    // Type Validation
+    if (!data.type?.trim()) {
+        errors.type = 'Posting type is required';
+    } else if (!['Job', 'Training', 'Apprenticeship'].includes(data.type)) {
+        errors.type = 'Invalid posting type';
+    }
+
+    // Required Skills Validation
+    if (!data.requiredSkills || data.requiredSkills.length === 0) {
+        errors.requiredSkills = 'At least one required skill must be specified';
+    } else {
+        const invalidSkills = data.requiredSkills.filter(skill => 
+            !skill.skillName?.trim() || 
+            !skill.proficiency
+        );
+        
+        if (invalidSkills.length > 0) {
+            errors.requiredSkills = 'All skills must have a name and proficiency level';
+        }
+    }
+
+    // Location Validation
+    if (!data.location?.trim()) {
+        errors.location = 'Location is required';
+    } else if (data.location.trim().length < 2) {
+        errors.location = 'Location must be at least 2 characters';
+    }
+
+    // Description Validation
+    if (!data.description?.trim()) {
+        errors.description = 'Description is required';
+    } else if (data.description.trim().length < 50) {
+        errors.description = 'Description must be at least 50 characters';
+    } else if (data.description.trim().length > 2000) {
+        errors.description = 'Description must not exceed 2000 characters';
+    }
+
+    // Application/Contact Info Validation
+    if (!data.applicationInfo?.trim()) {
+        errors.applicationInfo = 'Application/Contact information is required';
+    } else if (data.applicationInfo.trim().length < 10) {
+        errors.applicationInfo = 'Application information must be at least 10 characters';
+    } else if (data.applicationInfo.trim().length > 500) {
+        errors.applicationInfo = 'Application information must not exceed 500 characters';
+    }
+
+    return errors;
+};

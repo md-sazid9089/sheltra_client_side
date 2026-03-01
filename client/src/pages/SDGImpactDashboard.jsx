@@ -86,21 +86,25 @@ export default function SDGImpactDashboard() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const loadMetrics = async () => {
-        setIsLoading(true);
-        setError(null);
-        try {
-            const data = await fetchImpactMetrics(startDate, endDate);
-            setMetrics(data);
-        } catch (err) {
-            setError(err.message || 'Failed to load impact metrics.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     useEffect(() => {
+        let cancelled = false;
+
+        const loadMetrics = async () => {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const data = await fetchImpactMetrics(startDate, endDate);
+                if (!cancelled) setMetrics(data);
+            } catch (err) {
+                if (!cancelled) setError(err.message || 'Failed to load impact metrics.');
+            } finally {
+                if (!cancelled) setIsLoading(false);
+            }
+        };
+
         loadMetrics();
+
+        return () => { cancelled = true; };
     }, [startDate, endDate]);
 
     const applyPreset = (months) => {

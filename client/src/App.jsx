@@ -1,6 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
-import Dashboard from './pages/Dashboard';
 import RefugeeDashboard from './pages/RefugeeDashboard';
 import RefugeeProfile from './pages/RefugeeProfile';
 import Opportunities from './pages/Opportunities';
@@ -250,12 +249,34 @@ function App() {
                 <p className="text-xl text-gray-600 mb-8">
                   Beyond Shelter: Mapping Skills to Sustainable Livelihoods
                 </p>
-                <a
-                  href="/login"
+                <Link
+                  to="/login"
                   className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200"
                 >
                   Go to Login
-                </a>
+                </Link>
+              </div>
+            </div>
+          }
+        />
+
+        {/* 404 Catch-All */}
+        <Route
+          path="*"
+          element={
+            <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
+              <div className="text-center">
+                <p className="text-6xl font-bold text-gray-300 mb-2">404</p>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Page Not Found</h1>
+                <p className="text-gray-600 mb-8">
+                  The page you're looking for doesn't exist or has been moved.
+                </p>
+                <Link
+                  to="/"
+                  className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors"
+                >
+                  Back to Home
+                </Link>
               </div>
             </div>
           }

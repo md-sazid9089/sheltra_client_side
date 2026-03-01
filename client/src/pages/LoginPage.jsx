@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function LoginPage() {
@@ -7,6 +8,7 @@ export default function LoginPage() {
         password: '',
     });
 
+    const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [apiError, setApiError] = useState('');
@@ -86,9 +88,9 @@ export default function LoginPage() {
 
                 setSuccessMessage('Login successful! Redirecting...');
 
-                // Redirect after success (you can replace with useNavigate from react-router-dom)
+                // Navigate via React Router (no full-page reload)
                 setTimeout(() => {
-                    window.location.href = '/dashboard';
+                    navigate('/dashboard');
                 }, 1500);
             }
         } catch (error) {

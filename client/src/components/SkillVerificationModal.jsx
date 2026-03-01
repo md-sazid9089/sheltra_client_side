@@ -79,7 +79,8 @@ export default function SkillVerificationModal({ refugee, onClose, onVerificatio
     };
 
     const handleSubmitVerification = async () => {
-        setError('');
+        
+        const hasVerifiedSkills = verificationData.some(skill => skill.verified);
         
         if (!validateVerifications()) {
             return;
@@ -88,24 +89,7 @@ export default function SkillVerificationModal({ refugee, onClose, onVerificatio
         setIsSubmitting(true);
 
         try {
-            // Prepare payload for API
-            const payload = {
-                refugeeId: refugee.refugeeId,
-                verifications: verificationData
-                    .filter(skill => skill.status !== 'pending')
-                    .map(skill => ({
-                        skillName: skill.skillName,
-                        proficiency: skill.proficiency,
-                        yearsOfExperience: skill.yearsOfExperience,
-                        status: skill.status,
-                        remarks: skill.remarks.trim() || null,
-                    })),
-            };
-
-            // API call: POST /api/ngo/verify/:refugeeId
-            // const response = await axios.post(`/api/ngo/verify/${refugee.refugeeId}`, payload);
-            
-            // Simulate API call
+            //kesa laga mera majak
             await new Promise(resolve => setTimeout(resolve, 1500));
 
             console.log('Verification payload:', payload);
@@ -120,10 +104,8 @@ export default function SkillVerificationModal({ refugee, onClose, onVerificatio
             onVerificationComplete(refugee.refugeeId, summary);
         } catch (err) {
             console.error('Error submitting verification:', err);
-            setError(
-                err.response?.data?.message ||
-                'Failed to submit verification. Please try again.'
-            );
+            setError('Failed to submit verification. Please Please try again.');
+        } finally {
             setIsSubmitting(false);
         }
     };

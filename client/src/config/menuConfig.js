@@ -31,6 +31,7 @@ export const roleMenuConfig = {
         { label: 'Dashboard', path: '/dashboard', icon: 'home' },
         { label: 'User Management', path: '/admin/users', icon: 'users' },
         { label: 'Audit Logs', path: '/admin/audit-logs', icon: 'document' },
+        { label: 'Impact Dashboard', path: '/admin/impact', icon: 'chart' },
         { label: 'Sessions', path: '/admin/sessions', icon: 'calendar' },
         { label: 'Reports', path: '/admin/reports', icon: 'document' },
         { label: 'Settings', path: '/admin/settings', icon: 'settings' },

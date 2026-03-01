@@ -8,6 +8,7 @@ import Placements from './pages/Placements';
 import AdminPanel from './pages/AdminPanel';
 import AdminUsers from './pages/AdminUsers';
 import AdminAuditLogs from './pages/AdminAuditLogs';
+import SDGImpactDashboard from './pages/SDGImpactDashboard';
 import TalentPool from './pages/TalentPool';
 import EmployerFeedback from './pages/EmployerFeedback';
 import EmployerOnboarding from './pages/EmployerOnboarding';
@@ -200,6 +201,20 @@ function App() {
               <RoleGuard allowedRoles={['admin', 'Administrator']}>
                 <AppShell>
                   <AdminAuditLogs />
+                </AppShell>
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* SDG Impact Dashboard Route */}
+        <Route
+          path="/admin/impact"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['admin', 'Administrator']}>
+                <AppShell>
+                  <SDGImpactDashboard />
                 </AppShell>
               </RoleGuard>
             </ProtectedRoute>

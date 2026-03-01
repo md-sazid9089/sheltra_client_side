@@ -20,9 +20,11 @@ import UnauthorizedPage from './pages/UnauthorizedPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleGuard from './components/RoleGuard';
 import AppShell from './components/AppShell';
+import { ToastProvider } from './components/Toast';
 
 function App() {
   return (
+    <ToastProvider>
     <Router>
       <Routes>
         {/* Public Routes */}
@@ -258,6 +260,7 @@ function App() {
         />
       </Routes>
     </Router>
+    </ToastProvider>
   );
 }
 

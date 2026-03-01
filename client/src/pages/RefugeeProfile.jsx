@@ -28,6 +28,12 @@ const PROFICIENCY_LEVELS = [
     { value: 'fluent', label: 'Fluent' },
 ];
 
+const SKILL_PROFICIENCY_LEVELS = [
+    { value: 'beginner', label: 'Beginner' },
+    { value: 'intermediate', label: 'Intermediate' },
+    { value: 'advanced', label: 'Advanced' },
+];
+
 export default function RefugeeProfile() {
     const userInfo = getUserInfo();
     const [isEditMode, setIsEditMode] = useState(false);
@@ -54,11 +60,20 @@ export default function RefugeeProfile() {
 
         // Languages
         languages: [],
+
+        // Skills
+        skills: [],
     });
 
     const [languageInput, setLanguageInput] = useState({
         language: '',
         proficiency: 'intermediate',
+    });
+
+    const [skillInput, setSkillInput] = useState({
+        skillName: '',
+        proficiency: 'intermediate',
+        yearsOfExperience: '',
     });
 
     // Handle basic input change
@@ -129,6 +144,70 @@ export default function RefugeeProfile() {
             ...prev,
             languages: prev.languages.map(l =>
                 l.language === language ? { ...l, proficiency: newProficiency } : l
+            ),
+        }));
+    };
+
+    // Handle skill addition
+    const handleAddSkill = () => {
+        if (!skillInput.skillName.trim()) {
+            return;
+        }
+
+        // Validate years of experience
+        const years = parseFloat(skillInput.yearsOfExperience);
+        if (isNaN(years) || years < 0) {
+            alert('Please enter valid years of experience (0 or more)');
+            return;
+        }
+
+        // Check if skill already exists
+        if (formData.skills.some(s => s.skillName.toLowerCase() === skillInput.skillName.toLowerCase())) {
+            alert('This skill is already added');
+            return;
+        }
+
+        setFormData(prev => ({
+            ...prev,
+            skills: [
+                ...prev.skills,
+                {
+                    skillName: skillInput.skillName.trim(),
+                    proficiency: skillInput.proficiency,
+                    yearsOfExperience: parseFloat(skillInput.yearsOfExperience),
+                },
+            ],
+        }));
+
+        setSkillInput({
+            skillName: '',
+            proficiency: 'intermediate',
+            yearsOfExperience: '',
+        });
+
+        // Clear skills error
+        if (formErrors.skills) {
+            setFormErrors(prev => ({
+                ...prev,
+                skills: '',
+            }));
+        }
+    };
+
+    // Handle skill removal
+    const handleRemoveSkill = (skillName) => {
+        setFormData(prev => ({
+            ...prev,
+            skills: prev.skills.filter(s => s.skillName !== skillName),
+        }));
+    };
+
+    // Handle skill field change
+    const handleSkillChange = (skillName, field, value) => {
+        setFormData(prev => ({
+            ...prev,
+            skills: prev.skills.map(s =>
+                s.skillName === skillName ? { ...s, [field]: value } : s
             ),
         }));
     };
@@ -534,6 +613,161 @@ export default function RefugeeProfile() {
                                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                                 </svg>
                                 {formErrors.languages}
+                            </p>
+                        )}
+                    </div>
+                </FormSection>
+
+                {/* Skills Section */}
+                <FormSection
+                    title="Professional Skills"
+                    icon="💼"
+                >
+                    <div className="space-y-6">
+                        {/* Add Skill */}
+                        {isEditMode && (
+                            <div className="bg-indigo-50 rounded-lg p-6 border border-indigo-200">
+                                <h3 className="font-semibold text-gray-900 mb-4">Add a Skill</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Skill Name<span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            placeholder="e.g., JavaScript, Carpentry"
+                                            value={skillInput.skillName}
+                                            onChange={(e) => setSkillInput(prev => ({
+                                                ...prev,
+                                                skillName: e.target.value,
+                                            }))}
+                                            className="w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Proficiency<span className="text-red-500">*</span>
+                                        </label>
+                                        <select
+                                            value={skillInput.proficiency}
+                                            onChange={(e) => setSkillInput(prev => ({
+                                                ...prev,
+                                                proficiency: e.target.value,
+                                            }))}
+                                            className="w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
+                                        >
+                                            {SKILL_PROFICIENCY_LEVELS.map(level => (
+                                                <option key={level.value} value={level.value}>
+                                                    {level.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Years of Experience<span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            step="0.5"
+                                            placeholder="e.g., 2.5"
+                                            value={skillInput.yearsOfExperience}
+                                            onChange={(e) => setSkillInput(prev => ({
+                                                ...prev,
+                                                yearsOfExperience: e.target.value,
+                                            }))}
+                                            className="w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
+                                        />
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={handleAddSkill}
+                                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors self-end"
+                                    >
+                                        Add Skill
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Skills List */}
+                        {formData.skills.length > 0 ? (
+                            <div className="space-y-3">
+                                {formData.skills.map((skill) => (
+                                    <div
+                                        key={skill.skillName}
+                                        className="bg-gray-50 rounded-lg p-4 border border-gray-200"
+                                    >
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex-1">
+                                                <p className="font-semibold text-gray-900 text-lg">{skill.skillName}</p>
+                                                <div className="flex items-center gap-4 mt-2">
+                                                    <p className="text-sm text-gray-600">
+                                                        <span className="font-medium">Proficiency:</span>{' '}
+                                                        {SKILL_PROFICIENCY_LEVELS.find(l => l.value === skill.proficiency)?.label}
+                                                    </p>
+                                                    <p className="text-sm text-gray-600">
+                                                        <span className="font-medium">Experience:</span>{' '}
+                                                        {skill.yearsOfExperience} {skill.yearsOfExperience === 1 ? 'year' : 'years'}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {isEditMode && (
+                                                <div className="flex items-center gap-3 ml-4">
+                                                    <div className="flex flex-col gap-2">
+                                                        <select
+                                                            value={skill.proficiency}
+                                                            onChange={(e) => handleSkillChange(skill.skillName, 'proficiency', e.target.value)}
+                                                            className="px-3 py-1 rounded border-2 border-gray-300 text-sm focus:border-indigo-500 focus:outline-none"
+                                                        >
+                                                            {SKILL_PROFICIENCY_LEVELS.map(level => (
+                                                                <option key={level.value} value={level.value}>
+                                                                    {level.label}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                        <input
+                                                            type="number"
+                                                            min="0"
+                                                            step="0.5"
+                                                            value={skill.yearsOfExperience}
+                                                            onChange={(e) => {
+                                                                const years = parseFloat(e.target.value);
+                                                                if (!isNaN(years) && years >= 0) {
+                                                                    handleSkillChange(skill.skillName, 'yearsOfExperience', years);
+                                                                }
+                                                            }}
+                                                            className="px-3 py-1 rounded border-2 border-gray-300 text-sm focus:border-indigo-500 focus:outline-none w-20"
+                                                        />
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRemoveSkill(skill.skillName)}
+                                                        className="text-red-600 hover:text-red-700 font-semibold text-lg"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-gray-600 text-center py-8">No skills added yet</p>
+                        )}
+
+                        {formErrors.skills && (
+                            <p className="text-sm text-red-600 flex items-center gap-1">
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                </svg>
+                                {formErrors.skills}
                             </p>
                         )}
                     </div>

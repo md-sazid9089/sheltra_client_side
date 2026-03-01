@@ -53,5 +53,19 @@ export const validateProfileData = (data) => {
         errors.languages = 'At least one language is required';
     }
 
+    // Skills Validation (optional - skills are not required but if added, must be valid)
+    if (data.skills && data.skills.length > 0) {
+        const invalidSkills = data.skills.filter(skill => 
+            !skill.skillName?.trim() || 
+            !skill.proficiency || 
+            skill.yearsOfExperience === undefined || 
+            skill.yearsOfExperience < 0
+        );
+        
+        if (invalidSkills.length > 0) {
+            errors.skills = 'All skills must have a name, proficiency level, and valid years of experience';
+        }
+    }
+
     return errors;
 };

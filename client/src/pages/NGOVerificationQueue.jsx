@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import SkeletonLoader from '../components/SkeletonLoader';
 import SkillVerificationModal from '../components/SkillVerificationModal';
+import EmptyState from '../components/EmptyState';
+import { useToast } from '../components/Toast';
 
 export default function NGOVerificationQueue() {
     const [pendingVerifications, setPendingVerifications] = useState([]);
@@ -9,7 +11,7 @@ export default function NGOVerificationQueue() {
     const [selectedRefugee, setSelectedRefugee] = useState(null);
     const [showVerificationModal, setShowVerificationModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [notification, setNotification] = useState(null);
+    const toast = useToast();
 
     // Fetch pending verifications
     useEffect(() => {
@@ -161,10 +163,7 @@ export default function NGOVerificationQueue() {
             setPendingVerifications(mockData);
         } catch (error) {
             console.error('Error fetching pending verifications:', error);
-            setNotification({
-                type: 'error',
-                message: 'Failed to load pending verifications. Please try again.',
-            });
+            toast.error('Failed to load pending verifications. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -186,13 +185,7 @@ export default function NGOVerificationQueue() {
             ? `Verification complete! ${summary.approved} skill(s) approved, ${summary.rejected} skill(s) rejected.`
             : 'Skills verification submitted successfully!';
 
-        setNotification({
-            type: 'success',
-            message,
-        });
-
-        // Clear notification after 5 seconds
-        setTimeout(() => setNotification(null), 5000);
+        toast.success(message);
 
         setShowVerificationModal(false);
         setSelectedRefugee(null);
@@ -240,48 +233,6 @@ export default function NGOVerificationQueue() {
                 </button>
             </div>
 
-            {/* Notification */}
-            {notification && (
-                <div
-                    className={`rounded-lg p-4 flex items-start gap-3 ${
-                        notification.type === 'success'
-                            ? 'bg-green-50 border border-green-200'
-                            : 'bg-red-50 border border-red-200'
-                    }`}
-                >
-                    <svg
-                        className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                            notification.type === 'success' ? 'text-green-600' : 'text-red-600'
-                        }`}
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                    >
-                        {notification.type === 'success' ? (
-                            <path
-                                fillRule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                clipRule="evenodd"
-                            />
-                        ) : (
-                            <path
-                                fillRule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                clipRule="evenodd"
-                            />
-                        )}
-                    </svg>
-                    <div>
-                        <h3
-                            className={`font-semibold ${
-                                notification.type === 'success' ? 'text-green-900' : 'text-red-900'
-                            }`}
-                        >
-                            {notification.message}
-                        </h3>
-                    </div>
-                </div>
-            )}
-
             {/* Search Bar */}
             <div className="bg-white rounded-lg shadow-md p-6">
                 <div className="relative">
@@ -314,10 +265,23 @@ export default function NGOVerificationQueue() {
 
             {/* Loading State */}
             {isLoading ? (
-                <div className="space-y-4">
-                    {[...Array(3)].map((_, i) => (
-                        <SkeletonLoader key={i} height="200px" />
-                    ))}
+                <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
+                                <tr>
+                                    <th className="px-6 py-4 text-left text-sm font-semibold">Refugee Info</th>
+                                    <th className="px-6 py-4 text-left text-sm font-semibold">Contact</th>
+                                    <th className="px-6 py-4 text-left text-sm font-semibold">Pending Skills</th>
+                                    <th className="px-6 py-4 text-left text-sm font-semibold">Submitted</th>
+                                    <th className="px-6 py-4 text-left text-sm font-semibold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                                <SkeletonLoader variant="table-row" count={4} cols={5} />
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             ) : filteredVerifications.length > 0 ? (
                 /* Verification Queue Table */
@@ -440,28 +404,20 @@ export default function NGOVerificationQueue() {
                 </div>
             ) : (
                 /* Empty State */
-                <div className="bg-white rounded-lg shadow-md p-12 text-center">
-                    <svg
-                        className="mx-auto h-16 w-16 text-gray-400 mb-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1.5}
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                    </svg>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        No Pending Verifications
-                    </h3>
-                    <p className="text-gray-600">
-                        {searchQuery
-                            ? 'No results match your search criteria'
-                            : 'All skills have been verified! Check back later for new submissions.'}
-                    </p>
+                <div className="bg-white rounded-lg shadow-md">
+                    <EmptyState
+                        icon={
+                            <svg className="h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        }
+                        title="No Pending Verifications"
+                        description={
+                            searchQuery
+                                ? 'No results match your search criteria'
+                                : 'All skills have been verified! Check back later for new submissions.'
+                        }
+                    />
                 </div>
             )}
 

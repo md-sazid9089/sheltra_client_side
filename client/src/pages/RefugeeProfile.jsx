@@ -2,23 +2,16 @@ import { useState } from 'react';
 import axios from 'axios';
 import { getUserInfo } from '../utils/tokenUtils';
 import { validateProfileData } from '../utils/profileValidation';
+import Button from '../components/ui/Button';
+import { Input, Select, Textarea } from '../components/ui/FormComponents';
+import Card, { CardSection } from '../components/ui/Card';
+import Badge from '../components/ui/Badge';
+import PageHeader from '../components/ui/PageHeader';
 
 const SUPPORTED_LANGUAGES = [
-    'English',
-    'Spanish',
-    'French',
-    'Arabic',
-    'Mandarin',
-    'Hindi',
-    'Portuguese',
-    'Bengali',
-    'Russian',
-    'Japanese',
-    'German',
-    'Swahili',
-    'Amharic',
-    'Tigrinya',
-    'Somali',
+    'English', 'Spanish', 'French', 'Arabic', 'Mandarin', 'Hindi',
+    'Portuguese', 'Bengali', 'Russian', 'Japanese', 'German', 'Swahili',
+    'Amharic', 'Tigrinya', 'Somali',
 ];
 
 const PROFICIENCY_LEVELS = [
@@ -42,26 +35,18 @@ export default function RefugeeProfile() {
     const [errorMessage, setErrorMessage] = useState('');
     const [formErrors, setFormErrors] = useState({});
 
-    // Form state
     const [formData, setFormData] = useState({
-        // Basic Info
         firstName: userInfo?.name?.split(' ')[0] || '',
         lastName: userInfo?.name?.split(' ').slice(1).join(' ') || '',
         email: userInfo?.email || '',
         dateOfBirth: '',
         gender: '',
         phoneNumber: '',
-
-        // Location/Camp
         currentLocation: '',
         campName: '',
         nationality: '',
         countryOfOrigin: '',
-
-        // Languages
         languages: [],
-
-        // Skills
         skills: [],
     });
 
@@ -76,61 +61,26 @@ export default function RefugeeProfile() {
         yearsOfExperience: '',
     });
 
-    // Handle basic input change
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value,
-        }));
-
-        // Clear error for this field
+        setFormData(prev => ({ ...prev, [name]: value }));
         if (formErrors[name]) {
-            setFormErrors(prev => ({
-                ...prev,
-                [name]: '',
-            }));
+            setFormErrors(prev => ({ ...prev, [name]: '' }));
         }
     };
 
-    // Handle language addition
     const handleAddLanguage = () => {
-        if (!languageInput.language.trim()) {
-            return;
-        }
-
-        // Check if language already exists
+        if (!languageInput.language.trim()) return;
         if (formData.languages.some(l => l.language === languageInput.language)) {
-            alert('This language is already added');
             return;
         }
-
         setFormData(prev => ({
             ...prev,
-            languages: [
-                ...prev.languages,
-                {
-                    language: languageInput.language,
-                    proficiency: languageInput.proficiency,
-                },
-            ],
+            languages: [...prev.languages, { ...languageInput }],
         }));
-
-        setLanguageInput({
-            language: '',
-            proficiency: 'intermediate',
-        });
-
-        // Clear languages error
-        if (formErrors.languages) {
-            setFormErrors(prev => ({
-                ...prev,
-                languages: '',
-            }));
-        }
+        setLanguageInput({ language: '', proficiency: 'intermediate' });
     };
 
-    // Handle language removal
     const handleRemoveLanguage = (language) => {
         setFormData(prev => ({
             ...prev,
@@ -138,63 +88,28 @@ export default function RefugeeProfile() {
         }));
     };
 
-    // Handle language proficiency change
-    const handleLanguageProficiencyChange = (language, newProficiency) => {
+    const handleLanguageProficiencyChange = (language, proficiency) => {
         setFormData(prev => ({
             ...prev,
             languages: prev.languages.map(l =>
-                l.language === language ? { ...l, proficiency: newProficiency } : l
+                l.language === language ? { ...l, proficiency } : l
             ),
         }));
     };
 
-    // Handle skill addition
     const handleAddSkill = () => {
-        if (!skillInput.skillName.trim()) {
+        if (!skillInput.skillName.trim()) return;
+        if (formData.skills.some(s => s.skillName === skillInput.skillName)) {
             return;
         }
-
-        // Validate years of experience
-        const years = parseFloat(skillInput.yearsOfExperience);
-        if (isNaN(years) || years < 0) {
-            alert('Please enter valid years of experience (0 or more)');
-            return;
-        }
-
-        // Check if skill already exists
-        if (formData.skills.some(s => s.skillName.toLowerCase() === skillInput.skillName.toLowerCase())) {
-            alert('This skill is already added');
-            return;
-        }
-
+        const yearsOfExperience = parseFloat(skillInput.yearsOfExperience) || 0;
         setFormData(prev => ({
             ...prev,
-            skills: [
-                ...prev.skills,
-                {
-                    skillName: skillInput.skillName.trim(),
-                    proficiency: skillInput.proficiency,
-                    yearsOfExperience: parseFloat(skillInput.yearsOfExperience),
-                },
-            ],
+            skills: [...prev.skills, { ...skillInput, yearsOfExperience }],
         }));
-
-        setSkillInput({
-            skillName: '',
-            proficiency: 'intermediate',
-            yearsOfExperience: '',
-        });
-
-        // Clear skills error
-        if (formErrors.skills) {
-            setFormErrors(prev => ({
-                ...prev,
-                skills: '',
-            }));
-        }
+        setSkillInput({ skillName: '', proficiency: 'intermediate', yearsOfExperience: '' });
     };
 
-    // Handle skill removal
     const handleRemoveSkill = (skillName) => {
         setFormData(prev => ({
             ...prev,
@@ -202,7 +117,6 @@ export default function RefugeeProfile() {
         }));
     };
 
-    // Handle skill field change
     const handleSkillChange = (skillName, field, value) => {
         setFormData(prev => ({
             ...prev,
@@ -212,13 +126,11 @@ export default function RefugeeProfile() {
         }));
     };
 
-    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSuccessMessage('');
         setErrorMessage('');
 
-        // Validate form
         const errors = validateProfileData(formData);
         if (Object.keys(errors).length > 0) {
             setFormErrors(errors);
@@ -238,200 +150,140 @@ export default function RefugeeProfile() {
             });
 
             setSuccessMessage(
-                isEditMode
-                    ? 'Profile updated successfully!'
-                    : 'Profile created successfully!'
+                isEditMode ? 'Profile updated successfully!' : 'Profile created successfully!'
             );
-
-            // Switch to view mode
             setIsEditMode(false);
 
-            // Optional: Update form with response data
             if (response.data) {
                 setFormData(response.data);
             }
 
-            // Clear success message after 3 seconds
             setTimeout(() => setSuccessMessage(''), 3000);
         } catch (error) {
             setErrorMessage(
-                error.response?.data?.message ||
-                'Failed to save profile. Please try again.'
+                error.response?.data?.message || 'Failed to save profile. Please try again.'
             );
         } finally {
             setIsLoading(false);
         }
     };
 
-    // Form section component
-    const FormSection = ({ title, children, icon }) => (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden mt-6">
-            <div className="px-6 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 flex items-center gap-3">
-                {icon && <span className="text-white text-xl">{icon}</span>}
-                <h2 className="text-xl font-bold text-white">{title}</h2>
-            </div>
-            <div className="p-6">
-                {children}
-            </div>
-        </div>
-    );
-
-    // Form input component
-    const FormInput = ({ label, name, type = 'text', required = false, error, ...props }) => (
-        <div>
-            <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-2">
-                {label}
-                {required && <span className="text-red-500">*</span>}
-            </label>
-            <input
-                id={name}
-                name={name}
-                type={type}
-                value={formData[name]}
-                onChange={handleInputChange}
-                disabled={!isEditMode}
-                className={`w-full px-4 py-2 rounded-lg border-2 transition-colors focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed ${error
-                        ? 'border-red-500 bg-red-50'
-                        : 'border-gray-300 bg-white focus:border-indigo-500'
-                    }`}
-                {...props}
-            />
-            {error && (
-                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                    {error}
-                </p>
-            )}
-        </div>
-    );
-
-    // Form select component
-    const FormSelect = ({ label, name, options, required = false, error, ...props }) => (
-        <div>
-            <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-2">
-                {label}
-                {required && <span className="text-red-500">*</span>}
-            </label>
-            <select
-                id={name}
-                name={name}
-                value={formData[name]}
-                onChange={handleInputChange}
-                disabled={!isEditMode}
-                className={`w-full px-4 py-2 rounded-lg border-2 transition-colors focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed ${error
-                        ? 'border-red-500 bg-red-50'
-                        : 'border-gray-300 bg-white focus:border-indigo-500'
-                    }`}
-                {...props}
-            >
-                <option value="">Select {label.toLowerCase()}</option>
-                {options.map(option => (
-                    <option key={option.value} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </select>
-            {error && (
-                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                    {error}
-                </p>
-            )}
-        </div>
-    );
-
     return (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-4xl font-bold text-gray-900">My Profile</h1>
-                    <p className="text-gray-600 mt-2">
-                        {isEditMode ? 'Edit your profile information' : 'View your profile information'}
-                    </p>
-                </div>
-                <button
-                    onClick={() => setIsEditMode(!isEditMode)}
-                    disabled={isLoading}
-                    className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
-                >
-                    {isEditMode ? 'Cancel' : 'Edit Profile'}
-                </button>
-            </div>
+            <PageHeader
+                title="My Profile"
+                subtitle={isEditMode ? 'Edit your profile information' : 'View your profile information'}
+                actions={
+                    <Button
+                        variant={isEditMode ? 'secondary' : 'primary'}
+                        size="md"
+                        onClick={() => setIsEditMode(!isEditMode)}
+                        disabled={isLoading}
+                        icon={
+                            isEditMode ? (
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            ) : (
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            )
+                        }
+                    >
+                        {isEditMode ? 'Cancel' : 'Edit Profile'}
+                    </Button>
+                }
+            />
 
-            {/* Success Message */}
             {successMessage && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
-                    <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <div className="bg-success-50 border border-success-200 rounded-xl p-4 flex items-start gap-3">
+                    <svg className="w-5 h-5 text-success-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
-                    <div>
-                        <h3 className="font-semibold text-green-900">{successMessage}</h3>
-                    </div>
+                    <p className="text-sm text-success-700 font-medium">{successMessage}</p>
                 </div>
             )}
 
-            {/* Error Message */}
             {errorMessage && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-                    <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <div className="bg-danger-50 border border-danger-200 rounded-xl p-4 flex items-start gap-3">
+                    <svg className="w-5 h-5 text-danger-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                     </svg>
-                    <div>
-                        <h3 className="font-semibold text-red-900">{errorMessage}</h3>
-                    </div>
+                    <p className="text-sm text-danger-700 font-medium">{errorMessage}</p>
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-0">
-                {/* Basic Information Section */}
-                <FormSection
-                    title="Basic Information"
-                    icon="👤"
-                >
+            <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Basic Information */}
+                <Card variant="glass">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="w-10 h-10 flex items-center justify-center bg-primary-100 rounded-lg">
+                            <svg className="w-6 h-6 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900">Basic Information</h2>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormInput
+                        <Input
                             label="First Name"
                             name="firstName"
+                            value={formData.firstName}
+                            onChange={handleInputChange}
+                            disabled={!isEditMode}
                             required
                             error={formErrors.firstName}
                         />
-                        <FormInput
+                        <Input
                             label="Last Name"
                             name="lastName"
+                            value={formData.lastName}
+                            onChange={handleInputChange}
+                            disabled={!isEditMode}
                             required
                             error={formErrors.lastName}
                         />
-                        <FormInput
+                        <Input
                             label="Email Address"
                             name="email"
                             type="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            disabled={!isEditMode}
                             required
                             error={formErrors.email}
                         />
-                        <FormInput
+                        <Input
                             label="Phone Number"
                             name="phoneNumber"
                             type="tel"
+                            value={formData.phoneNumber}
+                            onChange={handleInputChange}
+                            disabled={!isEditMode}
                             error={formErrors.phoneNumber}
                         />
-                        <FormInput
+                        <Input
                             label="Date of Birth"
                             name="dateOfBirth"
                             type="date"
+                            value={formData.dateOfBirth}
+                            onChange={handleInputChange}
+                            disabled={!isEditMode}
                             required
                             error={formErrors.dateOfBirth}
                         />
-                        <FormSelect
+                        <Select
                             label="Gender"
                             name="gender"
+                            value={formData.gender}
+                            onChange={handleInputChange}
+                            disabled={!isEditMode}
                             required
                             error={formErrors.gender}
                             options={[
+                                { value: '', label: 'Select gender' },
                                 { value: 'male', label: 'Male' },
                                 { value: 'female', label: 'Female' },
                                 { value: 'other', label: 'Other' },
@@ -439,33 +291,47 @@ export default function RefugeeProfile() {
                             ]}
                         />
                     </div>
-                </FormSection>
+                </Card>
 
-                {/* Location and Camp Section */}
-                <FormSection
-                    title="Location & Camp Information"
-                    icon="📍"
-                >
+                {/* Location & Camp Information */}
+                <Card variant="glass">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="w-10 h-10 flex items-center justify-center bg-success-100 rounded-lg">
+                            <svg className="w-6 h-6 text-success-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900">Location & Camp Information</h2>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormInput
+                        <Input
                             label="Current Location"
                             name="currentLocation"
+                            value={formData.currentLocation}
+                            onChange={handleInputChange}
+                            disabled={!isEditMode}
                             required
                             error={formErrors.currentLocation}
-                            placeholder="City, Country"
                         />
-                        <FormInput
+                        <Input
                             label="Camp Name"
                             name="campName"
+                            value={formData.campName}
+                            onChange={handleInputChange}
+                            disabled={!isEditMode}
                             error={formErrors.campName}
-                            placeholder="If applicable"
                         />
-                        <FormSelect
+                        <Select
                             label="Nationality"
                             name="nationality"
+                            value={formData.nationality}
+                            onChange={handleInputChange}
+                            disabled={!isEditMode}
                             required
                             error={formErrors.nationality}
                             options={[
+                                { value: '', label: 'Select nationality' },
                                 { value: 'syrian', label: 'Syrian' },
                                 { value: 'sudanese', label: 'Sudanese' },
                                 { value: 'somali', label: 'Somali' },
@@ -477,12 +343,16 @@ export default function RefugeeProfile() {
                                 { value: 'other', label: 'Other' },
                             ]}
                         />
-                        <FormSelect
+                        <Select
                             label="Country of Origin"
                             name="countryOfOrigin"
+                            value={formData.countryOfOrigin}
+                            onChange={handleInputChange}
+                            disabled={!isEditMode}
                             required
                             error={formErrors.countryOfOrigin}
                             options={[
+                                { value: '', label: 'Select country' },
                                 { value: 'syria', label: 'Syria' },
                                 { value: 'sudan', label: 'Sudan' },
                                 { value: 'somalia', label: 'Somalia' },
@@ -495,316 +365,305 @@ export default function RefugeeProfile() {
                             ]}
                         />
                     </div>
-                </FormSection>
+                </Card>
 
-                {/* Languages Section */}
-                <FormSection
-                    title="Languages Spoken"
-                    icon="🗣️"
-                >
-                    <div className="space-y-6">
-                        {/* Add Language */}
-                        {isEditMode && (
-                            <div className="bg-indigo-50 rounded-lg p-6 border border-indigo-200">
-                                <h3 className="font-semibold text-gray-900 mb-4">Add a Language</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Language
-                                        </label>
-                                        <select
-                                            value={languageInput.language}
-                                            onChange={(e) => setLanguageInput(prev => ({
-                                                ...prev,
-                                                language: e.target.value,
-                                            }))}
-                                            className="w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
-                                        >
-                                            <option value="">Select language</option>
-                                            {SUPPORTED_LANGUAGES.map(lang => (
-                                                <option key={lang} value={lang}>
-                                                    {lang}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
+                {/* Languages */}
+                <Card variant="glass">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="w-10 h-10 flex items-center justify-center bg-purple-100 rounded-lg">
+                            <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389c-.188-.196-.373-.396-.554-.6a19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1zm6 6a1 1 0 01.894.553l2.991 5.982a.869.869 0 01.02.037l.99 1.98a1 1 0 11-1.79.895L15.383 16h-4.764l-.724 1.447a1 1 0 11-1.788-.894l.99-1.98.019-.038 2.99-5.982A1 1 0 0113 8zm-1.382 6h2.764L13 11.236 11.618 14z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900">Languages Spoken</h2>
+                    </div>
 
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Proficiency
-                                        </label>
-                                        <select
-                                            value={languageInput.proficiency}
-                                            onChange={(e) => setLanguageInput(prev => ({
-                                                ...prev,
-                                                proficiency: e.target.value,
-                                            }))}
-                                            className="w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
-                                        >
-                                            {PROFICIENCY_LEVELS.map(level => (
-                                                <option key={level.value} value={level.value}>
-                                                    {level.label}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    <button
+                    {isEditMode && (
+                        <div className="bg-gradient-to-r from-primary-50 to-indigo-50 rounded-xl p-5 mb-6 border border-primary-200">
+                            <h3 className="font-semibold text-gray-900 mb-4">Add a Language</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <Select
+                                    label="Language"
+                                    value={languageInput.language}
+                                    onChange={(e) => setLanguageInput(prev => ({
+                                        ...prev,
+                                        language: e.target.value,
+                                    }))}
+                                    options={[
+                                        { value: '', label: 'Select language' },
+                                        ...SUPPORTED_LANGUAGES.map(lang => ({ value: lang, label: lang }))
+                                    ]}
+                                />
+                                <Select
+                                    label="Proficiency"
+                                    value={languageInput.proficiency}
+                                    onChange={(e) => setLanguageInput(prev => ({
+                                        ...prev,
+                                        proficiency: e.target.value,
+                                    }))}
+                                    options={PROFICIENCY_LEVELS}
+                                />
+                                <div className="flex items-end">
+                                    <Button
                                         type="button"
+                                        variant="primary"
+                                        size="md"
+                                        fullWidth
                                         onClick={handleAddLanguage}
-                                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors self-end"
+                                        icon={
+                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+                                            </svg>
+                                        }
                                     >
-                                        Add Language
-                                    </button>
+                                        Add
+                                    </Button>
                                 </div>
                             </div>
-                        )}
+                        </div>
+                    )}
 
-                        {/* Languages List */}
-                        {formData.languages.length > 0 ? (
-                            <div className="space-y-3">
-                                {formData.languages.map((lang) => (
-                                    <div
-                                        key={lang.language}
-                                        className="bg-gray-50 rounded-lg p-4 flex items-center justify-between border border-gray-200"
+                    {formData.languages.length > 0 ? (
+                        <div className="space-y-3">
+                            {formData.languages.map((lang) => (
+                                <div
+                                    key={lang.language}
+                                    className="bg-gray-50/80 backdrop-blur-sm rounded-xl p-4 flex items-center justify-between border border-gray-200 hover:border-primary-300 transition-colors"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 flex items-center justify-center bg-white rounded-lg shadow-sm">
+                                            <span className="text-lg">🗣️</span>
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold text-gray-900">{lang.language}</p>
+                                            <Badge variant={lang.proficiency}>
+                                                {PROFICIENCY_LEVELS.find(l => l.value === lang.proficiency)?.label}
+                                            </Badge>
+                                        </div>
+                                    </div>
+
+                                    {isEditMode && (
+                                        <div className="flex items-center gap-3">
+                                            <Select
+                                                value={lang.proficiency}
+                                                onChange={(e) => handleLanguageProficiencyChange(lang.language, e.target.value)}
+                                                options={PROFICIENCY_LEVELS}
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={() => handleRemoveLanguage(lang.language)}
+                                                icon={
+                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                                    </svg>
+                                                }
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-12">
+                            <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-xl mb-3">
+                                <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389c-.188-.196-.373-.396-.554-.6a19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <p className="text-gray-600">No languages added yet</p>
+                        </div>
+                    )}
+
+                    {formErrors.languages && (
+                        <p className="text-sm text-danger-600 flex items-center gap-1 mt-3">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                            {formErrors.languages}
+                        </p>
+                    )}
+                </Card>
+
+                {/* Skills */}
+                <Card variant="glass">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="w-10 h-10 flex items-center justify-center bg-warning-100 rounded-lg">
+                            <svg className="w-6 h-6 text-warning-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clipRule="evenodd" />
+                                <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
+                            </svg>
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900">Professional Skills</h2>
+                    </div>
+
+                    {isEditMode && (
+                        <div className="bg-gradient-to-r from-success-50 to-emerald-50 rounded-xl p-5 mb-6 border border-success-200">
+                            <h3 className="font-semibold text-gray-900 mb-4">Add a Skill</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <Input
+                                    label="Skill Name"
+                                    placeholder="e.g., JavaScript, Carpentry"
+                                    value={skillInput.skillName}
+                                    onChange={(e) => setSkillInput(prev => ({
+                                        ...prev,
+                                        skillName: e.target.value,
+                                    }))}
+                                />
+                                <Select
+                                    label="Proficiency"
+                                    value={skillInput.proficiency}
+                                    onChange={(e) => setSkillInput(prev => ({
+                                        ...prev,
+                                        proficiency: e.target.value,
+                                    }))}
+                                    options={SKILL_PROFICIENCY_LEVELS}
+                                />
+                                <Input
+                                    label="Years of Experience"
+                                    type="number"
+                                    min="0"
+                                    step="0.5"
+                                    placeholder="0"
+                                    value={skillInput.yearsOfExperience}
+                                    onChange={(e) => setSkillInput(prev => ({
+                                        ...prev,
+                                        yearsOfExperience: e.target.value,
+                                    }))}
+                                />
+                                <div className="flex items-end">
+                                    <Button
+                                        type="button"
+                                        variant="success"
+                                        size="md"
+                                        fullWidth
+                                        onClick={handleAddSkill}
+                                        icon={
+                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+                                            </svg>
+                                        }
                                     >
-                                        <div className="flex items-center gap-4">
-                                            <div>
-                                                <p className="font-semibold text-gray-900">{lang.language}</p>
-                                                <p className="text-sm text-gray-600">
-                                                    {PROFICIENCY_LEVELS.find(l => l.value === lang.proficiency)?.label}
-                                                </p>
+                                        Add
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {formData.skills.length > 0 ? (
+                        <div className="space-y-3">
+                            {formData.skills.map((skill) => (
+                                <div
+                                    key={skill.skillName}
+                                    className="bg-gray-50/80 backdrop-blur-sm rounded-xl p-4 border border-gray-200 hover:border-success-300 transition-colors"
+                                >
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-3 mb-2">
+                                                <div className="w-10 h-10 flex items-center justify-center bg-white rounded-lg shadow-sm">
+                                                    <span className="text-lg">💼</span>
+                                                </div>
+                                                <div>
+                                                    <p className="font-semibold text-gray-900 text-lg">{skill.skillName}</p>
+                                                    <div className="flex items-center gap-2 mt-1">
+                                                        <Badge variant={skill.proficiency}>
+                                                            {SKILL_PROFICIENCY_LEVELS.find(l => l.value === skill.proficiency)?.label}
+                                                        </Badge>
+                                                        <span className="text-sm text-gray-500">•</span>
+                                                        <span className="text-sm text-gray-600">
+                                                            {skill.yearsOfExperience} {skill.yearsOfExperience === 1 ? 'year' : 'years'}
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         {isEditMode && (
-                                            <div className="flex items-center gap-3">
-                                                <select
-                                                    value={lang.proficiency}
-                                                    onChange={(e) => handleLanguageProficiencyChange(lang.language, e.target.value)}
-                                                    className="px-3 py-1 rounded border-2 border-gray-300 text-sm focus:border-indigo-500 focus:outline-none"
-                                                >
-                                                    {PROFICIENCY_LEVELS.map(level => (
-                                                        <option key={level.value} value={level.value}>
-                                                            {level.label}
-                                                        </option>
-                                                    ))}
-                                                </select>
-
-                                                <button
+                                            <div className="flex items-center gap-3 ml-4">
+                                                <div className="flex flex-col gap-2">
+                                                    <Select
+                                                        value={skill.proficiency}
+                                                        onChange={(e) => handleSkillChange(skill.skillName, 'proficiency', e.target.value)}
+                                                        options={SKILL_PROFICIENCY_LEVELS}
+                                                    />
+                                                    <Input
+                                                        type="number"
+                                                        min="0"
+                                                        step="0.5"
+                                                        value={skill.yearsOfExperience}
+                                                        onChange={(e) => {
+                                                            const years = parseFloat(e.target.value);
+                                                            if (!isNaN(years) && years >= 0) {
+                                                                handleSkillChange(skill.skillName, 'yearsOfExperience', years);
+                                                            }
+                                                        }}
+                                                    />
+                                                </div>
+                                                <Button
                                                     type="button"
-                                                    onClick={() => handleRemoveLanguage(lang.language)}
-                                                    className="text-red-600 hover:text-red-700 font-semibold"
-                                                >
-                                                    ✕
-                                                </button>
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    onClick={() => handleRemoveSkill(skill.skillName)}
+                                                    icon={
+                                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                                        </svg>
+                                                    }
+                                                />
                                             </div>
                                         )}
                                     </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <p className="text-gray-600 text-center py-8">No languages added yet</p>
-                        )}
-
-                        {formErrors.languages && (
-                            <p className="text-sm text-red-600 flex items-center gap-1">
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                </svg>
-                                {formErrors.languages}
-                            </p>
-                        )}
-                    </div>
-                </FormSection>
-
-                {/* Skills Section */}
-                <FormSection
-                    title="Professional Skills"
-                    icon="💼"
-                >
-                    <div className="space-y-6">
-                        {/* Add Skill */}
-                        {isEditMode && (
-                            <div className="bg-indigo-50 rounded-lg p-6 border border-indigo-200">
-                                <h3 className="font-semibold text-gray-900 mb-4">Add a Skill</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Skill Name<span className="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            placeholder="e.g., JavaScript, Carpentry"
-                                            value={skillInput.skillName}
-                                            onChange={(e) => setSkillInput(prev => ({
-                                                ...prev,
-                                                skillName: e.target.value,
-                                            }))}
-                                            className="w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Proficiency<span className="text-red-500">*</span>
-                                        </label>
-                                        <select
-                                            value={skillInput.proficiency}
-                                            onChange={(e) => setSkillInput(prev => ({
-                                                ...prev,
-                                                proficiency: e.target.value,
-                                            }))}
-                                            className="w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
-                                        >
-                                            {SKILL_PROFICIENCY_LEVELS.map(level => (
-                                                <option key={level.value} value={level.value}>
-                                                    {level.label}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Years of Experience<span className="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            type="number"
-                                            min="0"
-                                            step="0.5"
-                                            placeholder="e.g., 2.5"
-                                            value={skillInput.yearsOfExperience}
-                                            onChange={(e) => setSkillInput(prev => ({
-                                                ...prev,
-                                                yearsOfExperience: e.target.value,
-                                            }))}
-                                            className="w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
-                                        />
-                                    </div>
-
-                                    <button
-                                        type="button"
-                                        onClick={handleAddSkill}
-                                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors self-end"
-                                    >
-                                        Add Skill
-                                    </button>
                                 </div>
-                            </div>
-                        )}
-
-                        {/* Skills List */}
-                        {formData.skills.length > 0 ? (
-                            <div className="space-y-3">
-                                {formData.skills.map((skill) => (
-                                    <div
-                                        key={skill.skillName}
-                                        className="bg-gray-50 rounded-lg p-4 border border-gray-200"
-                                    >
-                                        <div className="flex items-start justify-between">
-                                            <div className="flex-1">
-                                                <p className="font-semibold text-gray-900 text-lg">{skill.skillName}</p>
-                                                <div className="flex items-center gap-4 mt-2">
-                                                    <p className="text-sm text-gray-600">
-                                                        <span className="font-medium">Proficiency:</span>{' '}
-                                                        {SKILL_PROFICIENCY_LEVELS.find(l => l.value === skill.proficiency)?.label}
-                                                    </p>
-                                                    <p className="text-sm text-gray-600">
-                                                        <span className="font-medium">Experience:</span>{' '}
-                                                        {skill.yearsOfExperience} {skill.yearsOfExperience === 1 ? 'year' : 'years'}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            {isEditMode && (
-                                                <div className="flex items-center gap-3 ml-4">
-                                                    <div className="flex flex-col gap-2">
-                                                        <select
-                                                            value={skill.proficiency}
-                                                            onChange={(e) => handleSkillChange(skill.skillName, 'proficiency', e.target.value)}
-                                                            className="px-3 py-1 rounded border-2 border-gray-300 text-sm focus:border-indigo-500 focus:outline-none"
-                                                        >
-                                                            {SKILL_PROFICIENCY_LEVELS.map(level => (
-                                                                <option key={level.value} value={level.value}>
-                                                                    {level.label}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                        <input
-                                                            type="number"
-                                                            min="0"
-                                                            step="0.5"
-                                                            value={skill.yearsOfExperience}
-                                                            onChange={(e) => {
-                                                                const years = parseFloat(e.target.value);
-                                                                if (!isNaN(years) && years >= 0) {
-                                                                    handleSkillChange(skill.skillName, 'yearsOfExperience', years);
-                                                                }
-                                                            }}
-                                                            className="px-3 py-1 rounded border-2 border-gray-300 text-sm focus:border-indigo-500 focus:outline-none w-20"
-                                                        />
-                                                    </div>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleRemoveSkill(skill.skillName)}
-                                                        className="text-red-600 hover:text-red-700 font-semibold text-lg"
-                                                    >
-                                                        ✕
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <p className="text-gray-600 text-center py-8">No skills added yet</p>
-                        )}
-
-                        {formErrors.skills && (
-                            <p className="text-sm text-red-600 flex items-center gap-1">
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-12">
+                            <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-xl mb-3">
+                                <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                                 </svg>
-                                {formErrors.skills}
-                            </p>
-                        )}
-                    </div>
-                </FormSection>
+                            </div>
+                            <p className="text-gray-600">No skills added yet</p>
+                        </div>
+                    )}
+
+                    {formErrors.skills && (
+                        <p className="text-sm text-danger-600 flex items-center gap-1 mt-3">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                            {formErrors.skills}
+                        </p>
+                    )}
+                </Card>
 
                 {/* Save Button */}
                 {isEditMode && (
-                    <div className="flex items-center gap-3 mt-8">
-                        <button
+                    <div className="flex items-center gap-3">
+                        <Button
                             type="submit"
+                            variant="primary"
+                            size="lg"
+                            loading={isLoading}
                             disabled={isLoading}
-                            className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-lg transition-colors flex items-center gap-2"
+                            icon={
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 00-1.414-1.414L10 12.586 7.707 10.293z" />
+                                </svg>
+                            }
                         >
-                            {isLoading ? (
-                                <>
-                                    <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    Saving...
-                                </>
-                            ) : (
-                                <>
-                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 00-1.414-1.414L10 12.586 7.707 10.293z" />
-                                    </svg>
-                                    Save Profile
-                                </>
-                            )}
-                        </button>
-                        <button
+                            Save Profile
+                        </Button>
+                        <Button
                             type="button"
+                            variant="secondary"
+                            size="lg"
                             onClick={() => setIsEditMode(false)}
-                            className="bg-gray-300 hover:bg-gray-400 text-gray-900 font-semibold py-3 px-8 rounded-lg transition-colors"
                         >
                             Cancel
-                        </button>
+                        </Button>
                     </div>
                 )}
             </form>

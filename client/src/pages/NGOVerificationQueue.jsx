@@ -5,6 +5,11 @@ import SkeletonLoader from '../components/SkeletonLoader';
 import SkillVerificationModal from '../components/SkillVerificationModal';
 import EmptyState from '../components/EmptyState';
 import { useToast } from '../components/Toast';
+import Button from '../components/ui/Button';
+import { Input } from '../components/ui/FormComponents';
+import Card from '../components/ui/Card';
+import Badge from '../components/ui/Badge';
+import PageHeader from '../components/ui/PageHeader';
 
 export default function NGOVerificationQueue() {
     const [pendingVerifications, setPendingVerifications] = useState([]);
@@ -216,62 +221,45 @@ export default function NGOVerificationQueue() {
 
     return (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-4xl font-bold text-gray-900">Skill Verification Queue</h1>
-                    <p className="text-gray-600 mt-2">
-                        Review and verify refugee skills to help them access opportunities
-                    </p>
-                </div>
-                <button
-                    onClick={fetchPendingVerifications}
-                    disabled={isLoading}
-                    className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-semibold py-2 px-6 rounded-lg transition-colors flex items-center gap-2"
-                >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
-                    </svg>
-                    Refresh
-                </button>
-            </div>
-
-            {/* Search Bar */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-                <div className="relative">
-                    <input
-                        type="text"
-                        placeholder="Search by name, ID, or camp..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full px-5 py-3 pl-12 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
-                    />
-                    <svg
-                        className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+            <PageHeader
+                title="Skill Verification Queue"
+                subtitle="Review and verify refugee skills to help them access opportunities"
+                actions={
+                    <Button
+                        variant="primary"
+                        size="md"
+                        onClick={fetchPendingVerifications}
+                        disabled={isLoading}
+                        icon={
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                            </svg>
+                        }
                     >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                        />
-                    </svg>
-                </div>
-                <div className="text-sm text-gray-600 mt-3">
-                    Showing {filteredVerifications.length} of {pendingVerifications.length} pending
-                    verification{pendingVerifications.length !== 1 ? 's' : ''}
-                </div>
-            </div>
+                        Refresh
+                    </Button>
+                }
+            />
 
-            {/* Loading State */}
+            <Card variant="glass">
+                <Input
+                    placeholder="Search by name, ID, or camp..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    icon={
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    }
+                    helperText={`Showing ${filteredVerifications.length} of ${pendingVerifications.length} pending verification${pendingVerifications.length !== 1 ? 's' : ''}`}
+                />
+            </Card>
+
             {isLoading ? (
-                <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                <Card variant="glass" className="overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
+                            <thead className="bg-gradient-to-r from-primary-600 to-primary-700 text-white">
                                 <tr>
                                     <th className="px-6 py-4 text-left text-sm font-semibold">Refugee Info</th>
                                     <th className="px-6 py-4 text-left text-sm font-semibold">Contact</th>
@@ -285,13 +273,12 @@ export default function NGOVerificationQueue() {
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </Card>
             ) : filteredVerifications.length > 0 ? (
-                /* Verification Queue Table */
-                <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                <Card variant="glass" className="overflow-hidden shadow-glass-lg">
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
+                            <thead className="bg-gradient-to-r from-primary-600 to-primary-700 text-white">
                                 <tr>
                                     <th className="px-6 py-4 text-left text-sm font-semibold">Refugee Info</th>
                                     <th className="px-6 py-4 text-left text-sm font-semibold">Contact</th>
@@ -346,13 +333,9 @@ export default function NGOVerificationQueue() {
                                                                 {skill.skillName}
                                                             </span>
                                                             <div className="flex items-center gap-2">
-                                                                <span
-                                                                    className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getProficiencyBadgeColor(
-                                                                        skill.proficiency
-                                                                    )}`}
-                                                                >
+                                                                <Badge variant={skill.proficiency}>
                                                                     {skill.proficiency}
-                                                                </span>
+                                                                </Badge>
                                                                 <span className="text-xs text-gray-600">
                                                                     {skill.yearsOfExperience}y
                                                                 </span>
@@ -381,33 +364,27 @@ export default function NGOVerificationQueue() {
 
                                         {/* Actions */}
                                         <td className="px-6 py-4">
-                                            <button
+                                            <Button
+                                                variant="primary"
+                                                size="sm"
                                                 onClick={() => handleOpenVerificationModal(refugee)}
-                                                className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm flex items-center gap-2"
+                                                icon={
+                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                    </svg>
+                                                }
                                             >
-                                                <svg
-                                                    className="w-4 h-4"
-                                                    fill="currentColor"
-                                                    viewBox="0 0 20 20"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
                                                 Verify Skills
-                                            </button>
+                                            </Button>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </Card>
             ) : (
-                /* Empty State */
-                <div className="bg-white rounded-lg shadow-md">
+                <Card variant="glass">
                     <EmptyState
                         icon={
                             <svg className="h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -421,7 +398,7 @@ export default function NGOVerificationQueue() {
                                 : 'All skills have been verified! Check back later for new submissions.'
                         }
                     />
-                </div>
+                </Card>
             )}
 
             {/* Verification Modal */}

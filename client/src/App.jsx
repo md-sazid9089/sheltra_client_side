@@ -7,6 +7,7 @@ import Opportunities from './pages/Opportunities';
 import Placements from './pages/Placements';
 import AdminPanel from './pages/AdminPanel';
 import AdminUsers from './pages/AdminUsers';
+import AdminAuditLogs from './pages/AdminAuditLogs';
 import TalentPool from './pages/TalentPool';
 import EmployerFeedback from './pages/EmployerFeedback';
 import EmployerOnboarding from './pages/EmployerOnboarding';
@@ -185,6 +186,20 @@ function App() {
               <RoleGuard allowedRoles={['admin', 'Administrator']}>
                 <AppShell>
                   <AdminUsers />
+                </AppShell>
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin Audit Logs Route */}
+        <Route
+          path="/admin/audit-logs"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['admin', 'Administrator']}>
+                <AppShell>
+                  <AdminAuditLogs />
                 </AppShell>
               </RoleGuard>
             </ProtectedRoute>

@@ -12,6 +12,7 @@ export const roleMenuConfig = {
     ],
     ngo: [
         { label: 'Dashboard', path: '/dashboard', icon: 'home' },
+        { label: 'Verifications', path: '/ngo/verifications', icon: 'check' },
         { label: 'Sessions', path: '/sessions', icon: 'calendar' },
         { label: 'Participants', path: '/participants', icon: 'users' },
         { label: 'Reports', path: '/reports', icon: 'document' },

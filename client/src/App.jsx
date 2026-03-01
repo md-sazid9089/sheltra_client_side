@@ -9,6 +9,9 @@ import AdminPanel from './pages/AdminPanel';
 import AdminUsers from './pages/AdminUsers';
 import TalentPool from './pages/TalentPool';
 import EmployerFeedback from './pages/EmployerFeedback';
+import EmployerOnboarding from './pages/EmployerOnboarding';
+import EmployerJobPosting from './pages/EmployerJobPosting';
+import EmployerJobsList from './pages/EmployerJobsList';
 import NGOVerificationQueue from './pages/NGOVerificationQueue';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -100,6 +103,46 @@ function App() {
               <RoleGuard allowedRoles={['employer']}>
                 <AppShell>
                   <EmployerFeedback />
+                </AppShell>
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Employer Onboarding Route */}
+        <Route
+          path="/employer/onboarding"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['employer']}>
+                <EmployerOnboarding />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Employer Job Posting Route */}
+        <Route
+          path="/jobs/new"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['employer']}>
+                <AppShell>
+                  <EmployerJobPosting />
+                </AppShell>
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Employer Jobs List Route */}
+        <Route
+          path="/jobs"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['employer']}>
+                <AppShell>
+                  <EmployerJobsList />
                 </AppShell>
               </RoleGuard>
             </ProtectedRoute>

@@ -175,19 +175,24 @@ export default function NGOVerificationQueue() {
         setShowVerificationModal(true);
     };
 
-    const handleVerificationComplete = (refugeeId) => {
+    const handleVerificationComplete = (refugeeId, summary) => {
         // Remove verified refugee from the list
         setPendingVerifications(prev =>
             prev.filter(r => r.refugeeId !== refugeeId)
         );
 
+        // Create success message with summary if provided
+        const message = summary
+            ? `Verification complete! ${summary.approved} skill(s) approved, ${summary.rejected} skill(s) rejected.`
+            : 'Skills verification submitted successfully!';
+
         setNotification({
             type: 'success',
-            message: 'Skills verified successfully!',
+            message,
         });
 
-        // Clear notification after 3 seconds
-        setTimeout(() => setNotification(null), 3000);
+        // Clear notification after 5 seconds
+        setTimeout(() => setNotification(null), 5000);
 
         setShowVerificationModal(false);
         setSelectedRefugee(null);

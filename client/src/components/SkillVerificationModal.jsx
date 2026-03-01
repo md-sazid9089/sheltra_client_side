@@ -5,53 +5,103 @@ export default function SkillVerificationModal({ refugee, onClose, onVerificatio
     const [verificationData, setVerificationData] = useState(
         refugee.pendingSkills.map(skill => ({
             ...skill,
-            verified: false,
-            verificationNotes: '',
+            status: 'pending', // 'pending', 'approved', 'rejected'
+            remarks: '',
         }))
     );
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
+    const [validationErrors, setValidationErrors] = useState({});
 
-    const handleToggleVerification = (index) => {
+    const handleStatusChange = (index, status) => {
         setVerificationData(prev =>
             prev.map((skill, idx) =>
-                idx === index ? { ...skill, verified: !skill.verified } : skill
+                idx === index ? { ...skill, status } : skill
             )
         );
+        // Clear validation error for this skill
+        setValidationErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors[index];
+            return newErrors;
+        });
     };
 
-    const handleNotesChange = (index, notes) => {
+    const handleRemarksChange = (index, remarks) => {
         setVerificationData(prev =>
             prev.map((skill, idx) =>
-                idx === index ? { ...skill, verificationNotes: notes } : skill
+                idx === index ? { ...skill, remarks } : skill
             )
         );
+        // Clear validation error for this skill
+        setValidationErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors[index];
+            return newErrors;
+        });
     };
 
-    const handleVerifyAll = () => {
+    const handleApproveAll = () => {
         setVerificationData(prev =>
-            prev.map(skill => ({ ...skill, verified: true }))
+            prev.map(skill => ({ ...skill, status: 'approved' }))
         );
+        setValidationErrors({});
+    };
+
+    const validateVerifications = () => {
+        const errors = {};
+        let hasDecisions = false;
+
+        verificationData.forEach((skill, index) => {
+            if (skill.status !== 'pending') {
+                hasDecisions = true;
+            }
+
+            // Remarks are mandatory for rejected skills
+            if (skill.status === 'rejected' && !skill.remarks.trim()) {
+                errors[index] = 'Remarks are required when rejecting a skill';
+            }
+        });
+
+        setValidationErrors(errors);
+
+        if (!hasDecisions) {
+            setError('Please approve or reject at least one skill before submitting');
+            return false;
+        }
+
+        if (Object.keys(errors).length > 0) {
+            setError('Please provide remarks for all rejected skills');
+            return false;
+        }
+
+        return true;
     };
 
     const handleSubmitVerification = async () => {
         
         const hasVerifiedSkills = verificationData.some(skill => skill.verified);
         
-        if (!hasVerifiedSkills) {
-            setError('Please verify at least one skill before submitting');
+        if (!validateVerifications()) {
             return;
         }
 
         setIsSubmitting(true);
-        setError('');
 
         try {
             //kesa laga mera majak
             await new Promise(resolve => setTimeout(resolve, 1500));
 
+            console.log('Verification payload:', payload);
+
+            // Prepare summary for feedback
+            const summary = {
+                approved: verificationData.filter(s => s.status === 'approved').length,
+                rejected: verificationData.filter(s => s.status === 'rejected').length,
+            };
+
             // Call success callback
-            onVerificationComplete(refugee.refugeeId);
+            onVerificationComplete(refugee.refugeeId, summary);
         } catch (err) {
             console.error('Error submitting verification:', err);
             setError('Failed to submit verification. Please Please try again.');
@@ -73,7 +123,9 @@ export default function SkillVerificationModal({ refugee, onClose, onVerificatio
         }
     };
 
-    const verifiedCount = verificationData.filter(s => s.verified).length;
+    const approvedCount = verificationData.filter(s => s.status === 'approved').length;
+    const rejectedCount = verificationData.filter(s => s.status === 'rejected').length;
+    const reviewedCount = approvedCount + rejectedCount;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -138,22 +190,32 @@ export default function SkillVerificationModal({ refugee, onClose, onVerificatio
 
                     {/* Verification Progress */}
                     <div className="mb-6">
-                        <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm font-semibold text-gray-900">
-                                Verification Progress: {verifiedCount} of {verificationData.length} skills
-                            </p>
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-4">
+                                <p className="text-sm font-semibold text-gray-900">
+                                    Progress: {reviewedCount} of {verificationData.length} skills reviewed
+                                </p>
+                                <div className="flex items-center gap-3 text-sm">
+                                    <span className="text-green-600 font-medium">
+                                        ✓ {approvedCount} Approved
+                                    </span>
+                                    <span className="text-red-600 font-medium">
+                                        ✕ {rejectedCount} Rejected
+                                    </span>
+                                </div>
+                            </div>
                             <button
-                                onClick={handleVerifyAll}
+                                onClick={handleApproveAll}
                                 className="text-sm text-indigo-600 hover:text-indigo-700 font-semibold"
                             >
-                                Verify All
+                                Approve All
                             </button>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
                                 className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
                                 style={{
-                                    width: `${(verifiedCount / verificationData.length) * 100}%`,
+                                    width: `${(reviewedCount / verificationData.length) * 100}%`,
                                 }}
                             />
                         </div>
@@ -161,80 +223,130 @@ export default function SkillVerificationModal({ refugee, onClose, onVerificatio
 
                     {/* Skills List */}
                     <div className="space-y-4">
-                        <h3 className="font-semibold text-gray-900 text-lg">Skills to Verify</h3>
+                        <h3 className="font-semibold text-gray-900 text-lg">Skills to Review</h3>
                         {verificationData.map((skill, index) => (
                             <div
                                 key={index}
                                 className={`border-2 rounded-lg p-4 transition-all ${
-                                    skill.verified
+                                    skill.status === 'approved'
                                         ? 'border-green-300 bg-green-50'
+                                        : skill.status === 'rejected'
+                                        ? 'border-red-300 bg-red-50'
                                         : 'border-gray-300 bg-white'
                                 }`}
                             >
-                                <div className="flex items-start gap-4">
-                                    {/* Checkbox */}
-                                    <div className="flex-shrink-0 mt-1">
-                                        <button
-                                            onClick={() => handleToggleVerification(index)}
-                                            className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
-                                                skill.verified
-                                                    ? 'bg-green-600 border-green-600'
-                                                    : 'bg-white border-gray-300 hover:border-indigo-500'
+                                {/* Skill Header */}
+                                <div className="flex items-center justify-between mb-3">
+                                    <div className="flex items-center gap-3">
+                                        <h4 className="font-semibold text-gray-900 text-lg">
+                                            {skill.skillName}
+                                        </h4>
+                                        <span
+                                            className={`px-3 py-1 rounded-full text-xs font-semibold border ${getProficiencyBadgeColor(
+                                                skill.proficiency
+                                            )}`}
+                                        >
+                                            {skill.proficiency.charAt(0).toUpperCase() +
+                                                skill.proficiency.slice(1)}
+                                        </span>
+                                    </div>
+                                    
+                                    {/* Status Badge */}
+                                    {skill.status !== 'pending' && (
+                                        <span
+                                            className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                                skill.status === 'approved'
+                                                    ? 'bg-green-600 text-white'
+                                                    : 'bg-red-600 text-white'
                                             }`}
                                         >
-                                            {skill.verified && (
-                                                <svg
-                                                    className="w-4 h-4 text-white"
-                                                    fill="currentColor"
-                                                    viewBox="0 0 20 20"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            )}
-                                        </button>
-                                    </div>
+                                            {skill.status === 'approved' ? '✓ APPROVED' : '✕ REJECTED'}
+                                        </span>
+                                    )}
+                                </div>
 
-                                    {/* Skill Details */}
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <h4 className="font-semibold text-gray-900 text-lg">
-                                                {skill.skillName}
-                                            </h4>
-                                            <span
-                                                className={`px-3 py-1 rounded-full text-xs font-semibold border ${getProficiencyBadgeColor(
-                                                    skill.proficiency
-                                                )}`}
-                                            >
-                                                {skill.proficiency.charAt(0).toUpperCase() +
-                                                    skill.proficiency.slice(1)}
-                                            </span>
-                                        </div>
-                                        <p className="text-sm text-gray-600 mb-3">
-                                            <span className="font-medium">Years of Experience:</span>{' '}
-                                            {skill.yearsOfExperience}{' '}
-                                            {skill.yearsOfExperience === 1 ? 'year' : 'years'}
-                                        </p>
+                                <p className="text-sm text-gray-600 mb-4">
+                                    <span className="font-medium">Years of Experience:</span>{' '}
+                                    {skill.yearsOfExperience}{' '}
+                                    {skill.yearsOfExperience === 1 ? 'year' : 'years'}
+                                </p>
 
-                                        {/* Verification Notes */}
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Verification Notes (Optional)
-                                            </label>
-                                            <textarea
-                                                value={skill.verificationNotes}
-                                                onChange={(e) =>
-                                                    handleNotesChange(index, e.target.value)
-                                                }
-                                                placeholder="Add any notes about this skill verification..."
-                                                rows={2}
-                                                className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none text-sm"
+                                {/* Approve/Reject Buttons */}
+                                <div className="flex gap-3 mb-4">
+                                    <button
+                                        onClick={() => handleStatusChange(index, 'approved')}
+                                        className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
+                                            skill.status === 'approved'
+                                                ? 'bg-green-600 text-white'
+                                                : 'bg-white border-2 border-green-600 text-green-600 hover:bg-green-50'
+                                        }`}
+                                    >
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clipRule="evenodd"
                                             />
-                                        </div>
-                                    </div>
+                                        </svg>
+                                        Approve
+                                    </button>
+                                    <button
+                                        onClick={() => handleStatusChange(index, 'rejected')}
+                                        className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
+                                            skill.status === 'rejected'
+                                                ? 'bg-red-600 text-white'
+                                                : 'bg-white border-2 border-red-600 text-red-600 hover:bg-red-50'
+                                        }`}
+                                    >
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                        Reject
+                                    </button>
+                                </div>
+
+                                {/* Remarks Field */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Remarks
+                                        {skill.status === 'rejected' && (
+                                            <span className="text-red-500 ml-1">*</span>
+                                        )}
+                                        {skill.status === 'approved' && (
+                                            <span className="text-gray-500 ml-1">(Optional)</span>
+                                        )}
+                                    </label>
+                                    <textarea
+                                        value={skill.remarks}
+                                        onChange={(e) => handleRemarksChange(index, e.target.value)}
+                                        placeholder={
+                                            skill.status === 'rejected'
+                                                ? 'Please explain why this skill is being rejected...'
+                                                : 'Add any notes about this skill verification...'
+                                        }
+                                        rows={2}
+                                        className={`w-full px-3 py-2 rounded-lg border-2 focus:outline-none text-sm ${
+                                            validationErrors[index]
+                                                ? 'border-red-500 focus:border-red-500 bg-red-50'
+                                                : 'border-gray-300 focus:border-indigo-500'
+                                        }`}
+                                    />
+                                    {validationErrors[index] && (
+                                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                    clipRule="evenodd"
+                                                />
+                                            </svg>
+                                            {validationErrors[index]}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         ))}
@@ -252,7 +364,7 @@ export default function SkillVerificationModal({ refugee, onClose, onVerificatio
                     </button>
                     <button
                         onClick={handleSubmitVerification}
-                        disabled={isSubmitting || verifiedCount === 0}
+                        disabled={isSubmitting || reviewedCount === 0}
                         className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-semibold py-2 px-6 rounded-lg transition-colors flex items-center gap-2"
                     >
                         {isSubmitting ? (
@@ -276,7 +388,7 @@ export default function SkillVerificationModal({ refugee, onClose, onVerificatio
                                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                     ></path>
                                 </svg>
-                                Submitting...
+                                Submitting Verification...
                             </>
                         ) : (
                             <>
@@ -287,7 +399,7 @@ export default function SkillVerificationModal({ refugee, onClose, onVerificatio
                                         clipRule="evenodd"
                                     />
                                 </svg>
-                                Submit Verification
+                                Submit Verifications
                             </>
                         )}
                     </button>

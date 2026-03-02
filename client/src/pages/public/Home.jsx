@@ -210,51 +210,76 @@ export default function Home() {
       </section>
 
       {/* ─── 2. Problem → Solution Bridge ─── */}
-      <section className="py-20 bg-white dark:bg-surface-darkBase">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            title="Bridging the Gap"
-            subtitle="Displaced individuals face systemic barriers. Sheltra transforms each into a pathway."
-            center
-          />
+      <section className="py-20 relative overflow-hidden bg-slate-950">
+        {/* Ambient glow */}
+        <div className="absolute top-0 right-1/3 w-96 h-96 rounded-full bg-red-500/6 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/3 w-96 h-96 rounded-full bg-cyan-500/6 blur-3xl pointer-events-none" />
 
-          {/* Barriers */}
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <h2 className="text-section-title text-white">Bridging the Gap</h2>
+            <p className="mt-3 text-slate-400 max-w-xl mx-auto text-base">
+              Displaced individuals face systemic barriers. Sheltra transforms each into a pathway.
+            </p>
+          </div>
+
+          {/* Barriers fan */}
+          <p className="text-center text-xs font-semibold uppercase tracking-widest text-red-400 mb-4">The Barriers</p>
+          <div className="glass-fan-container">
             {[
-              { icon: <FaExclamationTriangle className="w-8 h-8 mx-auto text-red-400" />, title: 'No Credential Proof', desc: 'Documents lost during displacement leave skills unverifiable.' },
-              { icon: <FaLock className="w-8 h-8 mx-auto text-red-400" />, title: 'Trust Deficit', desc: 'Employers lack confidence without established identity verification.' },
-              { icon: <FaGlobe className="w-8 h-8 mx-auto text-red-400" />, title: 'Fragmented Access', desc: 'Scattered resources across NGOs, governments, and private sector.' },
-            ].map((item) => (
-              <Card key={item.title} className="text-center border-l-4 border-l-red-500/70">
-                <div className="mb-3">{item.icon}</div>
-                <h3 className="font-semibold text-text-primary dark:text-text-darkPrimary mb-2">{item.title}</h3>
-                <p className="text-sm text-text-secondary dark:text-text-darkSecondary">{item.desc}</p>
-              </Card>
-            ))}
+              { icon: <FaExclamationTriangle className="w-8 h-8 text-red-400" />, title: 'No Credential Proof', desc: 'Documents lost during displacement leave skills unverifiable.' },
+              { icon: <FaLock className="w-8 h-8 text-red-400" />, title: 'Trust Deficit', desc: 'Employers lack confidence without established identity verification.' },
+              { icon: <FaGlobe className="w-8 h-8 text-red-400" />, title: 'Fragmented Access', desc: 'Scattered resources across NGOs, governments, and private sector.' },
+            ].map((item, i) => {
+              const rotations = [-18, 0, 18];
+              return (
+                <div
+                  key={item.title}
+                  data-name={item.title}
+                  className="glass-fan-card glass-fan-card--danger"
+                  style={{ '--r': rotations[i] }}
+                >
+                  <div className="flex flex-col items-center gap-3 pb-14 px-5">
+                    {item.icon}
+                    <p className="text-xs text-red-200 text-center leading-snug">{item.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           {/* Divider */}
-          <div className="flex items-center gap-4 my-8">
-            <div className="flex-1 h-px bg-border-light dark:bg-border-dark" />
-            <span className="text-sm font-semibold text-brand-primary bg-cyan-50 dark:bg-cyan-900/30 px-4 py-1.5 rounded-full">
+          <div className="flex items-center gap-4 my-12">
+            <div className="flex-1 h-px bg-white/10" />
+            <span className="text-sm font-semibold text-cyan-300 bg-cyan-900/30 border border-cyan-500/20 px-5 py-1.5 rounded-full">
               Sheltra's Solution ↓
             </span>
-            <div className="flex-1 h-px bg-border-light dark:bg-border-dark" />
+            <div className="flex-1 h-px bg-white/10" />
           </div>
 
-          {/* Solutions */}
-          <div className="grid md:grid-cols-3 gap-6">
+          {/* Solutions fan */}
+          <p className="text-center text-xs font-semibold uppercase tracking-widest text-emerald-400 mb-4">The Solutions</p>
+          <div className="glass-fan-container">
             {[
-              { icon: <FaCheckCircle className="w-8 h-8 mx-auto text-emerald-400" />, title: 'Verified Skill Profiles', desc: 'NGO-backed verification restores credential trust without traditional documents.' },
-              { icon: <FaHandshake className="w-8 h-8 mx-auto text-emerald-400" />, title: 'Ethical AI Matching', desc: 'Transparent, bias-aware algorithms match skills to opportunities with full audit trails.' },
-              { icon: <FaSitemap className="w-8 h-8 mx-auto text-emerald-400" />, title: 'Unified Platform', desc: 'One hub connecting refugees, NGOs, employers, and government partners.' },
-            ].map((item) => (
-              <Card key={item.title} hover className="text-center border-l-4 border-l-emerald-500/70">
-                <div className="mb-3">{item.icon}</div>
-                <h3 className="font-semibold text-text-primary dark:text-text-darkPrimary mb-2">{item.title}</h3>
-                <p className="text-sm text-text-secondary dark:text-text-darkSecondary">{item.desc}</p>
-              </Card>
-            ))}
+              { icon: <FaCheckCircle className="w-8 h-8 text-emerald-400" />, title: 'Verified Skill Profiles', desc: 'NGO-backed verification restores credential trust without traditional documents.' },
+              { icon: <FaHandshake className="w-8 h-8 text-emerald-400" />, title: 'Ethical AI Matching', desc: 'Transparent, bias-aware algorithms match skills to opportunities with full audit trails.' },
+              { icon: <FaSitemap className="w-8 h-8 text-emerald-400" />, title: 'Unified Platform', desc: 'One hub connecting refugees, NGOs, employers, and government partners.' },
+            ].map((item, i) => {
+              const rotations = [-18, 0, 18];
+              return (
+                <div
+                  key={item.title}
+                  data-name={item.title}
+                  className="glass-fan-card glass-fan-card--success"
+                  style={{ '--r': rotations[i] }}
+                >
+                  <div className="flex flex-col items-center gap-3 pb-14 px-5">
+                    {item.icon}
+                    <p className="text-xs text-emerald-200 text-center leading-snug">{item.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

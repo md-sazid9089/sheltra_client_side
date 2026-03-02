@@ -300,6 +300,16 @@
   margin: 0 12px;
 }
 
+.glass-fan-card--danger {
+  background: linear-gradient(rgba(239,68,68,0.18), transparent);
+  border-color: rgba(239,68,68,0.18);
+}
+
+.glass-fan-card--success {
+  background: linear-gradient(rgba(20,184,166,0.18), transparent);
+  border-color: rgba(20,184,166,0.18);
+}
+
 .glass-fan-card::before {
   content: attr(data-name);
   position: absolute;

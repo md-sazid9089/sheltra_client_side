@@ -44,10 +44,28 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-8 bg-linear-to-br from-gray-50 via-white to-gray-50">
-            <div className="w-full max-w-md">
-                {/* Logo */}
-                <div className="text-center mb-8">
+        <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-50">
+            {/* Navbar */}
+            <nav className="w-full px-4 sm:px-6 pt-4 sm:pt-5">
+                <div className="max-w-4xl mx-auto">
+                    <div className="bg-white/95 backdrop-blur-xl rounded-full shadow-md border border-gray-200/50 px-5 py-2.5 flex items-center justify-center">
+                        <Link
+                            to="/"
+                            className="flex items-center gap-2 px-4 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-full transition-all duration-200"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            Homepage
+                        </Link>
+                    </div>
+                </div>
+            </nav>
+
+            <div className="flex items-center justify-center p-8">
+                <div className="w-full max-w-md">
+                    {/* Logo */}
+                    <div className="text-center mb-8">
                     <div className="inline-flex items-center gap-2 mb-6">
                         <div className="w-12 h-12 bg-linear-to-br from-primary-600 to-primary-700 rounded-xl shadow-lg flex items-center justify-center">
                             <span className="text-2xl font-bold text-white">S</span>
@@ -150,6 +168,7 @@ export default function ForgotPasswordPage() {
                         </svg>
                         Back to Home
                     </Link>
+                </div>
                 </div>
             </div>
         </div>

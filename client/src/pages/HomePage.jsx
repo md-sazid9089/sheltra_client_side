@@ -130,74 +130,134 @@ export default function HomePage() {
 
     return (
         <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50/30 to-indigo-50/50">
-            {/* Capsule Navigation */}
-            <nav className={`fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 transition-all duration-500 ${scrolled ? 'py-2' : 'py-3 sm:py-4'}`}>
+            {/* Floating Glassmorphism Navbar */}
+            <nav
+                className="fixed left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 transition-all duration-300"
+                style={{ top: scrolled ? '12px' : '20px' }}
+            >
                 <div className="max-w-7xl mx-auto">
-                    <div className={`bg-white/95 backdrop-blur-2xl rounded-full shadow-xl shadow-black/5 border border-white/20 px-4 sm:px-6 transition-all duration-500 ${scrolled ? 'py-2' : 'py-2.5 sm:py-3'} flex items-center justify-between`}>
-                        {/* Logo */}
-                        <Link to="/" className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-br from-primary-600 via-primary-600 to-primary-700 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/25 ring-2 ring-white/50 transition-transform hover:scale-105">
-                                <span className="text-lg sm:text-xl font-bold text-white">S</span>
+                    <div
+                        className="flex items-center justify-between rounded-full transition-all duration-300"
+                        style={{
+                            background: 'rgba(255, 255, 255, 0.15)',
+                            backdropFilter: 'blur(20px)',
+                            WebkitBackdropFilter: 'blur(20px)',
+                            border: '1px solid rgba(255, 255, 255, 0.25)',
+                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12), 0 1px 0 rgba(255,255,255,0.2) inset',
+                            padding: scrolled ? '10px 24px' : '14px 28px',
+                        }}
+                    >
+                        {/* Logo — far left */}
+                        <Link to="/" className="flex items-center gap-2.5 flex-shrink-0" onClick={() => setMobileMenuOpen(false)}>
+                            <div
+                                className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                                style={{ background: 'rgba(255,255,255,0.9)' }}
+                            >
+                                <img src="/logo.png" alt="Sheltra" className="w-6 h-6 object-contain" />
                             </div>
-                            <span className="text-lg sm:text-xl font-bold bg-linear-to-r from-primary-600 via-primary-600 to-primary-700 bg-clip-text text-transparent">
+                            <span className="hidden sm:block text-white font-bold text-base tracking-wide" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                                 Sheltra
                             </span>
                         </Link>
 
-                        {/* Desktop Navigation */}
-                        <div className="hidden md:flex items-center gap-4 lg:gap-8">
-                            <a href="#about" className="text-sm lg:text-base font-semibold text-gray-700 hover:text-primary-600 transition-all duration-300 relative group whitespace-nowrap">
-                                About
-                                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-600 to-primary-500 group-hover:w-full transition-all duration-300"></span>
-                            </a>
-                            <a href="#how-it-works" className="text-sm lg:text-base font-semibold text-gray-700 hover:text-primary-600 transition-all duration-300 relative group whitespace-nowrap">
-                                How it Works
-                                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-600 to-primary-500 group-hover:w-full transition-all duration-300"></span>
-                            </a>
-                            <a href="#features" className="text-sm lg:text-base font-semibold text-gray-700 hover:text-primary-600 transition-all duration-300 relative group whitespace-nowrap">
-                                Features
-                                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-600 to-primary-500 group-hover:w-full transition-all duration-300"></span>
-                            </a>
-                            <Link to="/login">
-                                <Button variant="primary" size="sm" className="shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-300">
-                                    Sign In
-                                </Button>
-                            </Link>
+                        {/* Centered Nav Links — desktop */}
+                        <div className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+                            {[
+                                { label: 'Home', to: '/', isLink: true },
+                                { label: 'About', href: '#about' },
+                                { label: 'How it Works', href: '#how-it-works' },
+                            ].map((item) =>
+                                item.isLink ? (
+                                    <Link
+                                        key={item.label}
+                                        to={item.to}
+                                        className="px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 whitespace-nowrap"
+                                        style={{ color: 'rgba(255,255,255,0.92)', textShadow: '0 1px 2px rgba(0,0,0,0.25)' }}
+                                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.18)'; }}
+                                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+                                    >
+                                        {item.label}
+                                    </Link>
+                                ) : (
+                                    <a
+                                        key={item.label}
+                                        href={item.href}
+                                        className="px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 whitespace-nowrap"
+                                        style={{ color: 'rgba(255,255,255,0.92)', textShadow: '0 1px 2px rgba(0,0,0,0.25)' }}
+                                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.18)'; }}
+                                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+                                    >
+                                        {item.label}
+                                    </a>
+                                )
+                            )}
                         </div>
 
-                        {/* Mobile Menu Button */}
-                        <button
-                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="md:hidden p-2 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all duration-300"
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                {mobileMenuOpen ? (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                ) : (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                                )}
-                            </svg>
-                        </button>
+                        {/* Login button — far right */}
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                            {/* Desktop Login */}
+                            <Link to="/login" className="hidden md:block">
+                                <button
+                                    className="px-5 py-2 rounded-full text-sm font-bold transition-all duration-200"
+                                    style={{
+                                        background: 'rgba(255,255,255,0.95)',
+                                        color: '#111827',
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                                    }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.25)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.95)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                                >
+                                    Login
+                                </button>
+                            </Link>
+
+                            {/* Mobile Hamburger */}
+                            <button
+                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                className="md:hidden flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200"
+                                style={{ background: 'rgba(255,255,255,0.18)', color: 'white' }}
+                                aria-label="Toggle menu"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    {mobileMenuOpen ? (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    ) : (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    )}
+                                </svg>
+                            </button>
+                        </div>
                     </div>
 
-                    {/* Mobile Menu */}
+                    {/* Mobile Dropdown */}
                     {mobileMenuOpen && (
-                        <div className="md:hidden mt-3 bg-white/98 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-black/10 border border-white/20 p-6 animate-in slide-in-from-top duration-300">
-                            <div className="flex flex-col gap-4">
-                                <a href="#about" className="px-4 py-3 text-gray-700 font-medium hover:bg-gradient-to-r hover:from-primary-50 hover:to-blue-50 rounded-xl transition-all duration-300" onClick={() => setMobileMenuOpen(false)}>
+                        <div
+                            className="md:hidden mt-2 rounded-3xl p-2 animate-in slide-in-from-top duration-300"
+                            style={{
+                                background: 'rgba(15, 23, 42, 0.85)',
+                                backdropFilter: 'blur(20px)',
+                                WebkitBackdropFilter: 'blur(20px)',
+                                border: '1px solid rgba(255,255,255,0.15)',
+                                boxShadow: '0 16px 48px rgba(0,0,0,0.3)',
+                            }}
+                        >
+                            <div className="flex flex-col gap-1">
+                                <Link to="/" className="px-5 py-3.5 text-sm font-semibold text-white/90 hover:text-white hover:bg-white/10 rounded-2xl transition-all duration-200" onClick={() => setMobileMenuOpen(false)}>
+                                    Home
+                                </Link>
+                                <a href="#about" className="px-5 py-3.5 text-sm font-semibold text-white/90 hover:text-white hover:bg-white/10 rounded-2xl transition-all duration-200" onClick={() => setMobileMenuOpen(false)}>
                                     About
                                 </a>
-                                <a href="#how-it-works" className="px-4 py-3 text-gray-700 font-medium hover:bg-gradient-to-r hover:from-primary-50 hover:to-blue-50 rounded-xl transition-all duration-300" onClick={() => setMobileMenuOpen(false)}>
+                                <a href="#how-it-works" className="px-5 py-3.5 text-sm font-semibold text-white/90 hover:text-white hover:bg-white/10 rounded-2xl transition-all duration-200" onClick={() => setMobileMenuOpen(false)}>
                                     How it Works
                                 </a>
-                                <a href="#features" className="px-4 py-3 text-gray-700 font-medium hover:bg-gradient-to-r hover:from-primary-50 hover:to-blue-50 rounded-xl transition-all duration-300" onClick={() => setMobileMenuOpen(false)}>
-                                    Features
-                                </a>
-                                <Link to="/login" className="w-full mt-2" onClick={() => setMobileMenuOpen(false)}>
-                                    <Button variant="primary" size="md" fullWidth className="shadow-lg shadow-primary-500/25">
-                                        Sign In
-                                    </Button>
-                                </Link>
+                                <div className="p-2 pt-1">
+                                    <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="block">
+                                        <button className="w-full py-3 rounded-2xl text-sm font-bold text-gray-900 bg-white hover:bg-gray-50 transition-all duration-200">
+                                            Login
+                                        </button>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -206,15 +266,20 @@ export default function HomePage() {
 
             {/* Hero Section with Background */}
             <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-                {/* Background Image with Enhanced Overlay */}
+                {/* Background Image with 40% dark linear-gradient overlay (WCAG AA) */}
                 <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary-950/98 via-primary-900/95 to-indigo-950/97 z-10 mix-blend-multiply"></div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary-900/60 via-transparent to-transparent z-20"></div>
                     <img
                         src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=2787&auto=format&fit=crop"
                         alt="Community background"
-                        className="w-full h-full object-cover scale-105 animate-pulse-slow"
+                        className="w-full h-full object-cover scale-105"
                         style={{ animationDuration: '8s' }}
+                    />
+                    {/* 40% dark overlay — WCAG AA contrast for white H1 */}
+                    <div
+                        className="absolute inset-0 z-10"
+                        style={{
+                            background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.40) 60%, rgba(0,0,0,0.55) 100%)'
+                        }}
                     />
                 </div>
 
@@ -226,9 +291,9 @@ export default function HomePage() {
                 </div>
 
                 {/* Hero Content */}
-                <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-28 md:py-32 lg:py-36 xl:py-40 text-center">
+                <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-28 lg:py-32 xl:py-36 text-center">
                     <div className="animate-in fade-in slide-in-from-bottom duration-1000">
-                        <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-white mb-4 sm:mb-6 leading-tight tracking-tight px-2">
+                        <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white mb-3 sm:mb-4 md:mb-6 leading-tight tracking-tight px-2">
                             <span className="inline-block">Beyond Shelter:</span><br className="hidden sm:block" />
                             <span className="bg-gradient-to-r from-blue-300 via-cyan-300 to-teal-300 bg-clip-text text-transparent animate-gradient-x inline-block">
                                 Mapping Skills to
@@ -237,41 +302,65 @@ export default function HomePage() {
                             <span className="inline-block">Sustainable Livelihoods</span>
                         </h1>
                     </div>
-                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-blue-100/90 mb-12 sm:mb-16 lg:mb-20 max-w-4xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom duration-1000 delay-200 px-4">
+                    <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-blue-100/90 mb-8 sm:mb-10 md:mb-12 lg:mb-16 max-w-4xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom duration-1000 delay-200 px-4">
                         Connecting refugee talent with ethical opportunities through verified skills and trusted partnerships
                     </p>
 
-                    {/* CTA Buttons */}
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 mb-16 sm:mb-20 lg:mb-24 animate-in fade-in slide-in-from-bottom duration-1000 delay-300 px-4">
+                    {/* CTA Buttons — 8pt spacing system */}
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 sm:mb-16 md:mb-20 lg:mb-24 animate-in fade-in slide-in-from-bottom duration-1000 delay-300 px-4">
+                        {/* Get Started — solid primary CTA */}
                         <Link to="/login" className="w-full sm:w-auto">
-                            <Button
-                                variant="primary"
-                                size="lg"
-                                className="bg-white text-primary-700 hover:bg-blue-50 shadow-2xl shadow-black/25 hover:shadow-3xl hover:scale-105 transition-all duration-300 border border-white/20 w-full sm:w-auto"
-                                icon={
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                    </svg>
-                                }
-                                iconPosition="right"
+                            <button
+                                className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full text-base font-bold text-white transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300/50"
+                                style={{
+                                    background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%)',
+                                    boxShadow: '0 4px 24px rgba(37, 99, 235, 0.45), 0 1px 0 rgba(255,255,255,0.15) inset',
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.transform = 'translateY(-3px)';
+                                    e.currentTarget.style.boxShadow = '0 12px 36px rgba(37, 99, 235, 0.55), 0 1px 0 rgba(255,255,255,0.15) inset';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 4px 24px rgba(37, 99, 235, 0.45), 0 1px 0 rgba(255,255,255,0.15) inset';
+                                }}
                             >
                                 Get Started
-                            </Button>
+                                <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
+                            </button>
                         </Link>
+
+                        {/* Learn More — ghost/outline */}
                         <a href="#about" className="w-full sm:w-auto">
-                            <Button
-                                variant="secondary"
-                                size="lg"
-                                className="bg-white/10 backdrop-blur-xl text-white border-2 border-white/40 hover:bg-white/20 hover:border-white/60 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 w-full sm:w-auto"
-                                icon={
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                }
-                                iconPosition="right"
+                            <button
+                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full text-base font-bold text-white transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30"
+                                style={{
+                                    background: 'rgba(255,255,255,0.08)',
+                                    backdropFilter: 'blur(12px)',
+                                    WebkitBackdropFilter: 'blur(12px)',
+                                    border: '2px solid rgba(255,255,255,0.45)',
+                                    boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.background = 'rgba(255,255,255,0.16)';
+                                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.7)';
+                                    e.currentTarget.style.transform = 'translateY(-3px)';
+                                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+                                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.45)';
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
+                                }}
                             >
                                 Learn More
-                            </Button>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
                         </a>
                     </div>
 
@@ -288,20 +377,20 @@ export default function HomePage() {
             </section>
 
             {/* Stats Section */}
-            <section className="relative -mt-16 sm:-mt-20 md:-mt-24 z-30 px-3 sm:px-4">
+            <section className="relative -mt-12 sm:-mt-16 md:-mt-20 lg:-mt-24 z-30 px-3 sm:px-4 md:px-6">
                 <div className="max-w-7xl mx-auto">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4 lg:gap-6">
                         {stats.map((stat, index) => (
                             <div
                                 key={index}
-                                className="group bg-white/95 backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-xl shadow-black/5 border border-white/20 hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-500 hover:-translate-y-2 hover:scale-105 cursor-default"
+                                className="group bg-white/95 backdrop-blur-2xl rounded-xl sm:rounded-2xl md:rounded-3xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-xl shadow-black/5 border border-white/20 hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-500 hover:-translate-y-1 sm:hover:-translate-y-2 hover:scale-105 cursor-default"
                                 style={{ animationDelay: `${index * 100}ms` }}
                             >
-                                <div className="text-2xl sm:text-3xl md:text-4xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-300">{stat.icon}</div>
-                                <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black bg-gradient-to-br from-primary-600 to-primary-700 bg-clip-text text-transparent mb-1 sm:mb-2">
+                                <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-1.5 sm:mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">{stat.icon}</div>
+                                <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black bg-gradient-to-br from-primary-600 to-primary-700 bg-clip-text text-transparent mb-1 sm:mb-1.5 md:mb-2">
                                     {stat.value}
                                 </div>
-                                <div className="text-xs sm:text-sm md:text-base text-gray-600 font-semibold">
+                                <div className="text-xs sm:text-sm md:text-base text-gray-600 font-semibold leading-tight">
                                     {stat.label}
                                 </div>
                             </div>
@@ -311,9 +400,9 @@ export default function HomePage() {
             </section>
 
             {/* About / Mission Section */}
-            <section id="about" className="py-16 sm:py-20 md:py-24 lg:py-32 px-4 sm:px-6 scroll-mt-16 sm:scroll-mt-20">
+            <section id="about" className="py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 px-4 sm:px-6 scroll-mt-16 sm:scroll-mt-20">
                 <div className="max-w-7xl mx-auto">
-                    <div className="grid md:grid-cols-2 gap-8 sm:gap-10 md:gap-12 lg:gap-20 items-center">
+                    <div className="grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-16 xl:gap-20 items-center">
                         {/* Text Content */}
                         <div className="space-y-4 sm:space-y-6 order-2 md:order-1">
                             <div className="inline-block">
@@ -398,9 +487,9 @@ export default function HomePage() {
             </section>
 
             {/* How It Works Section */}
-            <section id="how-it-works" className="py-16 sm:py-20 md:py-24 lg:py-32 px-4 sm:px-6 bg-gradient-to-br from-blue-50/80 via-indigo-50/60 to-purple-50/80 scroll-mt-16 sm:scroll-mt-20">
+            <section id="how-it-works" className="py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 px-4 sm:px-6 bg-gradient-to-br from-blue-50/80 via-indigo-50/60 to-purple-50/80 scroll-mt-16 sm:scroll-mt-20">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-12 sm:mb-16 md:mb-20">
+                    <div className="text-center mb-10 sm:mb-12 md:mb-16 lg:mb-20">
                         <div className="inline-block mb-4">
                             <span className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-100 to-purple-100 text-primary-700 text-sm font-bold px-4 py-2 rounded-full border border-primary-200">
                                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -417,7 +506,7 @@ export default function HomePage() {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 md:gap-8">
                         {howItWorksSteps.map((step, index) => (
                             <div key={index} className="relative group">
                                 {/* Connection Line (desktop only) */}
@@ -427,7 +516,7 @@ export default function HomePage() {
                                     </div>
                                 )}
 
-                                <div className="relative bg-white/90 backdrop-blur-xl rounded-3xl p-8 shadow-xl shadow-black/5 hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-500 hover:-translate-y-3 border border-white/50 h-full">
+                                <div className="relative bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-6 sm:p-7 md:p-8 shadow-xl shadow-black/5 hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-500 hover:-translate-y-1 sm:hover:-translate-y-2 border border-white/50 h-full">
                                     {/* Step Number Badge */}
                                     <div className="absolute -top-4 -left-4 w-14 h-14 bg-gradient-to-br from-primary-500 via-primary-600 to-blue-600 text-white text-xl font-black rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/30 group-hover:scale-110 transition-transform duration-300">
                                         {step.step}
@@ -442,7 +531,7 @@ export default function HomePage() {
                                     <h3 className="text-2xl font-black text-gray-900 mb-4">
                                         {step.title}
                                     </h3>
-                                    <p className="text-gray-600 leading-relaxed">
+                                    <p className="text-gray-700 leading-relaxed">
                                         {step.description}
                                     </p>
                                 </div>
@@ -453,9 +542,9 @@ export default function HomePage() {
             </section>
 
             {/* Features Section */}
-            <section id="features" className="py-16 sm:py-20 md:py-24 lg:py-32 px-4 sm:px-6 scroll-mt-16 sm:scroll-mt-20">
+            <section id="features" className="py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 px-4 sm:px-6 scroll-mt-16 sm:scroll-mt-20">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-12 sm:mb-16 md:mb-20">
+                    <div className="text-center mb-10 sm:mb-12 md:mb-16 lg:mb-20">
                         <div className="inline-block mb-4">
                             <span className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-100 to-indigo-100 text-primary-700 text-sm font-bold px-4 py-2 rounded-full border border-primary-200">
                                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -472,11 +561,11 @@ export default function HomePage() {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-6 md:gap-8">
                         {features.map((feature, index) => (
                             <div
                                 key={index}
-                                className="group relative bg-white/80 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 shadow-xl shadow-black/5 border border-white/50 hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-500 hover:-translate-y-2 overflow-hidden"
+                                className="group relative bg-white/80 backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-6 sm:p-7 md:p-8 shadow-xl shadow-black/5 border border-white/50 hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-500 hover:-translate-y-1 sm:hover:-translate-y-2 overflow-hidden"
                             >
                                 {/* Animated Gradient Background */}
                                 <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
@@ -493,7 +582,7 @@ export default function HomePage() {
                                 <h3 className="relative text-2xl font-black text-gray-900 mb-4 group-hover:text-primary-700 transition-colors duration-300">
                                     {feature.title}
                                 </h3>
-                                <p className="relative text-gray-600 leading-relaxed text-lg">
+                                <p className="relative text-gray-700 leading-relaxed text-lg">
                                     {feature.description}
                                 </p>
 
@@ -511,7 +600,7 @@ export default function HomePage() {
             </section>
 
             {/* Final CTA Section */}
-            <section className="relative py-16 sm:py-20 md:py-24 lg:py-32 px-4 sm:px-6 bg-gradient-to-br from-primary-600 via-primary-700 to-indigo-800 overflow-hidden">
+            <section className="relative py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 px-4 sm:px-6 bg-gradient-to-br from-primary-600 via-primary-700 to-indigo-800 overflow-hidden">
                 {/* Animated Background Pattern */}
                 <div className="absolute inset-0 opacity-20">
                     <div className="absolute inset-0" style={{
@@ -522,35 +611,35 @@ export default function HomePage() {
 
                 {/* Animated Blobs */}
                 <div className="absolute inset-0 opacity-30">
-                    <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-                    <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+                    <div className="absolute top-0 left-0 w-72 h-72 sm:w-96 sm:h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+                    <div className="absolute top-0 right-0 w-72 h-72 sm:w-96 sm:h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+                    <div className="absolute bottom-0 left-1/2 w-72 h-72 sm:w-96 sm:h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
                 </div>
 
                 <div className="max-w-5xl mx-auto text-center relative z-10">
-                    <div className="inline-block mb-4 sm:mb-6">
-                        <span className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-xl text-white text-xs sm:text-sm font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-full border border-white/30">
+                    <div className="inline-block mb-3 sm:mb-4 md:mb-6">
+                        <span className="inline-flex items-center gap-1.5 sm:gap-2 bg-white/20 backdrop-blur-xl text-white text-xs sm:text-sm font-bold px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 md:py-2.5 rounded-full border border-white/30">
                             <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
                             </svg>
                             Join Our Community
                         </span>
                     </div>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 sm:mb-8 leading-tight px-4">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-4 sm:mb-6 md:mb-8 leading-tight px-4">
                         Ready to Make an Impact?
                     </h2>
-                    <p className="text-lg sm:text-xl md:text-2xl text-blue-100/90 mb-10 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
+                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-100/90 mb-8 sm:mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
                         Join thousands of refugees, NGOs, and employers creating sustainable livelihoods and ethical opportunities together.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 px-4">
-                        <Link to="/login">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-5 px-4">
+                        <Link to="/login" className="w-full sm:w-auto">
                             <Button
                                 variant="primary"
                                 size="lg"
-                                className="bg-white text-primary-700 hover:bg-blue-50 shadow-2xl shadow-black/30 hover:shadow-3xl hover:scale-105 transition-all duration-300"
+                                className="bg-white text-primary-700 hover:bg-blue-50 shadow-2xl shadow-black/30 hover:shadow-3xl hover:scale-105 transition-all duration-300 focus:ring-4 focus:ring-white/50 w-full sm:w-auto"
                                 icon={
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                     </svg>
                                 }
@@ -559,13 +648,13 @@ export default function HomePage() {
                                 Get Started Today
                             </Button>
                         </Link>
-                        <a href="mailto:contact@sheltra.org">
+                        <a href="mailto:contact@sheltra.org" className="w-full sm:w-auto">
                             <Button
                                 variant="secondary"
                                 size="lg"
-                                className="bg-white/10 backdrop-blur-xl text-white border-2 border-white/40 hover:bg-white/20 hover:border-white/60 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                                className="bg-white text-primary-700 border-2 border-white hover:bg-gray-50 hover:border-gray-100 shadow-2xl shadow-black/30 hover:shadow-3xl hover:scale-105 transition-all duration-300 focus:ring-4 focus:ring-white/50 w-full sm:w-auto"
                                 icon={
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>
                                 }

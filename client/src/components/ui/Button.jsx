@@ -23,6 +23,7 @@ export default function Button({
         primary: 'bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 focus:ring-primary-500/50',
         secondary: 'bg-white border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 shadow-sm hover:shadow-md focus:ring-gray-300',
         ghost: 'bg-transparent hover:bg-gray-100 text-gray-700 hover:text-gray-900 focus:ring-gray-300',
+        black: 'bg-gray-900 hover:bg-black text-white shadow-lg shadow-gray-800/30 hover:shadow-xl hover:shadow-gray-800/40 focus:ring-gray-700/50',
         destructive: 'bg-gradient-to-r from-danger-600 to-danger-700 hover:from-danger-700 hover:to-danger-800 text-white shadow-lg shadow-danger-500/30 hover:shadow-xl hover:shadow-danger-500/40 focus:ring-danger-500/50',
         success: 'bg-gradient-to-r from-success-600 to-success-700 hover:from-success-700 hover:to-success-800 text-white shadow-lg shadow-success-500/30 hover:shadow-xl hover:shadow-success-500/40 focus:ring-success-500/50',
     };

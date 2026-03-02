@@ -11,66 +11,171 @@ export default function Home() {
   return (
     <div className="motion-safe-fade-in">
       {/* ─── 1. Hero Section ─── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-teal-50 dark:from-surface-darkBase dark:via-surface-darkBase dark:to-surface-darkBase py-20 lg:py-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section className="relative overflow-hidden min-h-[92vh] flex items-center -mt-20">
+        {/* Background image — displaced people on a hopeful journey */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&q=80')",
+          }}
+        />
+
+        {/* Multi-stop gradient overlay: dark left to translucent right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/97 via-blue-950/88 to-teal-900/60" />
+
+        {/* Ambient glow blobs */}
+        <div className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/3 w-80 h-80 rounded-full bg-blue-600/10 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 w-64 h-96 rounded-full bg-brand-primary/5 blur-3xl pointer-events-none" />
+
+        {/* Subtle dot-grid texture */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle, #ffffff 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+            {/* ── Left: Copy ── */}
             <div className="motion-safe-slide-up">
-              <h1 className="text-hero text-text-primary dark:text-text-darkPrimary leading-tight">
+              {/* Trust badge */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/15 border border-teal-400/25 text-teal-300 text-sm font-medium mb-7">
+                <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+                Trusted by 156 NGO Partners Worldwide
+              </div>
+
+              <h1 className="text-hero text-white leading-tight">
                 From Displacement to{' '}
-                <span className="text-brand-primary">Dignified Employment</span>
+                <span
+                  className="text-transparent bg-clip-text"
+                  style={{
+                    backgroundImage: 'linear-gradient(135deg, #5eead4 0%, #93c5fd 50%, #818cf8 100%)',
+                  }}
+                >
+                  Dignified Employment
+                </span>
               </h1>
-              <p className="mt-6 text-lg text-text-secondary dark:text-text-darkSecondary max-w-lg">
+
+              <p className="mt-6 text-lg text-slate-300 max-w-lg leading-relaxed">
                 Sheltra connects displaced individuals with verified opportunities through
                 skill-based matching, NGO verification, and ethical AI — creating trust-first
                 pathways to economic independence.
               </p>
-              <div className="mt-8 flex flex-wrap gap-4">
+
+              <div className="mt-9 flex flex-wrap gap-4">
                 <Button size="lg" onClick={() => navigate('/register')}>
                   Create Skill Profile
                 </Button>
-                <Button size="lg" variant="secondary" onClick={() => navigate('/register')}>
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  onClick={() => navigate('/register')}
+                >
                   Partner as NGO
                 </Button>
-                <Button size="lg" variant="ghost" onClick={() => {
-                  document.getElementById('impact')?.scrollIntoView({ behavior: 'smooth' });
-                }}>
+                <Button
+                  size="lg"
+                  variant="ghost"
+                  className="text-white border-white/25 hover:bg-white/8"
+                  onClick={() => {
+                    document.getElementById('impact')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
                   View Impact ↓
                 </Button>
               </div>
+
+              {/* Inline stats strip */}
+              <div className="mt-12 grid grid-cols-3 gap-6 pt-8 border-t border-white/10">
+                {[
+                  { value: '12K+', label: 'Profiles Created' },
+                  { value: '4,350', label: 'Jobs Matched' },
+                  { value: '156', label: 'NGO Partners' },
+                ].map((s) => (
+                  <div key={s.label}>
+                    <p className="text-2xl font-bold text-white">{s.value}</p>
+                    <p className="text-sm text-slate-400 mt-0.5">{s.label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Product preview card */}
+            {/* ── Right: Glassmorphism card stack ── */}
             <div className="motion-safe-slide-up" style={{ animationDelay: '200ms' }}>
-              <Card className="relative overflow-hidden">
+              {/* Main profile card */}
+              <div className="relative bg-white/8 backdrop-blur-xl border border-white/15 rounded-2xl p-6 shadow-2xl shadow-black/40">
                 <div className="absolute top-3 right-3">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-semantic-success-light text-green-700 dark:bg-green-900/40 dark:text-green-300">
-                    ✓ Verified Profile
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-500/20 border border-green-400/25 text-green-300">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    Verified Profile
                   </span>
                 </div>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-14 h-14 rounded-full bg-brand-primary/10 flex items-center justify-center text-xl font-bold text-brand-primary">
+
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-teal-500/30 to-blue-600/30 border border-teal-400/25 flex items-center justify-center text-xl font-bold text-teal-200">
                     AM
                   </div>
                   <div>
-                    <p className="font-semibold text-text-primary dark:text-text-darkPrimary">Amara M.</p>
-                    <p className="text-sm text-text-secondary dark:text-text-darkSecondary">Software Developer · Nairobi</p>
+                    <p className="font-semibold text-white">Amara M.</p>
+                    <p className="text-sm text-slate-400">Software Developer · Nairobi, Kenya</p>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-2 mb-4">
+
+                <div className="flex flex-wrap gap-2 mb-5">
                   {['Python', 'React', 'Data Analysis', 'Fluent English'].map((skill) => (
-                    <span key={skill} className="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-50 text-brand-primary dark:bg-blue-900/30 dark:text-blue-300">
+                    <span
+                      key={skill}
+                      className="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-500/15 border border-blue-400/20 text-blue-300"
+                    >
                       {skill}
                     </span>
                   ))}
                 </div>
-                <div className="flex items-center gap-2 text-sm text-semantic-success">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+
+                <div className="flex items-center gap-2 text-sm text-green-400">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
                   NGO-Verified · 3 Matching Opportunities
                 </div>
-              </Card>
+
+                {/* Quote */}
+                <div className="mt-5 pt-5 border-t border-white/10">
+                  <p className="text-sm text-slate-300 italic leading-relaxed">
+                    "Sheltra gave me a way to prove my skills after I lost everything.
+                    I found a job within three weeks."
+                  </p>
+                  <p className="mt-2 text-xs text-slate-500">— Amara M., Software Developer, Kenya</p>
+                </div>
+              </div>
+
+              {/* Floating notification badge */}
+              <div className="mt-3 ml-4 inline-flex items-center gap-3 bg-white/8 backdrop-blur-sm border border-white/15 rounded-xl px-4 py-3 shadow-lg">
+                <div className="w-9 h-9 rounded-full bg-brand-primary/30 border border-brand-primary/25 flex items-center justify-center text-base">
+                  🤝
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-white">New Match Found</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Tech Lead role · Berlin, Germany</p>
+                </div>
+                <span className="ml-2 w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+              </div>
             </div>
+
           </div>
         </div>
+
+        {/* Bottom fade transition into next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-surface-darkBase to-transparent" />
       </section>
 
       {/* ─── 2. Problem → Solution Bridge ─── */}

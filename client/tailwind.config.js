@@ -6,6 +6,9 @@ export default {
     ],
     theme: {
         extend: {
+            screens: {
+                'xs': '475px',
+            },
             colors: {
                 primary: {
                     50: '#f0f9ff',
@@ -53,6 +56,38 @@ export default {
             boxShadow: {
                 'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
                 'glass-lg': '0 16px 48px 0 rgba(31, 38, 135, 0.2)',
+                '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
+            },
+            animation: {
+                'blob': 'blob 7s infinite',
+                'gradient-x': 'gradient-x 3s ease infinite',
+                'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+                blob: {
+                    '0%': {
+                        transform: 'translate(0px, 0px) scale(1)',
+                    },
+                    '33%': {
+                        transform: 'translate(30px, -50px) scale(1.1)',
+                    },
+                    '66%': {
+                        transform: 'translate(-20px, 20px) scale(0.9)',
+                    },
+                    '100%': {
+                        transform: 'translate(0px, 0px) scale(1)',
+                    },
+                },
+                'gradient-x': {
+                    '0%, 100%': {
+                        'background-size': '200% 200%',
+                        'background-position': 'left center',
+                    },
+                    '50%': {
+                        'background-size': '200% 200%',
+                        'background-position': 'right center',
+                    },
+                },
             },
         },
     },

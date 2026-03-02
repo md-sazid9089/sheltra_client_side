@@ -78,6 +78,12 @@ export function Navbar() {
                   About
                 </Link>
                 <Link
+                  to="/contact"
+                  className="px-4 py-1.5 text-sm font-medium text-white/80 hover:text-white rounded-full hover:bg-white/10 transition-all"
+                >
+                  Contact
+                </Link>
+                <Link
                   to="/login"
                   className="px-4 py-1.5 text-sm font-medium text-white/80 hover:text-white rounded-full hover:bg-white/10 transition-all"
                 >
@@ -171,6 +177,13 @@ export function Navbar() {
                   onClick={() => setMobileOpen(false)}
                 >
                   About
+                </Link>
+                <Link
+                  to="/contact"
+                  className="block text-sm font-medium text-white/80 hover:text-white py-2 px-3 rounded-xl hover:bg-white/10 transition-all"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Contact
                 </Link>
                 <Link
                   to="/login"

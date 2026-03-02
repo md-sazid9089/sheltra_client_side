@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Button from '../components/ui/Button';
-import { Input } from '../components/ui/FormComponents';
-import Card from '../components/ui/Card';
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
@@ -44,131 +41,143 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-50">
-            {/* Navbar */}
-            <nav className="w-full px-4 sm:px-6 pt-4 sm:pt-5">
-                <div className="max-w-4xl mx-auto">
-                    <div className="bg-white/95 backdrop-blur-xl rounded-full shadow-md border border-gray-200/50 px-5 py-2.5 flex items-center justify-center">
-                        <Link
-                            to="/"
-                            className="flex items-center gap-2 px-4 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-full transition-all duration-200"
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                            </svg>
-                            Homepage
-                        </Link>
-                    </div>
-                </div>
-            </nav>
+        <div className="min-h-screen flex items-center justify-center p-6" style={{ background: '#0d1117' }}>
+            <div className="w-full max-w-md mx-4">
 
-            <div className="flex items-center justify-center p-8">
-                <div className="w-full max-w-md">
-                    {/* Logo */}
-                    <div className="text-center mb-8">
-                    <div className="inline-flex items-center gap-2 mb-6">
-                        <div className="w-12 h-12 bg-linear-to-br from-primary-600 to-primary-700 rounded-xl shadow-lg flex items-center justify-center">
-                            <span className="text-2xl font-bold text-white">S</span>
-                        </div>
-                        <span className="text-3xl font-bold bg-linear-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
-                            Sheltra
-                        </span>
-                    </div>
-                </div>
+                {/* Gradient-border card — teal → dark red */}
+                <div className="p-[1.5px] rounded-2xl" style={{ background: 'linear-gradient(145deg, #06b6d4 0%, #0891b2 30%, #7c3aed 65%, #991b1b 100%)' }}>
+                <div className="rounded-2xl p-8 sm:p-10" style={{ background: 'linear-gradient(160deg, #0f1f2e 0%, #111827 50%, #1a0f0f 100%)' }}>
 
-                {/* Forgot Password Card */}
-                <Card variant="glass" className="shadow-xl border border-gray-200/50">
-                    <div className="text-center mb-8">
-                        <div className="w-16 h-16 bg-linear-to-br from-primary-100 to-primary-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
-                        </div>
-                        <h2 className="text-3xl font-bold text-gray-900 mb-2">Forgot Password?</h2>
-                        <p className="text-gray-600">No worries, we'll send you reset instructions</p>
-                    </div>
-
-                    {/* Success Message */}
-                    {successMessage && (
-                        <div className="mb-6 p-4 bg-success-50 border border-success-200 rounded-xl flex items-start gap-3">
-                            <svg className="w-5 h-5 text-success-600 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                            </svg>
-                            <p className="text-sm text-success-700 font-medium">{successMessage}</p>
-                        </div>
-                    )}
-
-                    {/* Error Message */}
-                    {error && (
-                        <div className="mb-6 p-4 bg-danger-50 border border-danger-200 rounded-xl flex items-start gap-3">
-                            <svg className="w-5 h-5 text-danger-600 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                            </svg>
-                            <p className="text-sm text-danger-700 font-medium">{error}</p>
-                        </div>
-                    )}
-
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <Input
-                            label="Email Address"
-                            name="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => {
-                                setEmail(e.target.value);
-                                if (error) setError('');
-                            }}
-                            placeholder="your@email.com"
-                            error={error}
-                            required
-                            disabled={isLoading}
-                            icon={
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    {successMessage ? (
+                        /* ══ SUCCESS STATE ══ */
+                        <div className="text-center py-4">
+                            {/* Green check icon */}
+                            <div className="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mx-auto mb-5">
+                                <svg className="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                 </svg>
-                            }
-                        />
+                            </div>
+                            <h2 className="text-2xl font-bold text-white mb-2">Check Your Email</h2>
+                            <p className="text-sm text-gray-400 mb-6">{successMessage}</p>
 
-                        <Button
-                            type="submit"
-                            variant="primary"
-                            size="lg"
-                            fullWidth
-                            loading={isLoading}
-                            disabled={isLoading}
-                        >
-                            Send Reset Instructions
-                        </Button>
-                    </form>
+                            {/* Back to login */}
+                            <Link
+                                to="/login"
+                                className="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400/60 rounded"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                Back to Login
+                            </Link>
+                        </div>
+                    ) : (
+                        /* ══ FORM STATE ══ */
+                        <>
+                            {/* Header */}
+                            <div className="text-center mb-8">
+                                {/* Lock icon — orange accent */}
+                                <div className="w-14 h-14 rounded-full bg-orange-500/15 border border-orange-500/30 flex items-center justify-center mx-auto">
+                                    <svg className="w-7 h-7 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                                <h2 className="text-2xl font-bold text-white mt-4">Forgot Password?</h2>
+                                <p className="text-sm text-gray-400 mt-2">Enter your email and we'll send you a reset link</p>
+                            </div>
 
-                    {/* Back to Login Link */}
-                    <div className="mt-8 text-center">
-                        <Link to="/login" className="text-sm text-primary-600 hover:text-primary-700 font-medium inline-flex items-center gap-1.5 transition-colors">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                            </svg>
-                            Back to Login
-                        </Link>
-                    </div>
-                </Card>
+                            {/* Error */}
+                            {error && (
+                                <div className="mb-5 p-3 rounded-xl flex items-start gap-2.5 bg-red-500/10 border border-red-500/30">
+                                    <svg className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                    </svg>
+                                    <p className="text-sm font-medium text-red-400">{error}</p>
+                                </div>
+                            )}
 
-                {/* Footer Links */}
-                <div className="mt-8 text-center space-y-3">
-                    <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
-                        <a href="#" className="hover:text-gray-900 transition-colors">Help Center</a>
-                        <span>•</span>
-                        <a href="#" className="hover:text-gray-900 transition-colors">Privacy</a>
-                        <span>•</span>
-                        <a href="#" className="hover:text-gray-900 transition-colors">Terms</a>
-                    </div>
-                    <Link to="/" className="text-sm text-primary-600 hover:text-primary-700 font-medium inline-flex items-center gap-1.5 transition-colors">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {/* Form */}
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                {/* Email input */}
+                                <div>
+                                    <div
+                                        className={`flex items-center rounded-full overflow-hidden transition-all duration-200 focus-within:ring-1 focus-within:ring-cyan-400/60 ${error ? 'ring-1 ring-red-500' : ''}`}
+                                        style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${error ? 'rgba(239,68,68,0.7)' : 'rgba(255,255,255,0.12)'}` }}
+                                        onFocusCapture={e => { if (!error) e.currentTarget.style.borderColor = 'rgba(6,182,212,0.7)'; }}
+                                        onBlurCapture={e => { e.currentTarget.style.borderColor = error ? 'rgba(239,68,68,0.7)' : 'rgba(255,255,255,0.12)'; }}
+                                    >
+                                        <span className="pl-4 flex-shrink-0 text-gray-500" aria-hidden="true">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                            </svg>
+                                        </span>
+                                        <div className="flex-1 px-3 py-2.5">
+                                            <label htmlFor="email" className="block text-xs font-medium text-gray-400 mb-0.5">Email Address</label>
+                                            <input
+                                                id="email"
+                                                name="email"
+                                                type="email"
+                                                value={email}
+                                                onChange={(e) => {
+                                                    setEmail(e.target.value);
+                                                    if (error) setError('');
+                                                }}
+                                                placeholder="your@email.com"
+                                                disabled={isLoading}
+                                                required
+                                                aria-invalid={!!error}
+                                                aria-describedby={error ? 'email-error' : undefined}
+                                                className="w-full text-sm text-white placeholder-gray-600 outline-none bg-transparent"
+                                                style={{ colorScheme: 'dark' }}
+                                            />
+                                        </div>
+                                    </div>
+                                    {error && <p id="email-error" className="mt-1.5 text-xs text-red-400" role="alert">{error}</p>}
+                                </div>
+
+                                {/* Submit button */}
+                                <button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="w-full py-3 rounded-full font-bold text-white text-base tracking-wide bg-gradient-to-r from-orange-500 to-orange-400 hover:brightness-110 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed shadow-[0_4px_24px_rgba(249,115,22,0.35)] focus:outline-none focus:ring-2 focus:ring-orange-400/60"
+                                >
+                                    {isLoading ? (
+                                        <>
+                                            <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                            </svg>
+                                            Sending...
+                                        </>
+                                    ) : 'Send Reset Link'}
+                                </button>
+                            </form>
+
+                            {/* Back to login link */}
+                            <p className="mt-6 text-center text-sm text-gray-500">
+                                Remember your password?{' '}
+                                <Link
+                                    to="/login"
+                                    className="font-semibold text-cyan-400 hover:text-cyan-300 transition-colors duration-200"
+                                >
+                                    Back to Login
+                                </Link>
+                            </p>
+                        </>
+                    )}
+                </div>
+                </div>
+
+                {/* Back to home */}
+                <div className="mt-5 text-center">
+                    <Link to="/" className="inline-flex items-center gap-1.5 text-xs transition-colors" style={{ color: '#475569' }}
+                        onMouseEnter={e => { e.currentTarget.style.color = '#94a3b8'; }}
+                        onMouseLeave={e => { e.currentTarget.style.color = '#475569'; }}>
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
                         Back to Home
                     </Link>
-                </div>
                 </div>
             </div>
         </div>

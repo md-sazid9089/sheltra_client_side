@@ -5,8 +5,9 @@ import { getUserRole } from '../utils/tokenUtils';
 import { getMenuItemsByRole } from '../config/menuConfig';
 
 /**
- * AppShell layout component with modern glassmorphism design
- * Capsule-style topbar with responsive sidebar
+ * AppShell – dark sidebar + topbar layout shell.
+ * Desktop: w-64 sidebar | Tablet: w-16 icon sidebar | Mobile: hamburger overlay.
+ * All inner pages inherit this shell automatically.
  */
 export default function AppShell({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -14,27 +15,27 @@ export default function AppShell({ children }) {
     const menuItems = getMenuItemsByRole(userRole);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-            {/* Modern Topbar */}
-            <Topbar 
-                onMenuClick={() => setSidebarOpen(!sidebarOpen)} 
+        <div className="min-h-screen" style={{ background: '#0b1120' }}>
+            {/* Sidebar (fixed, handles its own responsive variants) */}
+            <Sidebar
+                isOpen={sidebarOpen}
+                setIsOpen={setSidebarOpen}
                 menuItems={menuItems}
-                sidebarOpen={sidebarOpen}
             />
 
-            {/* Mobile Sidebar */}
-            <Sidebar 
-                isOpen={sidebarOpen} 
-                setIsOpen={setSidebarOpen} 
-                menuItems={menuItems} 
-            />
+            {/* Content wrapper — offset by sidebar width */}
+            <div className="md:ml-16 lg:ml-64 flex flex-col min-h-screen">
+                {/* Topbar (sticky inside content column) */}
+                <Topbar
+                    onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+                    menuItems={menuItems}
+                />
 
-            {/* Main Content */}
-            <main className="pt-24 pb-8 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-7xl mx-auto">
+                {/* Main content */}
+                <main className="flex-1 p-6 lg:p-8">
                     {children}
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
     );
 }

@@ -135,7 +135,7 @@ export default function HomePage() {
                 className="fixed left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 transition-all duration-300"
                 style={{ top: scrolled ? '12px' : '20px' }}
             >
-                <div className="max-w-7xl mx-auto">
+                <div className="max-w-7xl mx-auto translate-x-12 sm:translate-x-16 lg:translate-x-24">
                     <div
                         className="flex items-center justify-between rounded-full transition-all duration-300"
                         style={{

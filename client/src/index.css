@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-surface-base text-text-primary font-sans;
+  }
+
+  .dark body,
+  body.dark-body {
+    @apply bg-surface-darkBase text-text-darkPrimary;
+  }
+}
+
+@layer utilities {
+  /* Reduced-motion safe animation classes */
+  .motion-safe-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  .motion-safe-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .motion-safe-fade-in,
+    .motion-safe-slide-up {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+
+  /* Hover lift for interactive elements */
+  .hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hover-lift:hover {
+      transform: none !important;
+    }
+  }
+
+  /* Focus ring utility */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 dark:focus:ring-offset-surface-darkBase;
+  }
+
+  /* Scrollbar styling */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-border-light dark:bg-border-dark rounded-full;
+  }
+}

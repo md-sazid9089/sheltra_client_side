@@ -104,7 +104,7 @@ export default function Login() {
           </p>
           <div className="grid grid-cols-2 gap-2">
             {[
-              { label: 'Refugee', email: 'refugee@sheltra.dev', color: 'bg-blue-50 dark:bg-blue-900/30 text-brand-primary' },
+              { label: 'Refugee', email: 'refugee@sheltra.dev', color: 'bg-cyan-50 dark:bg-cyan-900/30 text-brand-primary' },
               { label: 'NGO', email: 'ngo@sheltra.dev', color: 'bg-teal-50 dark:bg-teal-900/30 text-brand-accent' },
               { label: 'Employer', email: 'employer@sheltra.dev', color: 'bg-amber-50 dark:bg-amber-900/30 text-brand-amber' },
               { label: 'Admin', email: 'admin@sheltra.dev', color: 'bg-red-50 dark:bg-red-900/30 text-semantic-error' },

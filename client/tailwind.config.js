@@ -6,8 +6,8 @@ export default {
     extend: {
       colors: {
         brand: {
-          primary: '#2563EB',
-          'primary-hover': '#1D4ED8',
+          primary: '#06B6D4',
+          'primary-hover': '#0891B2',
           accent: '#0D9488',
           'accent-hover': '#0F766E',
           amber: '#F59E0B',
@@ -38,8 +38,8 @@ export default {
           'warning-light': '#FEF3C7',
           error: '#EF4444',
           'error-light': '#FEE2E2',
-          info: '#3B82F6',
-          'info-light': '#DBEAFE',
+          info: '#06B6D4',
+          'info-light': '#CFFAFE',
         },
       },
       spacing: {

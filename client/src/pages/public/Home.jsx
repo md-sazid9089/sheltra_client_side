@@ -22,11 +22,11 @@ export default function Home() {
         />
 
         {/* Multi-stop gradient overlay: dark left to translucent right */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/97 via-blue-950/88 to-teal-900/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/97 via-cyan-950/88 to-teal-900/60" />
 
         {/* Ambient glow blobs */}
         <div className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/3 w-80 h-80 rounded-full bg-blue-600/10 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/3 w-80 h-80 rounded-full bg-cyan-600/10 blur-3xl pointer-events-none" />
         <div className="absolute top-1/2 -translate-y-1/2 left-0 w-64 h-96 rounded-full bg-brand-primary/5 blur-3xl pointer-events-none" />
 
         {/* Subtle dot-grid texture */}
@@ -56,7 +56,7 @@ export default function Home() {
                 <span
                   className="text-transparent bg-clip-text"
                   style={{
-                    backgroundImage: 'linear-gradient(135deg, #5eead4 0%, #93c5fd 50%, #818cf8 100%)',
+                    backgroundImage: 'linear-gradient(135deg, #5eead4 0%, #67e8f9 50%, #22d3ee 100%)',
                   }}
                 >
                   Dignified Employment
@@ -69,17 +69,43 @@ export default function Home() {
                 pathways to economic independence.
               </p>
 
-              <div className="mt-9 flex flex-wrap gap-4">
-                <Button size="lg" onClick={() => navigate('/register')}>
-                  Create Skill Profile
-                </Button>
-                <Button
-                  size="lg"
-                  variant="secondary"
+              <div className="mt-9 flex flex-wrap gap-4 items-center">
+                {/* Create Skill Profile — cyan sweep */}
+                <button
                   onClick={() => navigate('/register')}
+                  className="flex justify-center gap-2 items-center shadow-xl text-base lg:font-semibold isolation-auto border-white/30 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-cyan-500 hover:text-white before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-3 overflow-hidden border-2 rounded-full group text-white bg-white/10 backdrop-blur-sm"
+                >
+                  Create Skill Profile
+                  <svg
+                    className="w-8 h-8 justify-end group-hover:rotate-90 group-hover:bg-white/20 text-white ease-linear duration-300 rounded-full border border-white/40 group-hover:border-none p-2 rotate-45"
+                    viewBox="0 0 16 19"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7 18C7 18.5523 7.44772 19 8 19C8.55228 19 9 18.5523 9 18H7ZM8.70711 0.292893C8.31658 -0.0976311 7.68342 -0.0976311 7.29289 0.292893L0.928932 6.65685C0.538408 7.04738 0.538408 7.68054 0.928932 8.07107C1.31946 8.46159 1.95262 8.46159 2.34315 8.07107L8 2.41421L13.6569 8.07107C14.0474 8.46159 14.6805 8.46159 15.0711 8.07107C15.4616 7.68054 15.4616 7.04738 15.0711 6.65685L8.70711 0.292893ZM9 18L9 1H7L7 18H9Z"
+                      className="fill-white group-hover:fill-white"
+                    />
+                  </svg>
+                </button>
+
+                {/* Partner as NGO — teal sweep */}
+                <button
+                  onClick={() => navigate('/register')}
+                  className="flex justify-center gap-2 items-center shadow-xl text-base lg:font-semibold isolation-auto border-teal-400/40 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-teal-500 hover:text-white before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-3 overflow-hidden border-2 rounded-full group text-teal-300 bg-teal-500/10 backdrop-blur-sm"
                 >
                   Partner as NGO
-                </Button>
+                  <svg
+                    className="w-8 h-8 justify-end group-hover:rotate-90 group-hover:bg-white/20 text-teal-300 ease-linear duration-300 rounded-full border border-teal-400/50 group-hover:border-none p-2 rotate-45"
+                    viewBox="0 0 16 19"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7 18C7 18.5523 7.44772 19 8 19C8.55228 19 9 18.5523 9 18H7ZM8.70711 0.292893C8.31658 -0.0976311 7.68342 -0.0976311 7.29289 0.292893L0.928932 6.65685C0.538408 7.04738 0.538408 7.68054 0.928932 8.07107C1.31946 8.46159 1.95262 8.46159 2.34315 8.07107L8 2.41421L13.6569 8.07107C14.0474 8.46159 14.6805 8.46159 15.0711 8.07107C15.4616 7.68054 15.4616 7.04738 15.0711 6.65685L8.70711 0.292893ZM9 18L9 1H7L7 18H9Z"
+                      className="fill-teal-300 group-hover:fill-white"
+                    />
+                  </svg>
+                </button>
+
                 <Button
                   size="lg"
                   variant="ghost"
@@ -121,7 +147,7 @@ export default function Home() {
                 </div>
 
                 <div className="flex items-center gap-4 mb-5">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-teal-500/30 to-blue-600/30 border border-teal-400/25 flex items-center justify-center text-xl font-bold text-teal-200">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-teal-500/30 to-cyan-600/30 border border-teal-400/25 flex items-center justify-center text-xl font-bold text-teal-200">
                     AM
                   </div>
                   <div>
@@ -134,7 +160,7 @@ export default function Home() {
                   {['Python', 'React', 'Data Analysis', 'Fluent English'].map((skill) => (
                     <span
                       key={skill}
-                      className="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-500/15 border border-blue-400/20 text-blue-300"
+                      className="px-2.5 py-1 text-xs font-medium rounded-full bg-cyan-500/15 border border-cyan-400/20 text-cyan-300"
                     >
                       {skill}
                     </span>
@@ -194,7 +220,7 @@ export default function Home() {
               { icon: '🔒', title: 'Trust Deficit', desc: 'Employers lack confidence without established identity verification.' },
               { icon: '🌍', title: 'Fragmented Access', desc: 'Scattered resources across NGOs, governments, and private sector.' },
             ].map((item) => (
-              <Card key={item.title} className="text-center border-semantic-error/20 bg-red-50/50 dark:bg-red-900/10 dark:border-red-900/30">
+              <Card key={item.title} className="text-center border-l-4 border-l-red-500/70">
                 <div className="text-3xl mb-3">{item.icon}</div>
                 <h3 className="font-semibold text-text-primary dark:text-text-darkPrimary mb-2">{item.title}</h3>
                 <p className="text-sm text-text-secondary dark:text-text-darkSecondary">{item.desc}</p>
@@ -205,7 +231,7 @@ export default function Home() {
           {/* Divider */}
           <div className="flex items-center gap-4 my-8">
             <div className="flex-1 h-px bg-border-light dark:bg-border-dark" />
-            <span className="text-sm font-semibold text-brand-primary bg-blue-50 dark:bg-blue-900/30 px-4 py-1.5 rounded-full">
+            <span className="text-sm font-semibold text-brand-primary bg-cyan-50 dark:bg-cyan-900/30 px-4 py-1.5 rounded-full">
               Sheltra's Solution ↓
             </span>
             <div className="flex-1 h-px bg-border-light dark:bg-border-dark" />
@@ -218,7 +244,7 @@ export default function Home() {
               { icon: '🤝', title: 'Ethical AI Matching', desc: 'Transparent, bias-aware algorithms match skills to opportunities with full audit trails.' },
               { icon: '🌐', title: 'Unified Platform', desc: 'One hub connecting refugees, NGOs, employers, and government partners.' },
             ].map((item) => (
-              <Card key={item.title} hover className="text-center border-semantic-success/20 bg-green-50/50 dark:bg-green-900/10 dark:border-green-900/30">
+              <Card key={item.title} hover className="text-center border-l-4 border-l-emerald-500/70">
                 <div className="text-3xl mb-3">{item.icon}</div>
                 <h3 className="font-semibold text-text-primary dark:text-text-darkPrimary mb-2">{item.title}</h3>
                 <p className="text-sm text-text-secondary dark:text-text-darkSecondary">{item.desc}</p>
@@ -392,14 +418,14 @@ export default function Home() {
           <h2 className="text-section-title text-white mb-4">
             Ready to Build Dignified Pathways?
           </h2>
-          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-cyan-100 text-lg mb-8 max-w-2xl mx-auto">
             Whether you are a displaced individual, an NGO partner, or an employer — Sheltra
             helps you create impact that matters.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button
               size="lg"
-              className="bg-white text-brand-primary hover:bg-blue-50"
+              className="bg-white text-brand-primary hover:bg-cyan-50"
               onClick={() => navigate('/register')}
             >
               Get Started Today

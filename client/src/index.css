@@ -17,6 +17,24 @@
   }
 }
 
+/* Global keyframes — kept outside @layer to avoid PostCSS parse errors */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes btn-shine {
+  0%   { left: -100px; }
+  60%  { left: 100%; }
+  100% { left: 100%; }
+}
+@keyframes fc-rotate {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
 @layer utilities {
   /* Reduced-motion safe animation classes */
   .motion-safe-fade-in {
@@ -66,3 +84,186 @@
     @apply bg-border-light dark:bg-border-dark rounded-full;
   }
 }
+
+/* ─────────────────────────────────────────────────────
+   Shimmer CTA button
+   ───────────────────────────────────────────────────── */
+.btn-shimmer {
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    padding-block: 0.5rem;
+    padding-inline: 1.25rem;
+    background-color: #06B6D4;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    outline: none;
+    overflow: hidden;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .btn-shimmer .btn-shimmer-icon {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease-in-out;
+    flex-shrink: 0;
+  }
+
+  .btn-shimmer:hover {
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .btn-shimmer:hover .btn-shimmer-icon {
+    transform: translateX(4px);
+  }
+
+  .btn-shimmer::before {
+    content: "";
+    position: absolute;
+    width: 100px;
+    height: 100%;
+    background-image: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0) 30%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0) 70%
+    );
+    top: 0;
+    left: -100px;
+    opacity: 0.6;
+  }
+
+  .btn-shimmer:hover::before {
+    animation: btn-shine 1.5s ease-out infinite;
+  }
+
+  /* ── Fancy card with rotating cyan border ── */
+  .fancy-card {
+    --fc-primary:  hsl(189, 92%, 58%);
+    --fc-primary-deep: hsl(189, 99%, 26%);
+    --fc-primary-dark: hsl(188, 94%, 13%);
+    --fc-bg:       hsla(240, 15%, 9%, 1);
+    --fc-line:     hsl(240, 9%, 17%);
+    --fc-white:    hsl(0, 0%, 100%);
+    --fc-para:     hsl(0, 0%, 83%);
+
+    position: relative;
+    background-color: var(--fc-bg);
+    background-image:
+      radial-gradient(at 88% 40%,  var(--fc-bg) 0px, transparent 85%),
+      radial-gradient(at 49% 30%,  var(--fc-bg) 0px, transparent 85%),
+      radial-gradient(at 14% 26%,  var(--fc-bg) 0px, transparent 85%),
+      radial-gradient(at 0%  64%,  var(--fc-primary-deep) 0px, transparent 85%),
+      radial-gradient(at 41% 94%,  hsl(189, 97%, 36%) 0px, transparent 85%),
+      radial-gradient(at 100% 99%, var(--fc-primary-dark) 0px, transparent 85%);
+    border-radius: 1rem;
+    box-shadow: 0px -16px 24px 0px rgba(255, 255, 255, 0.12) inset;
+    overflow: hidden;
+    color: var(--fc-white);
+  }
+
+  /* rotating gradient border */
+  .fancy-card::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+    inset: -1px;
+    border-radius: 1rem;
+    padding: 1px;
+    background: linear-gradient(0deg, hsl(0,0%,100%) -50%, hsl(0,0%,30%) 100%);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  /* spinning cyan sweep */
+  .fancy-card::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 10rem;
+    background-image: linear-gradient(
+      0deg,
+      hsla(0,0%,100%,0) 0%,
+      hsl(189,100%,50%) 40%,
+      hsl(189,100%,50%) 60%,
+      hsla(0,0%,40%,0) 100%
+    );
+    transform-origin: center center;
+    transform: translate(-50%, -50%) rotate(0deg);
+    animation: fc-rotate 8s linear infinite;
+    opacity: 0.15;
+    border-radius: 9999px;
+  }
+
+  /* ensure card children sit above the pseudo layers */
+  .fancy-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* text colour overrides for content inside fancy-card */
+  .fancy-card .fancy-title    { color: var(--fc-white); }
+  .fancy-card .fancy-subtitle { color: var(--fc-para);  font-size: 0.875rem; }
+  .fancy-card hr              { background-color: var(--fc-line); border: none; height: 1px; }
+
+  /* check icon badge */
+  .fancy-card .fancy-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    background-color: var(--fc-primary);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .fancy-card .fancy-check svg { width: 0.8rem; height: 0.8rem; fill: hsl(240,15%,9%); }
+
+  /* bottom CTA button inside card */
+  .fancy-card .fancy-card-btn { cursor: pointer; padding: 0.55rem 1rem; width: 100%; background-image: linear-gradient(0deg, hsl(189,92%,58%), hsl(189,99%,26%) 100%); font-size: 0.8rem; font-weight: 600; color: #fff; border: 0; border-radius: 9999px; box-shadow: inset 0 -2px 25px -4px rgba(255,255,255,0.3); transition: opacity 0.2s; }
+  .fancy-card .fancy-card-btn:hover { opacity: 0.85; }
+
+  /* Force readable text inside always-dark fancy-card */
+  .fancy-card,
+  .fancy-card p,
+  .fancy-card h1,
+  .fancy-card h2,
+  .fancy-card h3,
+  .fancy-card h4,
+  .fancy-card span,
+  .fancy-card li { color: hsl(0,0%,93%) !important; }
+
+  .fancy-card .text-text-secondary  { color: hsl(0,0%,70%) !important; }
+  .fancy-card .text-text-muted       { color: hsl(0,0%,55%) !important; }
+  .fancy-card .text-brand-primary    { color: hsl(189,92%,62%) !important; }
+  .fancy-card .text-brand-accent     { color: hsl(174,72%,50%) !important; }
+  .fancy-card .text-brand-amber      { color: hsl(38,92%,60%) !important; }
+  .fancy-card .text-semantic-success { color: hsl(152,60%,55%) !important; }
+  .fancy-card .text-semantic-error   { color: hsl(0,85%,65%) !important; }
+
+  /* Neutralise any leftover light backgrounds inside fancy-card */
+  .fancy-card [class*="bg-white"],
+  .fancy-card [class*="bg-surface-card"],
+  .fancy-card [class*="bg-gray"] {
+    background-color: rgba(255,255,255,0.06) !important;
+  }
+  .fancy-card [class*="border-border"] {
+    border-color: rgba(255,255,255,0.1) !important;
+  }

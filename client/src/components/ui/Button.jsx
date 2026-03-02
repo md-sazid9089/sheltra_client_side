@@ -4,7 +4,7 @@ const variants = {
   primary:
     'bg-brand-primary text-white hover:bg-brand-primary-hover focus-ring',
   secondary:
-    'bg-white text-brand-primary border border-brand-primary hover:bg-blue-50 dark:bg-surface-darkCard dark:text-brand-accent dark:border-brand-accent dark:hover:bg-surface-darkBase focus-ring',
+    'bg-white text-brand-primary border border-brand-primary hover:bg-cyan-50 dark:bg-surface-darkCard dark:text-brand-accent dark:border-brand-accent dark:hover:bg-surface-darkBase focus-ring',
   accent:
     'bg-brand-accent text-white hover:bg-brand-accent-hover focus-ring',
   amber:

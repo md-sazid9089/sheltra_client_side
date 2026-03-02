@@ -53,7 +53,7 @@ export function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 font-bold text-lg text-white shrink-0">
             <svg className="w-7 h-7" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="64" height="64" rx="14" fill="#3B82F6" />
+              <rect width="64" height="64" rx="14" fill="#06B6D4" />
               <path d="M20 44V26a12 12 0 0 1 24 0v18" stroke="#fff" strokeWidth="4" strokeLinecap="round" />
               <circle cx="32" cy="22" r="4" fill="#0D9488" />
             </svg>
@@ -65,6 +65,18 @@ export function Navbar() {
             {!isAuthenticated ? (
               <>
                 <Link
+                  to="/"
+                  className="px-4 py-1.5 text-sm font-medium text-white/80 hover:text-white rounded-full hover:bg-white/10 transition-all"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/about"
+                  className="px-4 py-1.5 text-sm font-medium text-white/80 hover:text-white rounded-full hover:bg-white/10 transition-all"
+                >
+                  About
+                </Link>
+                <Link
                   to="/login"
                   className="px-4 py-1.5 text-sm font-medium text-white/80 hover:text-white rounded-full hover:bg-white/10 transition-all"
                 >
@@ -72,9 +84,12 @@ export function Navbar() {
                 </Link>
                 <button
                   onClick={() => navigate('/register')}
-                  className="ml-1 px-5 py-1.5 text-sm font-semibold rounded-full bg-white text-slate-900 hover:bg-white/90 transition-all shadow-sm"
+                  className="btn-shimmer ml-1"
                 >
                   Get Started
+                  <svg className="btn-shimmer-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z" clipRule="evenodd" />
+                  </svg>
                 </button>
               </>
             ) : (
@@ -143,6 +158,20 @@ export function Navbar() {
             {!isAuthenticated ? (
               <>
                 <Link
+                  to="/"
+                  className="block text-sm font-medium text-white/80 hover:text-white py-2 px-3 rounded-xl hover:bg-white/10 transition-all"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/about"
+                  className="block text-sm font-medium text-white/80 hover:text-white py-2 px-3 rounded-xl hover:bg-white/10 transition-all"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  About
+                </Link>
+                <Link
                   to="/login"
                   className="block text-sm font-medium text-white/80 hover:text-white py-2 px-3 rounded-xl hover:bg-white/10 transition-all"
                   onClick={() => setMobileOpen(false)}
@@ -150,10 +179,13 @@ export function Navbar() {
                   Login
                 </Link>
                 <button
-                  className="w-full text-left text-sm font-semibold text-slate-900 bg-white hover:bg-white/90 py-2 px-3 rounded-xl transition-all"
+                  className="btn-shimmer w-full justify-center"
                   onClick={() => { navigate('/register'); setMobileOpen(false); }}
                 >
                   Get Started
+                  <svg className="btn-shimmer-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z" clipRule="evenodd" />
+                  </svg>
                 </button>
               </>
             ) : (

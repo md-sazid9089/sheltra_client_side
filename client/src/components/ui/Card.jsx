@@ -4,7 +4,7 @@ export function Card({ children, className, hover = false, ...props }) {
   return (
     <div
       className={cn(
-        'bg-surface-card dark:bg-surface-darkCard rounded-card border border-border-light dark:border-border-dark shadow-card p-6',
+        'fancy-card p-6',
         hover && 'hover-lift cursor-pointer',
         'motion-safe-fade-in',
         className

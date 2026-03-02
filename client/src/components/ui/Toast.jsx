@@ -7,7 +7,7 @@ const toastVariants = {
   success: 'border-semantic-success bg-semantic-success-light dark:bg-green-900/40 text-green-800 dark:text-green-200',
   error: 'border-semantic-error bg-semantic-error-light dark:bg-red-900/40 text-red-800 dark:text-red-200',
   warning: 'border-semantic-warning bg-semantic-warning-light dark:bg-amber-900/40 text-amber-800 dark:text-amber-200',
-  info: 'border-semantic-info bg-semantic-info-light dark:bg-blue-900/40 text-blue-800 dark:text-blue-200',
+  info: 'border-semantic-info bg-semantic-info-light dark:bg-cyan-900/40 text-cyan-800 dark:text-cyan-200',
 };
 
 function ToastItem({ toast, onDismiss }) {

@@ -6,16 +6,16 @@ export function StatCard({ label, value, icon, trend, trendLabel, className }) {
   return (
     <div
       className={cn(
-        'bg-surface-card dark:bg-surface-darkCard rounded-card border border-border-light dark:border-border-dark shadow-card p-5 hover-lift motion-safe-fade-in',
+        'fancy-card rounded-card p-5 hover-lift motion-safe-fade-in',
         className
       )}
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-text-secondary dark:text-text-darkSecondary mb-1">
+          <p className="text-sm mb-1" style={{ color: 'hsl(0,0%,70%)' }}>
             {label}
           </p>
-          <p className="text-2xl font-bold text-text-primary dark:text-text-darkPrimary">
+          <p className="text-2xl font-bold text-white">
             {value}
           </p>
           {trendLabel && (
@@ -25,7 +25,7 @@ export function StatCard({ label, value, icon, trend, trendLabel, className }) {
           )}
         </div>
         {icon && (
-          <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-brand-primary">
+          <div className="p-2.5 rounded-xl bg-white/10 text-cyan-300">
             {icon}
           </div>
         )}

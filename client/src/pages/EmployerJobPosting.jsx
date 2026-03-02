@@ -143,8 +143,6 @@ export default function EmployerJobPosting() {
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1500));
 
-            console.log('Job Posting Data:', payload);
-
             setSuccessMessage(`${formData.type} posted successfully! Redirecting...`);
 
             // Redirect to employer job postings list after 2 seconds

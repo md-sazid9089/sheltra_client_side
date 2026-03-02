@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getUserInfo } from '../utils/tokenUtils';
 import { validateCompanyProfile } from '../utils/profileValidation';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import { Input, Select, Textarea } from '../components/ui/FormComponents';
 
 const INDUSTRIES = [
     'Technology',
@@ -50,15 +53,12 @@ export default function EmployerOnboarding() {
         description: '',
     });
 
-    // Handle input change
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
             [name]: value,
         }));
-
-        // Clear error for this field
         if (formErrors[name]) {
             setFormErrors(prev => ({
                 ...prev,
@@ -67,13 +67,11 @@ export default function EmployerOnboarding() {
         }
     };
 
-    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSuccessMessage('');
         setErrorMessage('');
 
-        // Validate form
         const errors = validateCompanyProfile(formData);
         if (Object.keys(errors).length > 0) {
             setFormErrors(errors);
@@ -83,20 +81,9 @@ export default function EmployerOnboarding() {
         setIsLoading(true);
 
         try {
-            // API call: POST /api/employer/profile
-            // const response = await axios.post('/api/employer/profile', formData);
-
-            // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1500));
-
-            console.log('Company Profile Data:', formData);
-
             setSuccessMessage('Company profile created successfully! Redirecting...');
-
-            // Redirect to employer dashboard (talent pool) after 2 seconds
-            setTimeout(() => {
-                navigate('/talent-pool');
-            }, 2000);
+            setTimeout(() => navigate('/talent-pool'), 2000);
         } catch (error) {
             setErrorMessage(
                 error.response?.data?.message ||
@@ -106,312 +93,133 @@ export default function EmployerOnboarding() {
         }
     };
 
-    // Form input component
-    const FormInput = ({ label, name, type = 'text', required = false, error, ...props }) => (
-        <div>
-            <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-2">
-                {label}
-                {required && <span className="text-red-500 ml-1">*</span>}
-            </label>
-            <input
-                id={name}
-                name={name}
-                type={type}
-                value={formData[name]}
-                onChange={handleInputChange}
-                disabled={isLoading}
-                className={`w-full px-4 py-2 rounded-lg border-2 transition-colors focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed ${
-                    error
-                        ? 'border-red-500 bg-red-50'
-                        : 'border-gray-300 bg-white focus:border-indigo-500'
-                }`}
-                {...props}
-            />
-            {error && (
-                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            fillRule="evenodd"
-                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                            clipRule="evenodd"
-                        />
-                    </svg>
-                    {error}
-                </p>
-            )}
-        </div>
-    );
-
-    // Form select component
-    const FormSelect = ({ label, name, options, required = false, error, placeholder, ...props }) => (
-        <div>
-            <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-2">
-                {label}
-                {required && <span className="text-red-500 ml-1">*</span>}
-            </label>
-            <select
-                id={name}
-                name={name}
-                value={formData[name]}
-                onChange={handleInputChange}
-                disabled={isLoading}
-                className={`w-full px-4 py-2 rounded-lg border-2 transition-colors focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed ${
-                    error
-                        ? 'border-red-500 bg-red-50'
-                        : 'border-gray-300 bg-white focus:border-indigo-500'
-                }`}
-                {...props}
-            >
-                <option value="">{placeholder || `Select ${label.toLowerCase()}`}</option>
-                {options.map((option) => (
-                    <option 
-                        key={typeof option === 'string' ? option : option.value} 
-                        value={typeof option === 'string' ? option : option.value}
-                    >
-                        {typeof option === 'string' ? option : option.label}
-                    </option>
-                ))}
-            </select>
-            {error && (
-                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            fillRule="evenodd"
-                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                            clipRule="evenodd"
-                        />
-                    </svg>
-                    {error}
-                </p>
-            )}
-        </div>
-    );
-
-    // Form textarea component
-    const FormTextarea = ({ label, name, required = false, error, ...props }) => (
-        <div>
-            <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-2">
-                {label}
-                {required && <span className="text-red-500 ml-1">*</span>}
-            </label>
-            <textarea
-                id={name}
-                name={name}
-                value={formData[name]}
-                onChange={handleInputChange}
-                disabled={isLoading}
-                className={`w-full px-4 py-2 rounded-lg border-2 transition-colors focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed ${
-                    error
-                        ? 'border-red-500 bg-red-50'
-                        : 'border-gray-300 bg-white focus:border-indigo-500'
-                }`}
-                rows={4}
-                {...props}
-            />
-            {error && (
-                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            fillRule="evenodd"
-                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                            clipRule="evenodd"
-                        />
-                    </svg>
-                    {error}
-                </p>
-            )}
-        </div>
-    );
-
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
-            <div className="max-w-4xl mx-auto">
-                {/* Header */}
-                <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                        Welcome to Sheltra! 🎉
-                    </h1>
-                    <p className="text-xl text-gray-600">
-                        Let's set up your company profile to get started
-                    </p>
-                    {userInfo && (
-                        <p className="text-gray-500 mt-2">
-                            Logged in as: <span className="font-semibold">{userInfo.email}</span>
-                        </p>
-                    )}
-                </div>
+        <div className="space-y-8 max-w-4xl mx-auto">
+            <div className="relative">
+                <div className="absolute inset-0 bg-linear-to-r from-warning-500/10 to-primary-500/10 rounded-3xl blur-3xl -z-10"></div>
+                <Card variant="glass" className="shadow-lg border border-warning-200/20">
+                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Company Profile</h1>
+                    <p className="text-gray-600">Tell us about your company to help us match you with the right talent</p>
+                </Card>
+            </div>
 
+            {successMessage && (
+                <Card className="bg-success-50 border-2 border-success-200">
+                    <div className="flex items-start gap-3">
+                        <svg className="w-6 h-6 text-success-600 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <p className="font-semibold text-success-900">{successMessage}</p>
+                    </div>
+                </Card>
+            )}
+
+            {errorMessage && (
+                <Card className="bg-danger-50 border-2 border-danger-200">
+                    <div className="flex items-start gap-3">
+                        <svg className="w-6 h-6 text-danger-600 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                        <p className="font-semibold text-danger-900">{errorMessage}</p>
+                    </div>
+                </Card>
+            )}
+
+            <Card variant="glass" className="shadow-xl">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Success Message */}
-                    {successMessage && (
-                        <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
-                            <svg
-                                className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                            <div>
-                                <h3 className="font-semibold text-green-900">{successMessage}</h3>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Error Message */}
-                    {errorMessage && (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-                            <svg
-                                className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                            <div>
-                                <h3 className="font-semibold text-red-900">{errorMessage}</h3>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Company Information Section */}
-                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                        <div className="px-6 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700">
-                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
-                                Company Information
-                            </h2>
-                        </div>
-                        <div className="p-6 space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <FormInput
-                                    label="Company Name"
-                                    name="companyName"
-                                    required
-                                    error={formErrors.companyName}
-                                    placeholder="e.g., Acme Corporation"
-                                />
-                                <FormInput
-                                    label="Company Website"
-                                    name="companyWebsite"
-                                    type="url"
-                                    required
-                                    error={formErrors.companyWebsite}
-                                    placeholder="https://www.example.com"
-                                />
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <FormSelect
-                                    label="Industry"
-                                    name="industry"
-                                    required
-                                    error={formErrors.industry}
-                                    options={INDUSTRIES}
-                                    placeholder="Select your industry"
-                                />
-                                <FormSelect
-                                    label="Company Size"
-                                    name="companySize"
-                                    required
-                                    error={formErrors.companySize}
-                                    options={COMPANY_SIZES}
-                                    placeholder="Select company size"
-                                />
-                            </div>
-
-                            <FormInput
-                                label="Location"
-                                name="location"
-                                required
-                                error={formErrors.location}
-                                placeholder="e.g., New York, NY, USA"
-                            />
-
-                            <FormTextarea
-                                label="Company Description"
-                                name="description"
-                                required
-                                error={formErrors.description}
-                                placeholder="Tell us about your company, your mission, and what makes you unique..."
-                            />
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Input
+                            label="Company Name"
+                            name="companyName"
+                            value={formData.companyName}
+                            onChange={handleInputChange}
+                            error={formErrors.companyName}
+                            placeholder="e.g., Acme Corporation"
+                            required
+                            disabled={isLoading}
+                        />
+                        <Input
+                            label="Company Website"
+                            name="companyWebsite"
+                            type="url"
+                            value={formData.companyWebsite}
+                            onChange={handleInputChange}
+                            error={formErrors.companyWebsite}
+                            placeholder="https://www.example.com"
+                            required
+                            disabled={isLoading}
+                        />
                     </div>
 
-                    {/* Submit Button */}
-                    <div className="flex items-center justify-center gap-4 pt-4">
-                        <button
-                            type="submit"
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Select
+                            label="Industry"
+                            name="industry"
+                            value={formData.industry}
+                            onChange={handleInputChange}
+                            error={formErrors.industry}
+                            required
                             disabled={isLoading}
-                            className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-12 rounded-lg transition-colors flex items-center gap-2 text-lg"
                         >
-                            {isLoading ? (
-                                <>
-                                    <svg
-                                        className="animate-spin h-5 w-5"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <circle
-                                            className="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            strokeWidth="4"
-                                        ></circle>
-                                        <path
-                                            className="opacity-75"
-                                            fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                        ></path>
-                                    </svg>
-                                    Creating Profile...
-                                </>
-                            ) : (
-                                <>
-                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                    Complete Setup
-                                </>
-                            )}
-                        </button>
+                            <option value="">Select your industry</option>
+                            {INDUSTRIES.map(industry => (
+                                <option key={industry} value={industry}>{industry}</option>
+                            ))}
+                        </Select>
+                        <Select
+                            label="Company Size"
+                            name="companySize"
+                            value={formData.companySize}
+                            onChange={handleInputChange}
+                            error={formErrors.companySize}
+                            required
+                            disabled={isLoading}
+                        >
+                            <option value="">Select company size</option>
+                            {COMPANY_SIZES.map(size => (
+                                <option key={size.value} value={size.value}>{size.label}</option>
+                            ))}
+                        </Select>
+                    </div>
+
+                    <Input
+                        label="Location"
+                        name="location"
+                        value={formData.location}
+                        onChange={handleInputChange}
+                        error={formErrors.location}
+                        placeholder="e.g., New York, NY, USA"
+                        required
+                        disabled={isLoading}
+                    />
+
+                    <Textarea
+                        label="Company Description"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        error={formErrors.description}
+                        placeholder="Tell us about your company, your mission, and what makes you unique..."
+                        rows={4}
+                        required
+                        disabled={isLoading}
+                    />
+
+                    <div className="flex items-center justify-center gap-4 pt-6 border-t border-gray-200">
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            size="lg"
+                            fullWidth
+                            loading={isLoading}
+                            disabled={isLoading}
+                        >
+                            Complete Onboarding
+                        </Button>
                     </div>
                 </form>
-
-                {/* Footer Note */}
-                <div className="mt-8 text-center">
-                    <p className="text-sm text-gray-600">
-                        By completing this form, you agree to our{' '}
-                        <a href="#" className="text-indigo-600 hover:text-indigo-700 font-medium">
-                            Terms of Service
-                        </a>{' '}
-                        and{' '}
-                        <a href="#" className="text-indigo-600 hover:text-indigo-700 font-medium">
-                            Privacy Policy
-                        </a>
-                    </p>
-                </div>
-            </div>
+            </Card>
         </div>
     );
 }
+

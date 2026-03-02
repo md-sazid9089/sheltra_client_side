@@ -86,21 +86,25 @@ export default function SDGImpactDashboard() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const loadMetrics = async () => {
-        setIsLoading(true);
-        setError(null);
-        try {
-            const data = await fetchImpactMetrics(startDate, endDate);
-            setMetrics(data);
-        } catch (err) {
-            setError(err.message || 'Failed to load impact metrics.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     useEffect(() => {
+        let cancelled = false;
+
+        const loadMetrics = async () => {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const data = await fetchImpactMetrics(startDate, endDate);
+                if (!cancelled) setMetrics(data);
+            } catch (err) {
+                if (!cancelled) setError(err.message || 'Failed to load impact metrics.');
+            } finally {
+                if (!cancelled) setIsLoading(false);
+            }
+        };
+
         loadMetrics();
+
+        return () => { cancelled = true; };
     }, [startDate, endDate]);
 
     const applyPreset = (months) => {
@@ -360,7 +364,7 @@ export default function SDGImpactDashboard() {
 
 function SummaryCard({ title, value, gradient, subtitle }) {
     return (
-        <div className={`bg-gradient-to-br ${gradient} rounded-lg shadow-md p-5 text-white`}>
+        <div className={`bg-linear-to-br ${gradient} rounded-lg shadow-md p-5 text-white`}>
             <h4 className="text-sm font-medium opacity-90">{title}</h4>
             <p className="text-3xl font-bold mt-1">{value}</p>
             {subtitle && <p className="text-xs opacity-75 mt-1">{subtitle}</p>}

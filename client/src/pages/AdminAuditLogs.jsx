@@ -495,9 +495,8 @@ export default function AdminAuditLogs() {
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
                                     {paginatedLogs.map(log => (
-                                        <>
+                                        <React.Fragment key={log.id}>
                                             <tr
-                                                key={log.id}
                                                 className="hover:bg-gray-50 transition-colors cursor-pointer"
                                                 onClick={() => toggleRowExpand(log.id)}
                                             >
@@ -607,7 +606,7 @@ export default function AdminAuditLogs() {
                                                     </td>
                                                 </tr>
                                             )}
-                                        </>
+                                        </React.Fragment>
                                     ))}
                                 </tbody>
                             </table>

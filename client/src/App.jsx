@@ -1,6 +1,8 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
-import Dashboard from './pages/Dashboard';
+import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import RefugeeDashboard from './pages/RefugeeDashboard';
 import RefugeeProfile from './pages/RefugeeProfile';
 import Opportunities from './pages/Opportunities';
@@ -31,6 +33,8 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
         {/* Protected Routes */}
@@ -241,21 +245,46 @@ function App() {
         />
 
         {/* Home Route */}
+        <Route path="/" element={<HomePage />} />
+
+        {/* 404 Catch-All */}
         <Route
-          path="/"
+          path="*"
           element={
-            <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
-              <div className="text-center">
-                <h1 className="text-5xl font-bold text-gray-900 mb-4">Sheltra</h1>
-                <p className="text-xl text-gray-600 mb-8">
-                  Beyond Shelter: Mapping Skills to Sustainable Livelihoods
+            <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-br from-gray-50 via-gray-100 to-gray-200 px-4">
+              <div className="text-center max-w-md">
+                {/* 404 Icon */}
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-gray-400 to-gray-500 rounded-2xl shadow-xl mb-6">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+
+                {/* 404 Text */}
+                <p className="text-7xl font-bold text-gray-300 mb-4">404</p>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Page Not Found</h1>
+                <p className="text-gray-600 mb-8">
+                  The page you're looking for doesn't exist or has been moved.
                 </p>
-                <a
-                  href="/login"
-                  className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200"
-                >
-                  Go to Login
-                </a>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <Link
+                    to="/"
+                    className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Back to Home
+                  </Link>
+                  <Link
+                    to="/login"
+                    className="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-6 rounded-xl border-2 border-gray-200 hover:border-gray-300 transition-all duration-200"
+                  >
+                    Go to Login
+                  </Link>
+                </div>
               </div>
             </div>
           }

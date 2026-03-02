@@ -224,89 +224,111 @@ export default function Opportunities() {
     return (
         <div className="space-y-8">
             {/* Header */}
-            <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">Opportunities</h1>
-                <p className="text-gray-600">
-                    Explore job opportunities perfectly matched for you
-                </p>
+            <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-purple-500/10 rounded-3xl blur-3xl -z10"></div>
+                <Card variant="glass" className="shadow-lg border border-primary-200/20">
+                    <div className="flex flex-col gap-4">
+                        <div>
+                            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Opportunities</h1>
+                            <p className="text-gray-600">
+                                Explore job opportunities perfectly matched for you
+                            </p>
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-3 text-sm">
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-primary-50 text-primary-700 rounded-lg">
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                                <span className="font-medium">{filteredOpportunities.length} Opportunities</span>
+                            </div>
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-success-50 text-success-700 rounded-lg">
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <span className="font-medium">Matched for you</span>
+                            </div>
+                        </div>
+                    </div>
+                </Card>
             </div>
 
             {/* Search and Filters Section */}
-            <div className="space-y-4">
-                {/* Search Bar */}
-                <div className="relative">
-                    <svg
-                        className="absolute left-4 top-3 w-5 h-5 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                        />
-                    </svg>
-                    <input
-                        type="text"
-                        placeholder="Search by title, company, or skills..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                    />
-                </div>
-
-                {/* Filter Chips */}
-                <div className="flex flex-wrap gap-3">
-                    {/* Type Filter Chip */}
-                    <select
-                        value={selectedType}
-                        onChange={(e) => setSelectedType(e.target.value)}
-                        className="px-4 py-2 border border-gray-300 rounded-full text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent cursor-pointer hover:border-indigo-300 transition-all"
-                    >
-                        <option value="">All Types</option>
-                        {allTypes.map(type => (
-                            <option key={type} value={type}>
-                                {type}
-                            </option>
-                        ))}
-                    </select>
-
-                    {/* Location Filter Chip */}
-                    <select
-                        value={selectedLocation}
-                        onChange={(e) => setSelectedLocation(e.target.value)}
-                        className="px-4 py-2 border border-gray-300 rounded-full text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent cursor-pointer hover:border-indigo-300 transition-all"
-                    >
-                        <option value="">All Locations</option>
-                        {allLocations.map(location => (
-                            <option key={location} value={location}>
-                                {location}
-                            </option>
-                        ))}
-                    </select>
-
-                    {/* Reset Filters */}
-                    {(searchQuery || selectedType || selectedLocation) && (
-                        <button
-                            onClick={() => {
-                                setSearchQuery('');
-                                setSelectedType('');
-                                setSelectedLocation('');
-                            }}
-                            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm font-medium transition-colors"
+            <Card variant="glass" className="shadow-md">
+                <div className="space-y-4">
+                    {/* Search Bar */}
+                    <div className="relative">
+                        <svg
+                            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
                         >
-                            ✕ Clear
-                        </button>
-                    )}
-                </div>
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                            />
+                        </svg>
+                        <input
+                            type="text"
+                            placeholder="Search by title, company, or skills..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all placeholder:text-gray-400"
+                        />
+                    </div>
 
-                {/* Results Count */}
-                <div className="text-sm text-gray-600">
-                    Showing {filteredOpportunities.length} of {opportunities.length} opportunities
+                    {/* Filter Chips */}
+                    <div className="flex flex-wrap gap-3">
+                        {/* Type Filter */}
+                        <select
+                            value={selectedType}
+                            onChange={(e) => setSelectedType(e.target.value)}
+                            className="px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-sm font-medium text-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer hover:border-primary-300 transition-all"
+                        >
+                            <option value="">All Types</option>
+                            {allTypes.map(type => (
+                                <option key={type} value={type}>
+                                    {type}
+                                </option>
+                            ))}
+                        </select>
+
+                        {/* Location Filter */}
+                        <select
+                            value={selectedLocation}
+                            onChange={(e) => setSelectedLocation(e.target.value)}
+                            className="px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-sm font-medium text-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer hover:border-primary-300 transition-all"
+                        >
+                            <option value="">All Locations</option>
+                            {allLocations.map(location => (
+                                <option key={location} value={location}>
+                                    {location}
+                                </option>
+                            ))}
+                        </select>
+
+                        {/* Reset Filters */}
+                        {(searchQuery || selectedType || selectedLocation) && (
+                            <button
+                                onClick={() => {
+                                    setSearchQuery('');
+                                    setSelectedType('');
+                                    setSelectedLocation('');
+                                }}
+                                className="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
+                            >
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
+                                Clear Filters
+                            </button>
+                        )}
+                    </div>
                 </div>
-            </div>
+            </Card>
 
             {/* Notification Toast */}
             {notification && (
@@ -325,116 +347,148 @@ export default function Opportunities() {
             {isLoading ? (
                 <div className="space-y-4">
                     {[...Array(4)].map((_, i) => (
-                        <div key={i} className="bg-gray-100 rounded-lg h-32 animate-pulse"></div>
+                        <Card key={i} className="animate-pulse">
+                            <div className="h-32 bg-gray-200 rounded-lg"></div>
+                        </Card>
                     ))}
                 </div>
             ) : filteredOpportunities.length > 0 ? (
                 <div className="space-y-4">
                     {filteredOpportunities.map(opportunity => (
-                        <div
+                        <Card
                             key={opportunity.id}
                             onClick={() => setSelectedDrawer(opportunity)}
-                            className="bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all cursor-pointer p-6 group"
+                            variant="glass"
+                            className="border-2 border-gray-200/50 hover:border-primary-300 hover:shadow-xl transition-all duration-300 cursor-pointer group"
                         >
-                            <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                    <div className="flex items-start gap-3 mb-2">
-                                        <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                                <div className="flex-1 space-y-4">
+                                    {/* Title and Match Score */}
+                                    <div className="flex items-start justify-between gap-3">
+                                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
                                             {opportunity.title}
                                         </h3>
-                                        {hasApplied(opportunity.id) && (
-                                            <span className="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                                Applied
-                                            </span>
-                                        )}
+                                        <Badge variant="primary" size="lg" className="flex-shrink-0 shadow-lg shadow-primary-500/20">
+                                            <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+                                            {opportunity.matchScore}% Match
+                                        </Badge>
                                     </div>
-                                    <p className="text-sm text-gray-600 mb-3">
-                                        {opportunity.company} • {opportunity.location}
-                                    </p>
-                                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+
+                                    {/* Company and Location */}
+                                    <div className="flex flex-wrap items-center gap-4 text-sm">
+                                        <div className="flex items-center gap-2 text-gray-700">
+                                            <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
+                                                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clipRule="evenodd" />
+                                                </svg>
+                                            </div>
+                                            <span className="font-semibold text-gray-900">{opportunity.company}</span>
+                                        </div>
+                                        <span className="text-gray-300">•</span>
+                                        <div className="flex items-center gap-2 text-gray-600">
+                                            <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                                            </svg>
+                                            <span className="font-medium">{opportunity.location}</span>
+                                        </div>
+                                        <span className="text-gray-300">•</span>
+                                        <Badge variant="secondary">{opportunity.type}</Badge>
+                                    </div>
+
+                                    {/* Description */}
+                                    <p className="text-gray-700 leading-relaxed">
                                         {opportunity.description}
                                     </p>
 
-                                    {/* Bottom Row - Skills and Details */}
-                                    <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600">
-                                        {/* Skills Tags */}
-                                        <div className="flex gap-2">
-                                            {opportunity.requiredSkills.slice(0, 2).map(skill => (
-                                                <span
-                                                    key={skill}
-                                                    className="bg-blue-50 text-blue-700 px-2 py-1 rounded"
-                                                >
-                                                    {skill}
-                                                </span>
-                                            ))}
-                                        </div>
-
-                                        {/* Type Badge */}
-                                        <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                                            {opportunity.type}
-                                        </span>
-
-                                        {/* Match Score */}
-                                        <span className="text-indigo-600 font-semibold">
-                                            {opportunity.matchScore}% match
-                                        </span>
+                                    {/* Skills */}
+                                    <div className="flex flex-wrap gap-2">
+                                        {opportunity.requiredSkills.map((skill) => (
+                                            <span
+                                                key={skill}
+                                                className="inline-flex items-center gap-1.5 bg-gradient-to-br from-gray-50 to-gray-100 text-gray-700 text-xs font-semibold px-3 py-2 rounded-lg border border-gray-200 hover:border-primary-300 transition-colors"
+                                            >
+                                                <svg className="w-3.5 h-3.5 text-success-500" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                </svg>
+                                                {skill}
+                                            </span>
+                                        ))}
                                     </div>
+
+                                    {hasApplied(opportunity.id) && (
+                                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-success-50 border border-success-200 rounded-lg">
+                                            <svg className="w-5 h-5 text-success-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                            </svg>
+                                            <span className="text-sm font-semibold text-success-700">Application Submitted</span>
+                                        </div>
+                                    )}
                                 </div>
 
-                                {/* Right Section - CTA */}
-                                <div className="ml-4 flex flex-col items-end gap-2">
-                                    <button
+                                {/* View Details Button */}
+                                <div className="flex-shrink-0 lg:self-start">
+                                    <Button
+                                        variant="primary"
+                                        size="md"
+                                        className="w-full lg:w-auto lg:min-w-[160px] shadow-lg shadow-primary-500/20"
+                                        icon={
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                            </svg>
+                                        }
+                                        iconPosition="right"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             setSelectedDrawer(opportunity);
                                         }}
-                                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                                     >
                                         View Details
-                                    </button>
-                                    {hasApplied(opportunity.id) && (
-                                        <span className="text-xs text-green-600 font-medium">
-                                            ✓ Already applied
-                                        </span>
-                                    )}
+                                    </Button>
                                 </div>
                             </div>
-                        </div>
+                        </Card>
                     ))}
                 </div>
             ) : (
                 /* No Results */
-                <div className="text-center py-12">
-                    <svg
-                        className="mx-auto h-16 w-16 text-gray-400 mb-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1.5}
-                            d="M20 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
-                        />
-                    </svg>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        No opportunities found
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                        Try adjusting your search or filters to find matching opportunities
-                    </p>
-                    <button
-                        onClick={() => {
-                            setSearchQuery('');
-                            setSelectedType('');
-                            setSelectedLocation('');
-                        }}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-                    >
-                        Clear Filters
-                    </button>
-                </div>
+                <Card variant="glass" className="shadow-lg">
+                    <div className="text-center py-16">
+                        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl mb-6">
+                            <svg
+                                className="w-10 h-10 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={1.5}
+                                    d="M20 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
+                                />
+                            </svg>
+                        </div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                            No opportunities found
+                        </h3>
+                        <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                            Try adjusting your search or filters to find matching opportunities
+                        </p>
+                        <Button
+                            variant="primary"
+                            size="lg"
+                            onClick={() => {
+                                setSearchQuery('');
+                                setSelectedType('');
+                                setSelectedLocation('');
+                            }}
+                        >
+                            Clear All Filters
+                        </Button>
+                    </div>
+                </Card>
             )}
 
             {/* Opportunities Drawer */}

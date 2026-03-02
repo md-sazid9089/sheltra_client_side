@@ -364,7 +364,7 @@ export default function SDGImpactDashboard() {
 
 function SummaryCard({ title, value, gradient, subtitle }) {
     return (
-        <div className={`bg-gradient-to-br ${gradient} rounded-lg shadow-md p-5 text-white`}>
+        <div className={`bg-linear-to-br ${gradient} rounded-lg shadow-md p-5 text-white`}>
             <h4 className="text-sm font-medium opacity-90">{title}</h4>
             <p className="text-3xl font-bold mt-1">{value}</p>
             {subtitle && <p className="text-xs opacity-75 mt-1">{subtitle}</p>}

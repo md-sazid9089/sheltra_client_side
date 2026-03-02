@@ -97,15 +97,25 @@ export default function RefugeeDashboard() {
     return (
         <div className="space-y-8">
             {/* Header Section */}
-            <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                    Welcome back, {userInfo?.name?.split(' ')[0]}! 👋
-                </h1>
-                <p className="text-gray-600 text-lg">Here's your career journey update</p>
+            <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-success-500/10 rounded-3xl blur-3xl -z-10"></div>
+                <Card variant="glass" className="border-l-4 border-primary-500">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+                                Welcome back, {userInfo?.name?.split(' ')[0]}! 👋
+                            </h1>
+                            <p className="text-gray-600 text-base sm:text-lg">Here's your career journey update</p>
+                        </div>
+                        <Badge variant="refugee" size="lg" className="self-start sm:self-center">
+                            Refugee
+                        </Badge>
+                    </div>
+                </Card>
             </div>
 
             {/* Summary Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 <SummaryCard
                     icon={
                         <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">

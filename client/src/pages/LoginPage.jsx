@@ -72,27 +72,75 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center px-4 py-12">
-            <div className="w-full max-w-md">
-                {/* Logo Section */}
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl shadow-xl shadow-primary-500/30 mb-4">
-                        <span className="text-3xl font-bold text-white">S</span>
-                    </div>
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent mb-2">
-                        Sheltra
-                    </h1>
-                    <p className="text-gray-600">
-                        Beyond Shelter: Mapping Skills to Sustainable Livelihoods
-                    </p>
+        <div className="min-h-screen flex">
+            {/* Left Section - Branding */}
+            <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 relative overflow-hidden">
+                {/* Animated background elements */}
+                <div className="absolute inset-0">
+                    <div className="absolute top-20 -left-20 w-96 h-96 bg-primary-500/30 rounded-full blur-3xl animate-blob"></div>
+                    <div className="absolute top-40 -right-20 w-96 h-96 bg-primary-400/30 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+                    <div className="absolute -bottom-20 left-1/4 w-96 h-96 bg-primary-600/30 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
                 </div>
 
-                {/* Login Card */}
-                <Card variant="glass" className="shadow-glass-lg">
-                    <div className="text-center mb-6">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-1">Welcome Back</h2>
-                        <p className="text-gray-600 text-sm">Sign in to continue to your account</p>
+                {/* Content */}
+                <div className="relative z-10 flex flex-col justify-center px-12 xl:px-20 text-white w-full">
+                    <div className="inline-flex items-center gap-3 mb-8">
+                        <div className="w-14 h-14 bg-white/20 backdrop-blur-xl border border-white/30 rounded-2xl flex items-center justify-center shadow-2xl">
+                            <span className="text-2xl font-bold">S</span>
+                        </div>
+                        <span className="text-3xl font-bold">Sheltra</span>
                     </div>
+
+                    <h1 className="text-5xl xl:text-6xl font-bold mb-6 leading-tight">
+                        Welcome Back to
+                        <span className="block bg-gradient-to-r from-white to-primary-100 bg-clip-text text-transparent">
+                            Your Future
+                        </span>
+                    </h1>
+
+                    <p className="text-xl text-primary-100 mb-12 max-w-md leading-relaxed">
+                        Beyond Shelter: Mapping Skills to Sustainable Livelihoods. Empowering refugees with opportunities.
+                    </p>
+
+                    {/* Feature highlights */}
+                    <div className="space-y-4 max-w-md">
+                        {[
+                            { icon: '🎯', text: 'Match your skills with opportunities' },
+                            { icon: '🤝', text: 'Connect with verified employers' },
+                            { icon: '📈', text: 'Build sustainable livelihoods' },
+                        ].map((item, i) => (
+                            <div key={i} className="flex items-center gap-4 text-white/90">
+                                <div className="w-10 h-10 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl flex items-center justify-center text-xl">
+                                    {item.icon}
+                                </div>
+                                <span className="text-lg">{item.text}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Right Section - Login Form */}
+            <div className="flex-1 flex items-center justify-center p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50">
+                <div className="w-full max-w-md">
+                    {/* Mobile Logo */}
+                    <div className="lg:hidden text-center mb-8">
+                        <div className="inline-flex items-center gap-2 mb-4">
+                            <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl shadow-lg flex items-center justify-center">
+                                <span className="text-xl font-bold text-white">S</span>
+                            </div>
+                            <span className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
+                                Sheltra
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Login Card */}
+                    <Card variant="glass" className="shadow-xl border border-gray-200/50">
+                        <div className="mb-8">
+                            <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+                            <p className="text-gray-600">Sign in to continue to your account</p>
+                        </div>
 
                     {/* Success Message */}
                     {successMessage && (
@@ -151,13 +199,16 @@ export default function LoginPage() {
                         />
 
                         <div className="flex items-center justify-between text-sm">
-                            <label className="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-500" />
-                                <span className="text-gray-600">Remember me</span>
+                            <label className="flex items-center gap-2 cursor-pointer group">
+                                <input 
+                                    type="checkbox" 
+                                    className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-500 cursor-pointer" 
+                                />
+                                <span className="text-gray-600 group-hover:text-gray-900 transition-colors">Remember me</span>
                             </label>
-                            <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">
+                            <Link to="/forgot-password" className="text-primary-600 hover:text-primary-700 font-medium transition-colors">
                                 Forgot password?
-                            </a>
+                            </Link>
                         </div>
 
                         <Button
@@ -202,24 +253,20 @@ export default function LoginPage() {
                     </div>
 
                     {/* Sign Up Link */}
-                    <p className="mt-6 text-center text-sm text-gray-600">
+                    <p className="mt-8 text-center text-sm text-gray-600">
                         Don't have an account?{' '}
-                        <a href="#" className="text-primary-600 hover:text-primary-700 font-semibold">
+                        <Link to="/register" className="text-primary-600 hover:text-primary-700 font-semibold transition-colors">
                             Sign up for free
-                        </a>
+                        </Link>
                     </p>
                 </Card>
 
                 {/* Footer Links */}
-                <div className="mt-6 text-center space-y-2">
-                    <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
-                        <a href="#" className="hover:text-gray-900">Help Center</a>
-                        <span>•</span>
-                        <a href="#" className="hover:text-gray-900">Privacy</a>
-                        <span>•</span>
-                        <a href="#" className="hover:text-gray-900">Terms</a>
-                    </div>
-                    <Link to="/" className="text-sm text-primary-600 hover:text-primary-700 font-medium inline-flex items-center gap-1">
+                <div className="mt-8 text-center space-y-3">
+                    <p className="text-sm text-gray-500">
+                        © {new Date().getFullYear()} Sheltra. All rights reserved.
+                    </p>
+                    <Link to="/" className="text-sm text-primary-600 hover:text-primary-700 font-medium inline-flex items-center gap-1.5 transition-colors">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
@@ -228,5 +275,6 @@ export default function LoginPage() {
                 </div>
             </div>
         </div>
+    </div>
     );
 }

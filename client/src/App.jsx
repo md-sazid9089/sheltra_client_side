@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import RefugeeDashboard from './pages/RefugeeDashboard';
 import RefugeeProfile from './pages/RefugeeProfile';
 import Opportunities from './pages/Opportunities';
@@ -31,6 +33,8 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
         {/* Protected Routes */}
@@ -247,10 +251,10 @@ function App() {
         <Route
           path="*"
           element={
-            <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 px-4">
+            <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-br from-gray-50 via-gray-100 to-gray-200 px-4">
               <div className="text-center max-w-md">
                 {/* 404 Icon */}
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-gray-400 to-gray-500 rounded-2xl shadow-xl mb-6">
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-gray-400 to-gray-500 rounded-2xl shadow-xl mb-6">
                   <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>

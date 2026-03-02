@@ -58,33 +58,41 @@ export default function AdminPanel() {
     ];
 
     return (
-        <div className="space-y-6">
-            <PageHeader
-                title="Admin Dashboard"
-                subtitle="Manage system settings, users, and view analytics"
-            />
+        <div className="space-y-6 sm:space-y-8">
+            {/* Header */}
+            <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-danger-500/10 to-purple-500/10 rounded-3xl blur-3xl -z-10"></div>
+                <Card variant="glass" className="shadow-lg border border-danger-200/20">
+                    <div>
+                        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+                        <p className="text-gray-600">Manage system settings, users, and view analytics</p>
+                    </div>
+                </Card>
+            </div>
 
             {/* Admin Info Card */}
             {userInfo && (
-                <Card variant="glass" className="border-l-4 border-danger-500">
-                    <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 flex items-center justify-center bg-danger-100 rounded-xl flex-shrink-0">
-                            <svg className="w-7 h-7 text-danger-600" fill="currentColor" viewBox="0 0 20 20">
+                <Card variant="glass" className="border-l-4 border-danger-500 shadow-lg">
+                    <div className="flex flex-col sm:flex-row items-start gap-4">
+                        <div className="w-14 h-14 flex items-center justify-center bg-gradient-to-br from-danger-500 to-danger-600 rounded-2xl flex-shrink-0 shadow-lg">
+                            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                             </svg>
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Logged in as Administrator</h3>
-                            <div className="space-y-1 text-sm">
-                                <p className="text-gray-700">
-                                    <span className="font-medium">Name:</span> {userInfo.name || 'Admin'}
-                                </p>
-                                <p className="text-gray-700">
-                                    <span className="font-medium">Email:</span> {userInfo.email}
-                                </p>
-                                <div className="flex items-center gap-2 mt-2">
-                                    <span className="font-medium text-gray-700">Role:</span>
-                                    <Badge variant="admin">{userInfo.role || 'Admin'}</Badge>
+                            <h3 className="text-xl font-bold text-gray-900 mb-3">Logged in as Administrator</h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-gray-700">Name:</span>
+                                    <span className="text-gray-900">{userInfo.name || 'Admin'}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-gray-700">Email:</span>
+                                    <span className="text-gray-900">{userInfo.email}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-gray-700">Role:</span>
+                                    <Badge variant="admin" size="md">{userInfo.role || 'Admin'}</Badge>
                                 </div>
                             </div>
                         </div>
@@ -93,23 +101,24 @@ export default function AdminPanel() {
             )}
 
             {/* Admin Control Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {adminCards.map((card, index) => (
                     <Card
                         key={index}
-                        className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-primary-300"
+                        variant="glass"
+                        className="relative overflow-hidden group hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-primary-200"
                         onClick={() => card.route !== '#' && navigate(card.route)}
                     >
                         <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-5 group-hover:opacity-10 transition-opacity`}></div>
                         <div className="relative">
-                            <div className={`w-14 h-14 flex items-center justify-center rounded-xl bg-gradient-to-br ${card.gradient} text-white shadow-lg mb-4`}>
+                            <div className={`w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br ${card.gradient} text-white shadow-lg shadow-${card.gradient.split('-')[1]}-500/30 mb-4 group-hover:scale-110 transition-transform`}>
                                 {card.icon}
                             </div>
                             <h3 className="text-lg font-bold text-gray-900 mb-2">{card.title}</h3>
-                            <p className="text-gray-600 text-sm mb-4">{card.description}</p>
+                            <p className="text-gray-600 text-sm mb-6 line-clamp-2">{card.description}</p>
                             <div className="flex items-center text-primary-600 font-semibold text-sm group-hover:gap-2 transition-all">
                                 <span>View</span>
-                                <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                                <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                                 </svg>
                             </div>
@@ -119,47 +128,42 @@ export default function AdminPanel() {
             </div>
 
             {/* Warning Box */}
-            <Card className="bg-gradient-to-r from-warning-50 to-yellow-50 border-2 border-warning-200">
+            <Card variant="glass" className="bg-gradient-to-r from-warning-50/80 to-yellow-50/80 border-2 border-warning-300/50 backdrop-blur-xl">
                 <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 flex items-center justify-center bg-warning-100 rounded-lg flex-shrink-0">
-                        <svg className="w-6 h-6 text-warning-600" fill="currentColor" viewBox="0 0 20 20">
+                    <div className="w-12 h-12 flex items-center justify-center bg-warning-100 rounded-xl flex-shrink-0 shadow-md">
+                        <svg className="w-7 h-7 text-warning-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                         </svg>
                     </div>
-                    <div>
-                        <h3 className="text-lg font-bold text-warning-900 mb-1">⚠️ Admin Area</h3>
-                        <p className="text-warning-800 text-sm">
-                            This area is restricted to users with admin role only. All actions here are logged for security purposes.
+                    <div className="flex-1">
+                        <h3 className="text-lg font-bold text-warning-900 mb-2 flex items-center gap-2">
+                            <span>⚠️</span>
+                            Admin Area - Restricted Access
+                        </h3>
+                        <p className="text-warning-800 text-sm leading-relaxed">
+                            This area is restricted to users with admin role only. All actions here are logged and monitored for security purposes.
                         </p>
                     </div>
                 </div>
             </Card>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <Card variant="glass">
-                    <div className="text-center">
-                        <div className="text-3xl font-bold text-primary-600 mb-1">1,234</div>
-                        <div className="text-sm text-gray-600">Total Users</div>
-                    </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <Card variant="glass" className="text-center hover:shadow-lg transition-shadow">
+                    <div className="text-4xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent mb-2">1,234</div>
+                    <div className="text-sm font-medium text-gray-600">Total Users</div>
                 </Card>
-                <Card variant="glass">
-                    <div className="text-center">
-                        <div className="text-3xl font-bold text-success-600 mb-1">856</div>
-                        <div className="text-sm text-gray-600">Active Refugees</div>
-                    </div>
+                <Card variant="glass" className="text-center hover:shadow-lg transition-shadow">
+                    <div className="text-4xl font-bold bg-gradient-to-r from-success-600 to-success-700 bg-clip-text text-transparent mb-2">856</div>
+                    <div className="text-sm font-medium text-gray-600">Active Refugees</div>
                 </Card>
-                <Card variant="glass">
-                    <div className="text-center">
-                        <div className="text-3xl font-bold text-warning-600 mb-1">42</div>
-                        <div className="text-sm text-gray-600">Partner NGOs</div>
-                    </div>
+                <Card variant="glass" className="text-center hover:shadow-lg transition-shadow">
+                    <div className="text-4xl font-bold bg-gradient-to-r from-warning-600 to-warning-700 bg-clip-text text-transparent mb-2">42</div>
+                    <div className="text-sm font-medium text-gray-600">Partner NGOs</div>
                 </Card>
-                <Card variant="glass">
-                    <div className="text-center">
-                        <div className="text-3xl font-bold text-purple-600 mb-1">128</div>
-                        <div className="text-sm text-gray-600">Employers</div>
-                    </div>
+                <Card variant="glass" className="text-center hover:shadow-lg transition-shadow">
+                    <div className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent mb-2">128</div>
+                    <div className="text-sm font-medium text-gray-600">Employers</div>
                 </Card>
             </div>
         </div>

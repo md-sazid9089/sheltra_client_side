@@ -134,31 +134,36 @@ export default function Placements() {
     return (
         <div className="space-y-8">
             {/* Header */}
-            <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">Placement Tracking</h1>
-                <p className="text-gray-600">
-                    Monitor your employment journey from application to completion
-                </p>
+            <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-warning-500/10 rounded-3xl blur-3xl -z-10"></div>
+                <Card variant="glass" className="shadow-lg border border-purple-200/20">
+                    <div>
+                        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Placement Tracking</h1>
+                        <p className="text-gray-600">
+                            Monitor your employment journey from application to completion
+                        </p>
+                    </div>
+                </Card>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <Card variant="glass" className="border-l-4 border-primary-500 hover:shadow-xl transition-shadow">
                     <p className="text-sm font-medium text-gray-600 mb-2">Total Placements</p>
-                    <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
-                </div>
-                <div className="bg-white rounded-lg border border-green-200 p-6">
+                    <p className="text-4xl font-bold text-gray-900">{stats.total}</p>
+                </Card>
+                <Card variant="glass" className="border-l-4 border-success-500 hover:shadow-xl transition-shadow">
                     <p className="text-sm font-medium text-gray-600 mb-2">Active Placements</p>
-                    <p className="text-3xl font-bold text-green-600">{stats.active}</p>
-                </div>
-                <div className="bg-white rounded-lg border border-emerald-200 p-6">
+                    <p className="text-4xl font-bold text-success-600">{stats.active}</p>
+                </Card>
+                <Card variant="glass" className="border-l-4 border-purple-500 hover:shadow-xl transition-shadow">
                     <p className="text-sm font-medium text-gray-600 mb-2">Completed</p>
-                    <p className="text-3xl font-bold text-emerald-600">{stats.completed}</p>
-                </div>
-                <div className="bg-white rounded-lg border border-blue-200 p-6">
+                    <p className="text-4xl font-bold text-purple-600">{stats.completed}</p>
+                </Card>
+                <Card variant="glass" className="border-l-4 border-warning-500 hover:shadow-xl transition-shadow">
                     <p className="text-sm font-medium text-gray-600 mb-2">Pending / In Progress</p>
-                    <p className="text-3xl font-bold text-blue-600">{stats.pending}</p>
-                </div>
+                    <p className="text-4xl font-bold text-warning-600">{stats.pending}</p>
+                </Card>
             </div>
 
             {/* Tabs */}

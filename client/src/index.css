@@ -267,3 +267,55 @@
   .fancy-card [class*="border-border"] {
     border-color: rgba(255,255,255,0.1) !important;
   }
+
+/* ── Glass Fan Cards (Team Section) ── */
+.glass-fan-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 2rem 0 1rem;
+}
+
+.glass-fan-card {
+  position: relative;
+  width: 185px;
+  height: 235px;
+  background: linear-gradient(rgba(255,255,255,0.10), transparent);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 25px 35px rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.5s ease, margin 0.5s ease;
+  border-radius: 14px;
+  margin: 0 -48px;
+  backdrop-filter: blur(12px);
+  transform: rotate(calc(var(--r) * 1deg));
+  cursor: pointer;
+}
+
+.glass-fan-container:hover .glass-fan-card {
+  transform: rotate(0deg);
+  margin: 0 12px;
+}
+
+.glass-fan-card::before {
+  content: attr(data-name);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0 0 14px 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0 10px;
+  text-align: center;
+}

@@ -4,6 +4,11 @@ import { Card } from '@/components/ui/Card';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Stepper } from '@/components/ui/Stepper';
 import { StatCard } from '@/components/ui/StatCard';
+import {
+  FaExclamationTriangle, FaLock, FaGlobe, FaCheckCircle, FaHandshake,
+  FaSitemap, FaUser, FaBuilding, FaBriefcase, FaChartBar,
+  FaShieldAlt, FaClipboardList, FaBullseye, FaBalanceScale,
+} from 'react-icons/fa';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -186,8 +191,8 @@ export default function Home() {
 
               {/* Floating notification badge */}
               <div className="mt-3 ml-4 inline-flex items-center gap-3 bg-white/8 backdrop-blur-sm border border-white/15 rounded-xl px-4 py-3 shadow-lg">
-                <div className="w-9 h-9 rounded-full bg-brand-primary/30 border border-brand-primary/25 flex items-center justify-center text-base">
-                  🤝
+                <div className="w-9 h-9 rounded-full bg-brand-primary/30 border border-brand-primary/25 flex items-center justify-center">
+                  <FaHandshake className="w-4 h-4 text-cyan-400" />
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-white">New Match Found</p>
@@ -216,12 +221,12 @@ export default function Home() {
           {/* Barriers */}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {[
-              { icon: '🚧', title: 'No Credential Proof', desc: 'Documents lost during displacement leave skills unverifiable.' },
-              { icon: '🔒', title: 'Trust Deficit', desc: 'Employers lack confidence without established identity verification.' },
-              { icon: '🌍', title: 'Fragmented Access', desc: 'Scattered resources across NGOs, governments, and private sector.' },
+              { icon: <FaExclamationTriangle className="w-8 h-8 mx-auto text-red-400" />, title: 'No Credential Proof', desc: 'Documents lost during displacement leave skills unverifiable.' },
+              { icon: <FaLock className="w-8 h-8 mx-auto text-red-400" />, title: 'Trust Deficit', desc: 'Employers lack confidence without established identity verification.' },
+              { icon: <FaGlobe className="w-8 h-8 mx-auto text-red-400" />, title: 'Fragmented Access', desc: 'Scattered resources across NGOs, governments, and private sector.' },
             ].map((item) => (
               <Card key={item.title} className="text-center border-l-4 border-l-red-500/70">
-                <div className="text-3xl mb-3">{item.icon}</div>
+                <div className="mb-3">{item.icon}</div>
                 <h3 className="font-semibold text-text-primary dark:text-text-darkPrimary mb-2">{item.title}</h3>
                 <p className="text-sm text-text-secondary dark:text-text-darkSecondary">{item.desc}</p>
               </Card>
@@ -240,12 +245,12 @@ export default function Home() {
           {/* Solutions */}
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { icon: '✅', title: 'Verified Skill Profiles', desc: 'NGO-backed verification restores credential trust without traditional documents.' },
-              { icon: '🤝', title: 'Ethical AI Matching', desc: 'Transparent, bias-aware algorithms match skills to opportunities with full audit trails.' },
-              { icon: '🌐', title: 'Unified Platform', desc: 'One hub connecting refugees, NGOs, employers, and government partners.' },
+              { icon: <FaCheckCircle className="w-8 h-8 mx-auto text-emerald-400" />, title: 'Verified Skill Profiles', desc: 'NGO-backed verification restores credential trust without traditional documents.' },
+              { icon: <FaHandshake className="w-8 h-8 mx-auto text-emerald-400" />, title: 'Ethical AI Matching', desc: 'Transparent, bias-aware algorithms match skills to opportunities with full audit trails.' },
+              { icon: <FaSitemap className="w-8 h-8 mx-auto text-emerald-400" />, title: 'Unified Platform', desc: 'One hub connecting refugees, NGOs, employers, and government partners.' },
             ].map((item) => (
               <Card key={item.title} hover className="text-center border-l-4 border-l-emerald-500/70">
-                <div className="text-3xl mb-3">{item.icon}</div>
+                <div className="mb-3">{item.icon}</div>
                 <h3 className="font-semibold text-text-primary dark:text-text-darkPrimary mb-2">{item.title}</h3>
                 <p className="text-sm text-text-secondary dark:text-text-darkSecondary">{item.desc}</p>
               </Card>
@@ -283,13 +288,13 @@ export default function Home() {
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { role: 'Refugees', color: 'brand-primary', desc: 'Build verified skill profiles, find matched opportunities, and track your journey to employment.', cta: 'Create Profile', icon: '👤' },
-              { role: 'NGOs', color: 'brand-accent', desc: 'Verify refugee identities, manage cases, and coordinate with employers on placement.', cta: 'Partner With Us', icon: '🏢' },
-              { role: 'Employers', color: 'brand-amber', desc: 'Post opportunities, browse verified talent, and provide feedback on placements.', cta: 'Post Opportunities', icon: '💼' },
-              { role: 'Donors & Gov', color: 'brand-primary', desc: 'Track impact metrics, view audit trails, and see real-time progress on SDG alignment.', cta: 'View Impact', icon: '📊' },
+              { role: 'Refugees', color: 'brand-primary', desc: 'Build verified skill profiles, find matched opportunities, and track your journey to employment.', cta: 'Create Profile', icon: <FaUser className="w-8 h-8 mx-auto text-cyan-400" /> },
+              { role: 'NGOs', color: 'brand-accent', desc: 'Verify refugee identities, manage cases, and coordinate with employers on placement.', cta: 'Partner With Us', icon: <FaBuilding className="w-8 h-8 mx-auto text-teal-400" /> },
+              { role: 'Employers', color: 'brand-amber', desc: 'Post opportunities, browse verified talent, and provide feedback on placements.', cta: 'Post Opportunities', icon: <FaBriefcase className="w-8 h-8 mx-auto text-amber-400" /> },
+              { role: 'Donors & Gov', color: 'brand-primary', desc: 'Track impact metrics, view audit trails, and see real-time progress on SDG alignment.', cta: 'View Impact', icon: <FaChartBar className="w-8 h-8 mx-auto text-cyan-400" /> },
             ].map((item) => (
               <Card key={item.role} hover className="text-center">
-                <div className="text-3xl mb-3">{item.icon}</div>
+                <div className="mb-3">{item.icon}</div>
                 <h3 className="font-semibold text-text-primary dark:text-text-darkPrimary mb-2">{item.role}</h3>
                 <p className="text-sm text-text-secondary dark:text-text-darkSecondary mb-4">{item.desc}</p>
                 <Button variant="secondary" size="sm" className="w-full" onClick={() => navigate('/register')}>
@@ -311,12 +316,12 @@ export default function Home() {
           />
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { icon: '🛡️', title: 'Privacy-First Design', desc: 'Personal data is encrypted, consent-based, and never shared without explicit permission. GDPR-ready from day one.' },
-              { icon: '✓', title: 'NGO Verification Layer', desc: 'Every refugee profile is verified by a registered NGO partner before being visible to employers.' },
-              { icon: '📋', title: 'Immutable Audit Logs', desc: 'All verification actions, matches, and decisions are logged with timestamps for full accountability.' },
+              { icon: <FaShieldAlt className="w-8 h-8 mx-auto text-cyan-400" />, title: 'Privacy-First Design', desc: 'Personal data is encrypted, consent-based, and never shared without explicit permission. GDPR-ready from day one.' },
+              { icon: <FaCheckCircle className="w-8 h-8 mx-auto text-cyan-400" />, title: 'NGO Verification Layer', desc: 'Every refugee profile is verified by a registered NGO partner before being visible to employers.' },
+              { icon: <FaClipboardList className="w-8 h-8 mx-auto text-cyan-400" />, title: 'Immutable Audit Logs', desc: 'All verification actions, matches, and decisions are logged with timestamps for full accountability.' },
             ].map((item) => (
               <Card key={item.title} className="text-center">
-                <div className="text-3xl mb-3">{item.icon}</div>
+                <div className="mb-3">{item.icon}</div>
                 <h3 className="font-semibold text-text-primary dark:text-text-darkPrimary mb-2">{item.title}</h3>
                 <p className="text-sm text-text-secondary dark:text-text-darkSecondary">{item.desc}</p>
               </Card>
@@ -393,7 +398,7 @@ export default function Home() {
           />
           <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
             <Card hover className="text-center border-l-4 border-l-red-500">
-              <div className="text-4xl mb-3">🎯</div>
+              <div className="flex justify-center mb-3"><FaBullseye className="w-10 h-10 text-cyan-400" /></div>
               <h3 className="font-bold text-lg text-text-primary dark:text-text-darkPrimary mb-2">SDG 8</h3>
               <p className="text-sm font-medium text-brand-primary mb-2">Decent Work &amp; Economic Growth</p>
               <p className="text-sm text-text-secondary dark:text-text-darkSecondary">
@@ -401,7 +406,7 @@ export default function Home() {
               </p>
             </Card>
             <Card hover className="text-center border-l-4 border-l-pink-500">
-              <div className="text-4xl mb-3">⚖️</div>
+              <div className="flex justify-center mb-3"><FaBalanceScale className="w-10 h-10 text-pink-400" /></div>
               <h3 className="font-bold text-lg text-text-primary dark:text-text-darkPrimary mb-2">SDG 10</h3>
               <p className="text-sm font-medium text-brand-accent mb-2">Reduced Inequalities</p>
               <p className="text-sm text-text-secondary dark:text-text-darkSecondary">

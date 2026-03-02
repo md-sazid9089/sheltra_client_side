@@ -2,35 +2,36 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { SectionHeading } from '@/components/ui/SectionHeading';
+import { FaShieldAlt, FaBalanceScale, FaLock, FaGlobe, FaClipboardList, FaHandshake } from 'react-icons/fa';
 
 const WHY_ITEMS = [
   {
-    icon: '🛡️',
+    icon: <FaShieldAlt className="w-6 h-6 text-cyan-300" />,
     title: 'Trust-First Architecture',
     desc: 'Every profile is NGO-verified before employers ever see it — because displaced people deserve more than a checkbox.',
   },
   {
-    icon: '⚖️',
+    icon: <FaBalanceScale className="w-6 h-6 text-cyan-300" />,
     title: 'Ethical AI Matching',
     desc: 'Our algorithms are transparent, bias-audited, and human-overseen. Skills and potential drive matches, not proxy signals.',
   },
   {
-    icon: '🔒',
+    icon: <FaLock className="w-6 h-6 text-cyan-300" />,
     title: 'Privacy by Design',
     desc: 'Consent-driven data sharing, end-to-end encryption, and GDPR-ready controls ensure individuals stay in control.',
   },
   {
-    icon: '🌍',
+    icon: <FaGlobe className="w-6 h-6 text-cyan-300" />,
     title: 'Built with Communities',
     desc: 'Sheltra was co-designed with refugees, field NGOs, and ethical technologists — shaped by lived experience, not assumptions.',
   },
   {
-    icon: '📋',
+    icon: <FaClipboardList className="w-6 h-6 text-cyan-300" />,
     title: 'Full Accountability',
     desc: 'Immutable audit logs, transparent decision trails, and SDG-aligned impact reporting for every partner and donor.',
   },
   {
-    icon: '🤝',
+    icon: <FaHandshake className="w-6 h-6 text-cyan-300" />,
     title: 'Ecosystem Approach',
     desc: 'Refugees, NGOs, employers, and governments in one unified platform — reducing fragmentation across the entire journey.',
   },
@@ -229,32 +230,46 @@ export default function About() {
       </section>
 
       {/* ─── 4. Meet the Team ─── */}
-      <section className="py-24 bg-white dark:bg-surface-darkBase">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            title="Meet Our Team"
-            subtitle="Humanitarians, engineers, and community builders united by one purpose."
-            center
-          />
+      <section className="py-24 relative overflow-hidden bg-slate-950">
+        {/* Ambient glow */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-cyan-500/8 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-72 h-72 rounded-full bg-teal-500/8 blur-3xl pointer-events-none" />
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-            {TEAM.map((member) => (
-              <Card key={member.name} hover className="text-center">
-                {/* Avatar */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-section-title text-white">Meet Our Team</h2>
+            <p className="mt-3 text-slate-400 max-w-xl mx-auto text-base">
+              Humanitarians, engineers, and community builders united by one purpose.
+            </p>
+          </div>
+
+          {/* Glass fan cards */}
+          <div className="glass-fan-container">
+            {TEAM.map((member, i) => {
+              const rotations = [-22, -8, 8, 22];
+              return (
                 <div
-                  className={`w-20 h-20 rounded-full mx-auto mb-4 bg-gradient-to-br ${member.color} border ${member.border} flex items-center justify-center text-2xl font-bold ${member.text}`}
+                  key={member.name}
+                  data-name={member.name}
+                  className="glass-fan-card"
+                  style={{ '--r': rotations[i] }}
                 >
-                  {member.initials}
+                  <div className="flex flex-col items-center gap-2 pb-14 px-4">
+                    <div
+                      className={`w-16 h-16 rounded-full bg-gradient-to-br ${member.color} border ${member.border} flex items-center justify-center text-xl font-bold ${member.text}`}
+                    >
+                      {member.initials}
+                    </div>
+                    <p className="text-xs font-semibold text-cyan-300 text-center leading-tight">
+                      {member.role}
+                    </p>
+                    <p className="text-xs text-slate-400 text-center leading-snug line-clamp-3">
+                      {member.bio}
+                    </p>
+                  </div>
                 </div>
-                <h3 className="font-semibold text-text-primary dark:text-text-darkPrimary">
-                  {member.name}
-                </h3>
-                <p className="text-xs font-medium text-brand-primary mt-0.5 mb-3">{member.role}</p>
-                <p className="text-sm text-text-secondary dark:text-text-darkSecondary leading-relaxed">
-                  {member.bio}
-                </p>
-              </Card>
-            ))}
+              );
+            })}
           </div>
 
           {/* Hiring band */}

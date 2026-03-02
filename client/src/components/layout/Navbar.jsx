@@ -4,6 +4,7 @@ import { storage } from '@/lib/storage';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
+import { FaSun, FaMoon } from 'react-icons/fa';
 
 export function Navbar() {
   const { isAuthenticated, logout, role } = useAuth();
@@ -196,7 +197,8 @@ export function Navbar() {
               </>
             )}
             <button onClick={toggleTheme} className="flex items-center gap-2 text-sm text-white/70 hover:text-white py-2 px-3 rounded-xl hover:bg-white/10 transition-all w-full">
-              {dark ? '☀️ Light mode' : '🌙 Dark mode'}
+              {dark ? <FaSun className="w-4 h-4" /> : <FaMoon className="w-4 h-4" />}
+              {dark ? 'Light mode' : 'Dark mode'}
             </button>
           </div>
         )}

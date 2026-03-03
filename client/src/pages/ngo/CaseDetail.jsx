@@ -196,7 +196,7 @@ export default function CaseDetail() {
           {/* Existing notes */}
           <div className="space-y-3 mb-6">
             {(caseData.notes || []).map((note) => (
-              <div key={note.id} className="p-3 rounded-input bg-gray-50 dark:bg-surface-darkBase">
+              <div key={note.id} className="fancy-card p-3">
                 <p className="text-sm text-text-primary dark:text-text-darkPrimary">{note.text}</p>
                 <p className="text-xs text-text-muted dark:text-text-darkMuted mt-1">
                   {note.author} · {note.created_at}

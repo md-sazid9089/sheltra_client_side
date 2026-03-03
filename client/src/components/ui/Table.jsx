@@ -2,14 +2,14 @@ import { cn } from '@/lib/cn';
 
 export function Table({ columns, data, className, onRowClick }) {
   return (
-    <div className={cn('overflow-x-auto rounded-card border border-border-light dark:border-border-dark', className)}>
+    <div className={cn('fancy-card overflow-x-auto', className)}>
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-gray-50 dark:bg-surface-darkBase border-b border-border-light dark:border-border-dark">
+          <tr className="bg-white/5 border-b border-white/10">
             {columns.map((col) => (
               <th
                 key={col.key}
-                className="px-4 py-3 text-left font-semibold text-text-secondary dark:text-text-darkSecondary whitespace-nowrap"
+                className="px-4 py-3 text-left font-semibold text-slate-400 whitespace-nowrap"
               >
                 {col.label}
               </th>
@@ -32,15 +32,15 @@ export function Table({ columns, data, className, onRowClick }) {
                 key={row.id || i}
                 onClick={() => onRowClick?.(row)}
                 className={cn(
-                  'border-b border-border-light dark:border-border-dark last:border-0',
-                  'hover:bg-gray-50 dark:hover:bg-surface-darkBase transition-colors',
+                  'border-b border-white/8 last:border-0',
+                  'hover:bg-white/5 transition-colors',
                   onRowClick && 'cursor-pointer'
                 )}
               >
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className="px-4 py-3 text-text-primary dark:text-text-darkPrimary whitespace-nowrap"
+                    className="px-4 py-3 text-slate-200 whitespace-nowrap"
                   >
                     {col.render ? col.render(row[col.key], row) : row[col.key]}
                   </td>

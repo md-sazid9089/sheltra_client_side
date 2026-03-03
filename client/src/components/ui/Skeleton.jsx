@@ -33,7 +33,7 @@ Skeleton.Card = function SkeletonCard({ className }) {
   return (
     <div
       className={cn(
-        'bg-surface-card dark:bg-surface-darkCard rounded-card border border-border-light dark:border-border-dark p-6 space-y-4',
+        'fancy-card p-6 space-y-4',
         className
       )}
     >

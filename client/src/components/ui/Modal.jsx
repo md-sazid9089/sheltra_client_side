@@ -44,7 +44,7 @@ export function Modal({ open, onClose, title, children, className, footer }) {
     >
       <div
         className={cn(
-          'bg-surface-card dark:bg-surface-darkCard rounded-card shadow-modal p-6 w-full max-w-lg mx-4',
+          'fancy-card p-6 w-full max-w-lg mx-4',
           'motion-safe-fade-in',
           className
         )}
@@ -52,12 +52,12 @@ export function Modal({ open, onClose, title, children, className, footer }) {
       >
         {title && (
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-text-primary dark:text-text-darkPrimary">
+            <h2 className="text-lg font-semibold text-white">
               {title}
             </h2>
             <button
               onClick={onClose}
-              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="p-1 rounded-full hover:bg-white/10 transition-colors"
               aria-label="Close modal"
             >
               <svg className="w-5 h-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">

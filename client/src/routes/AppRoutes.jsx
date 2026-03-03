@@ -19,6 +19,8 @@ import Settings from '@/pages/shared/Settings';
 import RefugeeDashboard from '@/pages/refugee/Dashboard';
 import RefugeeProfile from '@/pages/refugee/ProfileForm';
 import Opportunities from '@/pages/refugee/Opportunities';
+import Blogs from '@/pages/refugee/Blogs';
+import CVRating from '@/pages/refugee/CVRating';
 
 // NGO pages
 import NGODashboard from '@/pages/ngo/Dashboard';
@@ -77,6 +79,8 @@ export default function AppRoutes() {
         <Route path="/refugee/dashboard" element={<RefugeeDashboard />} />
         <Route path="/refugee/profile" element={<RefugeeProfile />} />
         <Route path="/refugee/opportunities" element={<Opportunities />} />
+        <Route path="/refugee/blogs" element={<Blogs />} />
+        <Route path="/refugee/cv-rating" element={<CVRating />} />
       </Route>
 
       {/* ── NGO routes ── */}

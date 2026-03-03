@@ -11,7 +11,6 @@ import { Select } from '@/components/ui/Select';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
-import { Skeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useToast } from '@/components/ui/Toast';
 
@@ -29,11 +28,11 @@ export default function Jobs() {
   const toast = useToast();
   const [showModal, setShowModal] = useState(false);
 
-  const { data: jobs, isLoading } = useQuery({
+  const { data: jobs } = useQuery({
     queryKey: ['employer-jobs'],
     queryFn: () => api.get('/employer/jobs').then((r) => r.data),
     retry: false,
-    placeholderData: [
+    initialData: [
       { id: 1, title: 'Junior Software Developer', location: 'Nairobi', type: 'Full-time', skills_required: 'Python, React', applicants: 12, status: 'active', created_at: '2026-02-20' },
       { id: 2, title: 'Data Analyst', location: 'Remote', type: 'Contract', skills_required: 'SQL, Excel, Tableau', applicants: 8, status: 'active', created_at: '2026-02-25' },
     ],
@@ -66,15 +65,7 @@ export default function Jobs() {
     defaultValues: { title: '', location: '', type: '', skills_required: '', description: '', salary_range: '' },
   });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4 motion-safe-fade-in">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton.Card />
-        <Skeleton.Card />
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-6 motion-safe-fade-in">

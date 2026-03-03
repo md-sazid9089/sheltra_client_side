@@ -2,14 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { Badge } from '@/components/ui/Badge';
 import { Table } from '@/components/ui/Table';
-import { Skeleton } from '@/components/ui/Skeleton';
 
 export default function Users() {
-  const { data: users, isLoading } = useQuery({
+  const { data: users } = useQuery({
     queryKey: ['admin-users'],
     queryFn: () => api.get('/admin/users').then((r) => r.data),
     retry: false,
-    placeholderData: [
+    initialData: [
       { id: 1, name: 'Amara Mensah', email: 'amara@example.com', role: 'refugee', status: 'active', created_at: '2026-01-15' },
       { id: 2, name: 'Sarah Kim', email: 'sarah@ngo.org', role: 'ngo', status: 'active', created_at: '2026-01-10' },
       { id: 3, name: 'TechBridge HR', email: 'hr@techbridge.com', role: 'employer', status: 'active', created_at: '2026-02-01' },
@@ -39,14 +38,7 @@ export default function Users() {
     { key: 'created_at', label: 'Joined' },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4 motion-safe-fade-in">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton.Card />
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-6 motion-safe-fade-in">

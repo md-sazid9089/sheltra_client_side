@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Card } from '@/components/ui/Card';
-import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
 
 const profileSchema = z.object({
@@ -23,7 +22,7 @@ export default function EmployerProfile() {
   const queryClient = useQueryClient();
   const toast = useToast();
 
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile } = useQuery({
     queryKey: ['employer-profile'],
     queryFn: () => api.get('/employer/profile').then((r) => r.data),
     retry: false,
@@ -50,14 +49,7 @@ export default function EmployerProfile() {
     values: profile || undefined,
   });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4 motion-safe-fade-in">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton.Card />
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-6 motion-safe-fade-in">

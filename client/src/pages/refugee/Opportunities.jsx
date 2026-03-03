@@ -4,7 +4,6 @@ import api from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { Skeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
 
 const AI_DISCLAIMER =
@@ -13,11 +12,11 @@ const AI_DISCLAIMER =
 export default function Opportunities() {
   const [expandedId, setExpandedId] = useState(null);
 
-  const { data: opportunities, isLoading, isError } = useQuery({
+  const { data: opportunities, isError } = useQuery({
     queryKey: ['refugee-opportunities'],
     queryFn: () => api.get('/refugees/opportunities').then((r) => r.data),
     retry: false,
-    placeholderData: [
+    initialData: [
       {
         id: 1,
         title: 'Junior Software Developer',
@@ -54,16 +53,7 @@ export default function Opportunities() {
     ],
   });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4 motion-safe-fade-in">
-        <Skeleton className="h-8 w-64" />
-        {[1, 2, 3].map((i) => (
-          <Skeleton.Card key={i} />
-        ))}
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-6 motion-safe-fade-in">

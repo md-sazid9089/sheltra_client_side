@@ -12,3 +12,4 @@ export { Stepper } from './Stepper';
 export { ToastProvider, useToast } from './Toast';
 export { EmptyState } from './EmptyState';
 export { Skeleton } from './Skeleton';
+export { Loader, PageLoader } from './Loader';

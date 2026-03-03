@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
-import { Skeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useToast } from '@/components/ui/Toast';
 
@@ -18,11 +17,11 @@ export default function Talent() {
   const [feedbackTarget, setFeedbackTarget] = useState(null);
   const [feedbackText, setFeedbackText] = useState('');
 
-  const { data: talent, isLoading } = useQuery({
+  const { data: talent } = useQuery({
     queryKey: ['employer-talent'],
     queryFn: () => api.get('/employer/talent').then((r) => r.data),
     retry: false,
-    placeholderData: [
+    initialData: [
       { id: 1, name: 'Amara Mensah', location: 'Nairobi', skills: ['Python', 'React', 'Data Analysis'], verified: true, match_score: 92, languages: ['English', 'French'] },
       { id: 2, name: 'Fatima Al-Rashid', location: 'Amman', skills: ['Nursing', 'Community Health'], verified: true, match_score: 85, languages: ['Arabic', 'English'] },
       { id: 3, name: 'Daniel Osei', location: 'Accra', skills: ['Electrical Engineering', 'Solar Installation'], verified: true, match_score: 78, languages: ['English', 'Twi'] },
@@ -41,14 +40,7 @@ export default function Talent() {
     onError: () => toast('Failed to send feedback.', 'error'),
   });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4 motion-safe-fade-in">
-        <Skeleton className="h-8 w-48" />
-        {[1, 2, 3].map((i) => <Skeleton.Card key={i} />)}
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-6 motion-safe-fade-in">

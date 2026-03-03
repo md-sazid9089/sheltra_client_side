@@ -3,7 +3,6 @@ import api from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { StatCard } from '@/components/ui/StatCard';
 import { Badge } from '@/components/ui/Badge';
-import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/providers/AuthProvider';
 import { Link } from 'react-router-dom';
@@ -11,24 +10,13 @@ import { Link } from 'react-router-dom';
 export default function RefugeeDashboard() {
   const { user } = useAuth();
 
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile } = useQuery({
     queryKey: ['refugee-profile'],
     queryFn: () => api.get('/refugees/profile').then((r) => r.data),
     retry: false,
   });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6 motion-safe-fade-in">
-        <Skeleton className="h-8 w-64" />
-        <div className="grid sm:grid-cols-3 gap-4">
-          <Skeleton.Card />
-          <Skeleton.Card />
-          <Skeleton.Card />
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-8 motion-safe-fade-in">

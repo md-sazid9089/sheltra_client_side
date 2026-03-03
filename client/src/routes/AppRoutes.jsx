@@ -1,6 +1,8 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { PublicLayout, RefugeeLayout, NGOLayout, EmployerLayout, AdminLayout } from '@/components/layout';
 import { ProtectedRoute } from '@/components/routing/ProtectedRoute';
+import { PageLoader } from '@/components/ui/Loader';
 
 // Public pages
 import Home from '@/pages/public/Home';
@@ -35,9 +37,24 @@ import Users from '@/pages/admin/Users';
 import NGOs from '@/pages/admin/NGOs';
 import AuditLogs from '@/pages/admin/AuditLogs';
 
+function NavigationSpinner() {
+  const location = useLocation();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setVisible(true);
+    const t = setTimeout(() => setVisible(false), 500);
+    return () => clearTimeout(t);
+  }, [location.pathname]);
+
+  return visible ? <PageLoader /> : null;
+}
+
 export default function AppRoutes() {
   return (
-    <Routes>
+    <>
+      <NavigationSpinner />
+      <Routes>
       {/* ── Public routes ── */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
@@ -117,5 +134,6 @@ export default function AppRoutes() {
         } />
       </Route>
     </Routes>
+    </>
   );
 }

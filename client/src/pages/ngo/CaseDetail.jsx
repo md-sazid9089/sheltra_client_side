@@ -8,7 +8,6 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Textarea';
-import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
 
 const noteSchema = z.object({
@@ -22,14 +21,14 @@ export default function CaseDetail() {
   const toast = useToast();
 
   // Fetch single case (falls back to placeholder)
-  const { data: caseData, isLoading } = useQuery({
+  const { data: caseData } = useQuery({
     queryKey: ['ngo-case', id],
     queryFn: () => api.get(`/ngo/cases`).then((r) => {
       const cases = r.data;
       return Array.isArray(cases) ? cases.find((c) => String(c.id) === String(id)) : null;
     }),
     retry: false,
-    placeholderData: {
+    initialData: {
       id: Number(id),
       name: 'Amara Mensah',
       location: 'Nairobi, Kenya',
@@ -78,15 +77,7 @@ export default function CaseDetail() {
     defaultValues: { note: '' },
   });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4 motion-safe-fade-in">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton.Card />
-        <Skeleton.Card />
-      </div>
-    );
-  }
+
 
   if (!caseData) {
     return (

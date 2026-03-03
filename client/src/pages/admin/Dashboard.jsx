@@ -2,16 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { StatCard } from '@/components/ui/StatCard';
-import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/Button';
 import { Link } from 'react-router-dom';
 
 export default function AdminDashboard() {
-  const { data: metrics, isLoading } = useQuery({
+  const { data: metrics } = useQuery({
     queryKey: ['admin-metrics'],
     queryFn: () => api.get('/admin/impact-metrics').then((r) => r.data),
     retry: false,
-    placeholderData: {
+    initialData: {
       total_users: 15200,
       total_refugees: 12480,
       total_ngos: 156,
@@ -23,16 +22,7 @@ export default function AdminDashboard() {
     },
   });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6 motion-safe-fade-in">
-        <Skeleton className="h-8 w-64" />
-        <div className="grid sm:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((i) => <Skeleton.Card key={i} />)}
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-8 motion-safe-fade-in">

@@ -40,7 +40,7 @@ const WHY_ITEMS = [
 const TEAM = [
   {
     initials: 'SA',
-    name: 'Sara Al-Amin',
+    name: 'Sazid',
     role: 'Co-Founder & CEO',
     bio: 'Former UNHCR field officer with 12 years of displacement response experience across East Africa and the Middle East.',
     color: 'from-teal-500/30 to-cyan-600/30',
@@ -48,8 +48,8 @@ const TEAM = [
     text: 'text-teal-200',
   },
   {
-    initials: 'JK',
-    name: 'James Kofi',
+    initials: 'AB',
+    name: 'Abrar',
     role: 'Co-Founder & CTO',
     bio: 'Machine learning engineer specialising in ethical AI and fairness-aware systems. Previously at Oxford Internet Institute.',
     color: 'from-cyan-500/30 to-cyan-700/30',
@@ -57,8 +57,8 @@ const TEAM = [
     text: 'text-cyan-200',
   },
   {
-    initials: 'MR',
-    name: 'Maria Reyes',
+    initials: 'IR',
+    name: 'Irfan',
     role: 'Head of NGO Partnerships',
     bio: 'Built and scaled partnership networks across 40+ countries for global humanitarian organisations.',
     color: 'from-cyan-600/30 to-teal-700/30',
@@ -66,8 +66,8 @@ const TEAM = [
     text: 'text-cyan-200',
   },
   {
-    initials: 'TN',
-    name: 'Tariq Nasser',
+    initials: 'TA',
+    name: 'Tawsif',
     role: 'Head of Product',
     bio: 'Product designer with deep expertise in trauma-informed UX and inclusive technology for under-resourced communities.',
     color: 'from-purple-500/30 to-pink-600/30',

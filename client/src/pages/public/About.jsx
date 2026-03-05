@@ -303,14 +303,9 @@ export default function About() {
             <ActionButton variant="primary" onClick={() => navigate('/register')}>
               GET STARTED
             </ActionButton>
-            <Button
-              size="lg"
-              variant="ghost"
-              className="text-white border border-white/30 hover:bg-white/10"
-              onClick={() => navigate('/login')}
-            >
-              Sign In
-            </Button>
+            <ActionButton variant="primary" onClick={() => navigate('/login')}>
+              SIGN IN
+            </ActionButton>
           </div>
         </div>
       </section>

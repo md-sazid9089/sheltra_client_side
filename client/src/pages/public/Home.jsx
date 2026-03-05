@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
+import ActionButton from '@/components/ui/ActionButton';
 import { Card } from '@/components/ui/Card';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Stepper } from '@/components/ui/Stepper';
@@ -453,13 +454,9 @@ export default function Home() {
             helps you create impact that matters.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Button
-              size="lg"
-              className="bg-white text-brand-primary hover:bg-cyan-50"
-              onClick={() => navigate('/register')}
-            >
-              Get Started Today
-            </Button>
+            <ActionButton variant="primary" onClick={() => navigate('/register')}>
+              GET STARTED TODAY
+            </ActionButton>
             <Button
               size="lg"
               variant="ghost"

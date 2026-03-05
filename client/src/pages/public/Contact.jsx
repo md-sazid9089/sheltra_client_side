@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
+import ActionButton from '@/components/ui/ActionButton';
 import {
   FaEnvelope, FaMapMarkerAlt, FaTwitter, FaLinkedin, FaGithub,
   FaCheckCircle, FaChevronDown, FaChevronUp, FaPaperPlane,
@@ -319,9 +320,9 @@ export default function Contact() {
             Join thousands of organisations and individuals already using Sheltra to restore economic dignity.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg" className="bg-white text-brand-primary hover:bg-cyan-50" onClick={() => navigate('/register')}>
-              Get Started
-            </Button>
+            <ActionButton variant="primary" onClick={() => navigate('/register')}>
+              GET STARTED
+            </ActionButton>
             <Button size="lg" variant="ghost" className="text-white border border-white/30 hover:bg-white/10" onClick={() => navigate('/about')}>
               Learn More
             </Button>

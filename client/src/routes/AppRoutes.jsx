@@ -21,6 +21,7 @@ import RefugeeProfile from '@/pages/refugee/ProfileForm';
 import Opportunities from '@/pages/refugee/Opportunities';
 import Blogs from '@/pages/refugee/Blogs';
 import CVRating from '@/pages/refugee/CVRating';
+import VirtualNIDCheck from '@/pages/refugee/VirtualNIDCheck';
 
 // NGO pages
 import NGODashboard from '@/pages/ngo/Dashboard';
@@ -57,87 +58,88 @@ export default function AppRoutes() {
     <>
       <NavigationSpinner />
       <Routes>
-      {/* ── Public routes ── */}
-      <Route element={<PublicLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="/settings" element={<Settings />} />
-      </Route>
+        {/* ── Public routes ── */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
 
-      {/* ── Refugee routes ── */}
-      <Route
-        element={
-          <ProtectedRoute allowedRoles={['refugee']}>
-            <RefugeeLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route path="/refugee/dashboard" element={<RefugeeDashboard />} />
-        <Route path="/refugee/profile" element={<RefugeeProfile />} />
-        <Route path="/refugee/opportunities" element={<Opportunities />} />
-        <Route path="/refugee/blogs" element={<Blogs />} />
-        <Route path="/refugee/cv-rating" element={<CVRating />} />
-      </Route>
+        {/* ── Refugee routes ── */}
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={['refugee']}>
+              <RefugeeLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/refugee/dashboard" element={<RefugeeDashboard />} />
+          <Route path="/refugee/profile" element={<RefugeeProfile />} />
+          <Route path="/refugee/opportunities" element={<Opportunities />} />
+          <Route path="/refugee/blogs" element={<Blogs />} />
+          <Route path="/refugee/cv-rating" element={<CVRating />} />
+          <Route path="/refugee/nid-check" element={<VirtualNIDCheck />} />
+        </Route>
 
-      {/* ── NGO routes ── */}
-      <Route
-        element={
-          <ProtectedRoute allowedRoles={['ngo']}>
-            <NGOLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route path="/ngo/dashboard" element={<NGODashboard />} />
-        <Route path="/ngo/cases" element={<Cases />} />
-        <Route path="/ngo/cases/:id" element={<CaseDetail />} />
-      </Route>
+        {/* ── NGO routes ── */}
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={['ngo']}>
+              <NGOLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/ngo/dashboard" element={<NGODashboard />} />
+          <Route path="/ngo/cases" element={<Cases />} />
+          <Route path="/ngo/cases/:id" element={<CaseDetail />} />
+        </Route>
 
-      {/* ── Employer routes ── */}
-      <Route
-        element={
-          <ProtectedRoute allowedRoles={['employer']}>
-            <EmployerLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route path="/employer/dashboard" element={<EmployerDashboard />} />
-        <Route path="/employer/profile" element={<EmployerProfile />} />
-        <Route path="/employer/jobs" element={<Jobs />} />
-        <Route path="/employer/talent" element={<Talent />} />
-      </Route>
+        {/* ── Employer routes ── */}
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={['employer']}>
+              <EmployerLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/employer/dashboard" element={<EmployerDashboard />} />
+          <Route path="/employer/profile" element={<EmployerProfile />} />
+          <Route path="/employer/jobs" element={<Jobs />} />
+          <Route path="/employer/talent" element={<Talent />} />
+        </Route>
 
-      {/* ── Admin routes ── */}
-      <Route
-        element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <AdminLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/users" element={<Users />} />
-        <Route path="/admin/ngos" element={<NGOs />} />
-        <Route path="/admin/audit-logs" element={<AuditLogs />} />
-      </Route>
+        {/* ── Admin routes ── */}
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<Users />} />
+          <Route path="/admin/ngos" element={<NGOs />} />
+          <Route path="/admin/audit-logs" element={<AuditLogs />} />
+        </Route>
 
-      {/* Catch-all */}
-      <Route path="*" element={
-        <PublicLayout />
-      }>
+        {/* Catch-all */}
         <Route path="*" element={
-          <div className="min-h-[60vh] flex items-center justify-center">
-            <div className="text-center">
-              <h1 className="text-4xl font-bold text-text-primary dark:text-text-darkPrimary mb-2">404</h1>
-              <p className="text-text-secondary dark:text-text-darkSecondary">Page not found</p>
+          <PublicLayout />
+        }>
+          <Route path="*" element={
+            <div className="min-h-[60vh] flex items-center justify-center">
+              <div className="text-center">
+                <h1 className="text-4xl font-bold text-text-primary dark:text-text-darkPrimary mb-2">404</h1>
+                <p className="text-text-secondary dark:text-text-darkSecondary">Page not found</p>
+              </div>
             </div>
-          </div>
-        } />
-      </Route>
-    </Routes>
+          } />
+        </Route>
+      </Routes>
     </>
   );
 }

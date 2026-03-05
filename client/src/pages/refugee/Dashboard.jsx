@@ -25,6 +25,20 @@ const QUICK_LINKS = [
     ),
   },
   {
+    to: '/refugee/nid-check',
+    title: 'Get Virtual NID',
+    description: 'Get a verified National Identification Document (NID) after NGO verification.',
+    cta: 'Check Status',
+    variant: 'primary',
+    icon: (
+      <div className="w-10 h-10 rounded-xl bg-cyan-500/12 border border-cyan-500/20 flex items-center justify-center">
+        <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v10a2 2 0 002 2h5m0 0V4m0 12h9a2 2 0 012 2v2a2 2 0 01-2 2h-2.5" />
+        </svg>
+      </div>
+    ),
+  },
+  {
     to: '/refugee/opportunities',
     title: 'Browse Opportunities',
     description: 'View roles matched to your verified skills, with transparent AI explanations for every recommendation.',

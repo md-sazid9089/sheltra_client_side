@@ -2,14 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { Badge } from '@/components/ui/Badge';
 import { Table } from '@/components/ui/Table';
-import { Skeleton } from '@/components/ui/Skeleton';
 
 export default function AuditLogs() {
-  const { data: logs, isLoading } = useQuery({
+  const { data: logs } = useQuery({
     queryKey: ['admin-audit-logs'],
     queryFn: () => api.get('/admin/audit-logs').then((r) => r.data),
     retry: false,
-    placeholderData: [
+    initialData: [
       { id: 1, action: 'PROFILE_VERIFIED', actor: 'Sarah Kim (NGO)', target: 'Amara Mensah', timestamp: '2026-03-02 14:32', ip: '192.168.1.xx' },
       { id: 2, action: 'JOB_POSTED', actor: 'TechBridge HR', target: 'Junior Developer Role', timestamp: '2026-03-02 11:15', ip: '10.0.0.xx' },
       { id: 3, action: 'USER_REGISTERED', actor: 'System', target: 'Daniel Osei', timestamp: '2026-03-01 09:45', ip: '172.16.0.xx' },
@@ -39,14 +38,7 @@ export default function AuditLogs() {
     { key: 'ip', label: 'IP' },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4 motion-safe-fade-in">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton.Card />
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-6 motion-safe-fade-in">

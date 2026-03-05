@@ -4,18 +4,17 @@ import api from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { Skeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Table } from '@/components/ui/Table';
 
 export default function Cases() {
   const navigate = useNavigate();
 
-  const { data: cases, isLoading } = useQuery({
+  const { data: cases } = useQuery({
     queryKey: ['ngo-cases'],
     queryFn: () => api.get('/ngo/cases').then((r) => r.data),
     retry: false,
-    placeholderData: [
+    initialData: [
       { id: 1, name: 'Amara Mensah', location: 'Nairobi', skills: 'Python, React', verified: false, submitted: '2026-02-28' },
       { id: 2, name: 'Fatima Al-Rashid', location: 'Amman', skills: 'Nursing, Arabic', verified: true, submitted: '2026-02-25' },
       { id: 3, name: 'Daniel Osei', location: 'Accra', skills: 'Electrician, English', verified: false, submitted: '2026-03-01' },
@@ -48,14 +47,7 @@ export default function Cases() {
     },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4 motion-safe-fade-in">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton.Card />
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-6 motion-safe-fade-in">

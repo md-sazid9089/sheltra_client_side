@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import AnimatedButton from '@/components/ui/AnimatedButton';
+import ActionButton from '@/components/ui/ActionButton';
 import { Card } from '@/components/ui/Card';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { FaShieldAlt, FaBalanceScale, FaLock, FaGlobe, FaClipboardList, FaHandshake } from 'react-icons/fa';
@@ -299,13 +300,9 @@ export default function About() {
             you the tools to create real, lasting impact.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Button
-              size="lg"
-              className="bg-white text-brand-primary hover:bg-cyan-50"
-              onClick={() => navigate('/register')}
-            >
-              Get Started
-            </Button>
+            <ActionButton variant="primary" onClick={() => navigate('/register')}>
+              GET STARTED
+            </ActionButton>
             <Button
               size="lg"
               variant="ghost"

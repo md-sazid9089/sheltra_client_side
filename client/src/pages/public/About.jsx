@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
+import AnimatedButton from '@/components/ui/AnimatedButton';
 import { Card } from '@/components/ui/Card';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { FaShieldAlt, FaBalanceScale, FaLock, FaGlobe, FaClipboardList, FaHandshake } from 'react-icons/fa';
@@ -142,19 +143,17 @@ export default function About() {
             </p>
 
             <div className="mt-9 flex flex-wrap gap-4">
-              <Button size="lg" onClick={() => navigate('/register')}>
-                Join Sheltra
-              </Button>
-              <Button
-                size="lg"
+              <AnimatedButton variant="primary" onClick={() => navigate('/register')}>
+                JOIN SHELTRA
+              </AnimatedButton>
+              <AnimatedButton
                 variant="ghost"
-                className="text-white border-white/25 hover:bg-white/8"
                 onClick={() => {
                   document.getElementById('our-story')?.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
-                Read Our Story ↓
-              </Button>
+                OUR STORY
+              </AnimatedButton>
             </div>
           </div>
         </div>

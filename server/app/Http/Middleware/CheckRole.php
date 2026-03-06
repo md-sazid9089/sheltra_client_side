@@ -7,22 +7,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * CheckAdminCredentials - Sheltra Admin Role Verification
+ * CheckRole - Sheltra Flexible Role-Based Access Control
  * 
- * Validates that the authenticated user has admin role.
- * Used to protect admin-only endpoints.
- * Returns JSON response for API requests, redirect for web requests.
+ * Validates user has one of the allowed roles.
+ * Usage: middleware('role:refugee,ngo')
+ * Protects routes that require specific roles.
  */
-class CheckAdminCredentials
+class CheckRole
 {
     /**
-     * Handle an incoming request - verify admin role.
+     * Handle an incoming request - verify user role.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
+     * @param  string  $roles  Comma-separated allowed roles
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
         // Check if user is authenticated
         if (!Auth::check()) {
@@ -36,12 +37,13 @@ class CheckAdminCredentials
             return redirect()->route('login');
         }
 
-        // Check if user has admin role
-        if (Auth::user()->role !== 'admin') {
+        // Check if user role is in allowed roles
+        $userRole = Auth::user()->role;
+        if (!in_array($userRole, $roles)) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Admin access required. Your role: ' . (Auth::user()->role ?? 'unknown'),
+                    'message' => 'Access denied. Required role: ' . implode(' or ', $roles) . '. Your role: ' . $userRole,
                 ], 403);
             }
 

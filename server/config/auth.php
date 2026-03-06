@@ -4,12 +4,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Authentication Defaults
+    | Authentication Defaults (Sheltra)
     |--------------------------------------------------------------------------
     |
-    | This option controls the default authentication "guard" and password
-    | reset options for your application. You may change these defaults
-    | as required, but they're a perfect start for most applications.
+    | Default authentication guard for Sheltra: role-based access control.
+    | All roles (refugee, ngo, employer, admin) use the same user table
+    | with a 'role' column for differentiation.
     |
     */
 
@@ -20,18 +20,15 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Authentication Guards
+    | Authentication Guards (Sheltra)
     |--------------------------------------------------------------------------
     |
-    | Next, you may define every authentication guard for your application.
-    | Of course, a great default configuration has been defined for you
-    | here which uses session storage and the Eloquent user provider.
+    | Sheltra uses web session guard for browser/SPA requests
+    | and sanctum for stateless API token authentication.
     |
-    | All authentication drivers have a user provider. This defines how the
-    | users are actually retrieved out of your database or other storage
-    | mechanisms used by this application to persist your user's data.
-    |
-    | Supported: "session"
+    | Guards:
+    | - web: Session-based for SPA frontend
+    | - sanctum: Stateless token-based (future enhancement)
     |
     */
 
@@ -40,22 +37,20 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'sanctum' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+        ],
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | User Providers
+    | User Providers (Sheltra)
     |--------------------------------------------------------------------------
     |
-    | All authentication drivers have a user provider. This defines how the
-    | users are actually retrieved out of your database or other storage
-    | mechanisms used by this application to persist your user's data.
-    |
-    | If you have multiple user tables or models you may configure multiple
-    | sources which represent each model / table. These sources may then
-    | be assigned to any extra authentication guards you have defined.
-    |
-    | Supported: "database", "eloquent"
+    | Sheltra uses single User model with role column.
+    | Roles: refugee, ngo, employer, admin
     |
     */
 
@@ -64,25 +59,15 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Resetting Passwords
+    | Resetting Passwords (Sheltra)
     |--------------------------------------------------------------------------
     |
-    | You may specify multiple password reset configurations if you have more
-    | than one user table or model in the application and you want to have
-    | separate password reset settings based on the specific user types.
-    |
-    | The expire time is the number of minutes that each reset token will be
-    | considered valid. This security feature keeps tokens short-lived so
-    | they have less time to be guessed. You may change this as needed.
+    | Password reset configuration for all Sheltra roles.
+    | Tokens expire after 60 minutes.
     |
     */
 
@@ -97,7 +82,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Password Confirmation Timeout
+    | Password Confirmation Timeout (Sheltra)
+    |--------------------------------------------------------------------------
+    |
+    | Specifies the number of seconds before a password confirmation
+    | times out if no activity occurs.
+    |
+    */
+
+    'password_timeout' => 10800,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Old Comment Reference (Remove)
+    |
     |--------------------------------------------------------------------------
     |
     | Here you may define the amount of seconds before a password confirmation

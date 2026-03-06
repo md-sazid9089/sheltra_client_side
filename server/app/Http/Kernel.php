@@ -50,13 +50,14 @@ class Kernel extends HttpKernel
      * The application's route middleware.
      *
      * These middleware may be assigned to groups or used individually.
+     * Sheltra adds: check.admin, role
      *
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [
-        'check.admin' => \App\Http\Middleware\CheckAdminCredentials::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'auth.session' => \Illuminate\Auth\Middleware\AuthenticateSession::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
@@ -64,5 +65,9 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+
+        // Sheltra: Admin and role-based access control
+        'check.admin' => \App\Http\Middleware\CheckAdminCredentials::class,
+        'role' => \App\Http\Middleware\CheckRole::class,
     ];
 }

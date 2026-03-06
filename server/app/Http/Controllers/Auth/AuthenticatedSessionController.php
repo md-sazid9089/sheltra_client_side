@@ -10,25 +10,42 @@ use Illuminate\Support\Facades\Auth;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Handle an incoming authentication request.
+     * Handle an incoming authentication request for Sheltra.
+     *
+     * Validates credentials, authenticates user, and returns role-aware response.
      *
      * @param  \App\Http\Requests\Auth\LoginRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(LoginRequest $request)
     {
+        // Validate and authenticate
         $request->authenticate();
 
+        // Regenerate session to prevent fixation attacks
         $request->session()->regenerate();
 
-        return response()->noContent();
+        $user = Auth::user();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Login successful.',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role ?? 'refugee',
+            ],
+        ], 200);
     }
 
     /**
-     * Destroy an authenticated session.
+     * Destroy an authenticated session for Sheltra.
+     *
+     * Logs user out and invalidates their session.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Request $request)
     {
@@ -38,6 +55,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return response()->noContent();
+        return response()->json([
+            'success' => true,
+            'message' => 'Logged out successfully.',
+        ], 200);
     }
 }

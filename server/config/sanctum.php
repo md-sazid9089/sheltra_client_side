@@ -4,30 +4,29 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Stateful Domains
+    | Stateful Domains (Sheltra)
     |--------------------------------------------------------------------------
     |
-    | Requests from the following domains / hosts will receive stateful API
-    | authentication cookies. Typically, these should include your local
-    | and production domains which access your API via a frontend SPA.
+    | Defines which domains should receive stateful API authentication cookies.
+    | Sheltra frontend communicates from port 3000 (development) or
+    | sheltra.app (production).
     |
     */
 
     'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
         '%s%s%s',
-        'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
+        'localhost,localhost:3000,localhost:5173,127.0.0.1,127.0.0.1:3000,127.0.0.1:8000,::1',
         env('APP_URL') ? ','.parse_url(env('APP_URL'), PHP_URL_HOST) : '',
         env('FRONTEND_URL') ? ','.parse_url(env('FRONTEND_URL'), PHP_URL_HOST) : ''
     ))),
 
     /*
     |--------------------------------------------------------------------------
-    | Expiration Minutes
+    | Expiration Minutes (Sheltra)
     |--------------------------------------------------------------------------
     |
-    | This value controls the number of minutes until an issued token will be
-    | considered expired. If this value is null, personal access tokens do
-    | not expire. This won't tweak the lifetime of first-party sessions.
+    | Tokens do not expire by default. Set a value for token expiration
+    | if needed (in days). Null = no expiration.
     |
     */
 
@@ -35,12 +34,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Sanctum Middleware
+    | Sanctum Middleware (Sheltra)
     |--------------------------------------------------------------------------
     |
-    | When authenticating your first-party SPA with Sanctum you may need to
-    | customize some of the middleware Sanctum uses while processing the
-    | request. You may change the middleware listed below as required.
+    | Middleware used for token authentication and CSRF verification.
     |
     */
 

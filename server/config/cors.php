@@ -4,28 +4,35 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Cross-Origin Resource Sharing (CORS) Configuration
+    | Cross-Origin Resource Sharing (CORS) - Sheltra Configuration
     |--------------------------------------------------------------------------
     |
-    | Here you may configure your settings for cross-origin resource sharing
-    | or "CORS". This determines what cross-origin operations may execute
-    | in web browsers. You are free to adjust these settings as needed.
+    | Configure CORS for Sheltra SPA frontend integration.
+    | Allows the React frontend to communicate with the Laravel API.
     |
-    | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+    | Frontend URLs:
+    | - Development: http://localhost:3000
+    | - Production: https://sheltra.app
     |
     */
 
-    'paths' => ['*'],
+    'paths' => ['api/*', 'auth/*'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:5173')],
+    'allowed_origins' => [
+        env('FRONTEND_URL', 'http://localhost:3000'),
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+    ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [
+        env('APP_URL') ? parse_url(env('APP_URL'), PHP_URL_HOST) : null,
+    ],
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => [],
+    'exposed_headers' => ['X-Total-Count', 'X-Page-Number'],
 
     'max_age' => 0,
 

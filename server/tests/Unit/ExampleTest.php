@@ -4,15 +4,23 @@ namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 
-class ExampleTest extends TestCase
+class RefugeeDataTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Test refugee profile data structure.
      *
      * @return void
      */
-    public function test_example()
+    public function test_refugee_profile_is_valid()
     {
-        $this->assertTrue(true);
+        $profile = [
+            'full_name' => 'Ahmed Hassan',
+            'country_of_origin' => 'Syria',
+            'legal_status' => 'refugee',
+            'availability' => 'full_time',
+        ];
+
+        $this->assertArrayHasKey('full_name', $profile);
+        $this->assertArrayHasKey('country_of_origin', $profile);
     }
 }

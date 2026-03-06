@@ -3,8 +3,16 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Throwable;
 
+/**
+ * Sheltra Global Exception Handler
+ * 
+ * Handles exceptions and errors across the Sheltra platform,
+ * converting them to JSON responses for the frontend API.
+ */
 class Handler extends ExceptionHandler
 {
     /**
@@ -41,6 +49,7 @@ class Handler extends ExceptionHandler
 
     /**
      * Render an exception into an HTTP response.
+     * All responses are JSON for Sheltra API compatibility.
      *
      * @param \Illuminate\Http\Request $request
      * @param \Throwable $exception
@@ -48,33 +57,43 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        $message = $this->getMessage($exception);
+        // Handle validation exceptions
+        if ($exception instanceof ValidationException) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed. Please check your input.',
+                'errors' => $exception->errors(),
+            ], 422);
+        }
 
+        // Handle model not found
+        if ($exception instanceof ModelNotFoundException) {
+            return response()->json([
+                'success' => false,
+                'message' => 'The requested resource was not found.',
+            ], 404);
+        }
+
+        // Handle unauthorized access
+        if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated. Please log in.',
+            ], 401);
+        }
+
+        // Handle authorization failures
+        if ($exception instanceof \Illuminate\Auth\Access\AuthorizationException) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not have permission to perform this action.',
+            ], 403);
+        }
+
+        // Generic error response
         return response()->json([
             'success' => false,
-            'message' => $message,
-        ], 200);
+            'message' => 'An error occurred. Please try again later.',
+        ], 500);
     }
-
-
-
-    /**
-     * Get the error message from the exception.
-     *
-     * @param \Throwable $exception
-     * @return string
-     */
-    protected function getMessage(Throwable $exception): string
-    {
-        if ($exception instanceof ValidationException) {
-            return 'Validation failed.';
-        }
-
-        if ($exception instanceof ModelNotFoundException) {
-            return 'Resource not found.';
-        }
-
-        return $exception->getMessage() ?: 'An unexpected error occurred.';
-    }
-
 }

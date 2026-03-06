@@ -74,7 +74,7 @@ class RefugeeService
      * @return array
      * @throws Exception
      */
-    public function getOpportunities($userId, $filters = [])
+    public function getMatchedOpportunities($userId, $filters = [])
     {
         try {
             // Placeholder: In production, query Job model with skill matching

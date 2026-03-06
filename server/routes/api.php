@@ -24,12 +24,12 @@ use Illuminate\Support\Facades\Route;
 // Authentication routes (public + guest middleware)
 Route::prefix('auth')->group(base_path('routes/auth.php'));
 
-// Session/auth state endpoint (public)
-Route::get('/auth/me', [SessionController::class, 'currentUser']);
-Route::post('/auth/validate', [SessionController::class, 'validate']);
+// Session/auth state endpoint (requires authentication)
+Route::middleware(['auth:sanctum'])->get('/auth/me', [SessionController::class, 'currentUser']);
+Route::middleware(['auth:sanctum'])->post('/auth/validate', [SessionController::class, 'validate']);
 
 // Refugee routes (refugee role required)
-Route::middleware(['auth', 'role:refugee'])->prefix('refugee')->group(function () {
+Route::middleware(['auth:sanctum', 'role:refugee'])->prefix('refugee')->group(function () {
     Route::get('/profile', [RefugeeController::class, 'getProfile']);
     Route::post('/profile', [RefugeeController::class, 'updateProfile']);
     Route::put('/profile', [RefugeeController::class, 'updateProfile']);
@@ -40,7 +40,7 @@ Route::middleware(['auth', 'role:refugee'])->prefix('refugee')->group(function (
 });
 
 // NGO routes (ngo role required)
-Route::middleware(['auth', 'role:ngo'])->prefix('ngo')->group(function () {
+Route::middleware(['auth:sanctum', 'role:ngo'])->prefix('ngo')->group(function () {
     Route::get('/cases', [NGOController::class, 'getCases']);
     Route::get('/cases/{caseId}', [NGOController::class, 'getCaseDetail']);
     Route::post('/cases/{caseId}/verify/{refugeeId}', [NGOController::class, 'submitVerification']);
@@ -50,7 +50,7 @@ Route::middleware(['auth', 'role:ngo'])->prefix('ngo')->group(function () {
 });
 
 // Employer routes (employer role required)
-Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function () {
+Route::middleware(['auth:sanctum', 'role:employer'])->prefix('employer')->group(function () {
     Route::get('/profile', [EmployerController::class, 'getProfile']);
     Route::post('/profile', [EmployerController::class, 'updateProfile']);
     Route::put('/profile', [EmployerController::class, 'updateProfile']);
@@ -63,7 +63,7 @@ Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function
 });
 
 // Admin routes (admin role required)
-Route::middleware(['auth', 'check.admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth:sanctum', 'check.admin'])->prefix('admin')->group(function () {
     Route::get('/impact-metrics', [AdminController::class, 'getImpactMetrics']);
     Route::get('/users', [AdminController::class, 'getUsers']);
     Route::get('/ngos', [AdminController::class, 'getNGOs']);

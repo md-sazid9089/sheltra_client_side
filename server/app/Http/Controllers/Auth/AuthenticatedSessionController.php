@@ -12,7 +12,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request for Sheltra.
      *
-     * Validates credentials, authenticates user, and returns role-aware response.
+     * Validates credentials, authenticates user, and returns Sanctum token.
      *
      * @param  \App\Http\Requests\Auth\LoginRequest  $request
      * @return \Illuminate\Http\JsonResponse
@@ -22,14 +22,15 @@ class AuthenticatedSessionController extends Controller
         // Validate and authenticate
         $request->authenticate();
 
-        // Regenerate session to prevent fixation attacks
-        $request->session()->regenerate();
-
         $user = Auth::user();
+
+        // Create Sanctum token
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'success' => true,
-            'message' => 'Login successful.',
+            'message' => 'Login successful',
+            'token' => $token,
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
@@ -42,18 +43,15 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session for Sheltra.
      *
-     * Logs user out and invalidates their session.
+     * Revokes all user tokens (logs user out).
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
+        // Revoke all tokens for the authenticated user
+        $request->user()->tokens()->delete();
 
         return response()->json([
             'success' => true,

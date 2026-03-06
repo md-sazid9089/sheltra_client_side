@@ -42,7 +42,7 @@ Route::post('/email/verification-notification', [EmailVerificationNotificationCo
     ->name('verification.send');
 
 // Authenticated endpoints
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });

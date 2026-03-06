@@ -54,12 +54,14 @@ class RegisteredUserController extends Controller
         // Register user (trigger email verification if needed)
         event(new Registered($user));
 
-        // Auto-login after registration
+        // Auto-login after registration - create Sanctum token
         Auth::login($user);
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'success' => true,
             'message' => 'Registration successful. Welcome to Sheltra!',
+            'token' => $token,
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,

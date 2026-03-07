@@ -7,7 +7,7 @@ WORKDIR /app
 
 # Install dependencies first (layer cache)
 COPY package.json package-lock.json* ./
-RUN npm install
+RUN npm cache clean --force && npm install --legacy-peer-deps
 
 # Copy source
 COPY . .
@@ -27,7 +27,7 @@ ENV VITE_BACKEND_ENDPOINT=$VITE_BACKEND_ENDPOINT
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
-RUN npm install
+RUN npm cache clean --force && npm install --legacy-peer-deps
 
 COPY . .
 

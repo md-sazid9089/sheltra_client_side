@@ -30,7 +30,7 @@ export default function Opportunities() {
 
   const { data: opportunities } = useQuery({
     queryKey: ['refugee-opportunities'],
-    queryFn: () => api.get('/refugees/opportunities').then((r) => r.data),
+    queryFn: () => api.get('/refugee/opportunities').then((r) => r.data),
     retry: false,
     initialData: [
       {

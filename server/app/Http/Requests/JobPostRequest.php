@@ -39,4 +39,23 @@ class JobPostRequest extends FormRequest
         ];
     }
 
-    /**\n     * Get the error messages for the defined validation rules.\n     *\n     * @return array\n     */\n    public function messages()\n    {\n        return [\n            'title.required' => 'Job title is required.',\n            'description.required' => 'Job description is required.',\n            'description.min' => 'Job description must be at least 50 characters.',\n            'role_type.required' => 'Job type is required.',\n            'location.required' => 'Location is required.',\n            'salary_max.gte' => 'Maximum salary must be greater than or equal to minimum salary.',\n            'required_skills.required' => 'At least one required skill must be specified.',\n            'num_positions.required' => 'Number of positions is required.',\n            'num_positions.min' => 'Number of positions must be at least 1.',\n        ];\n    }\n}
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'title.required' => 'Job title is required.',
+            'description.required' => 'Job description is required.',
+            'description.min' => 'Job description must be at least 50 characters.',
+            'role_type.required' => 'Job type is required.',
+            'location.required' => 'Location is required.',
+            'salary_max.gte' => 'Maximum salary must be greater than or equal to minimum salary.',
+            'required_skills.required' => 'At least one required skill must be specified.',
+            'num_positions.required' => 'Number of positions is required.',
+            'num_positions.min' => 'Number of positions must be at least 1.',
+        ];
+    }
+}

@@ -53,7 +53,7 @@ class SessionController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function validate(Request $request)
+    public function validateSession(Request $request)
     {
         if (!Auth::check()) {
             return response()->json([

@@ -26,7 +26,7 @@ Route::prefix('auth')->group(base_path('routes/auth.php'));
 
 // Session/auth state endpoint (requires authentication)
 Route::middleware(['auth:sanctum'])->get('/auth/me', [SessionController::class, 'currentUser']);
-Route::middleware(['auth:sanctum'])->post('/auth/validate', [SessionController::class, 'validate']);
+Route::middleware(['auth:sanctum'])->post('/auth/validate', [SessionController::class, 'validateSession']);
 
 // Refugee routes (refugee role required)
 Route::middleware(['auth:sanctum', 'role:refugee'])->prefix('refugee')->group(function () {

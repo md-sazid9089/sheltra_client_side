@@ -6,7 +6,7 @@ services:
     image: mysql:8.0
     container_name: sheltra_db
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
       MYSQL_DATABASE: ${DB_DATABASE:-sheltra_db}
@@ -28,80 +28,32 @@ services:
   # ──────────────────────────────────────────
   backend:
     build:
-      context: .
+      context: ./server
       dockerfile: Dockerfile
-      args:
-        APP_NAME: ${APP_NAME:-Sheltra}
-        APP_ENV: ${APP_ENV:-local}
-        APP_KEY: ${APP_KEY:-}
-        APP_DEBUG: ${APP_DEBUG:-true}
-        APP_URL: ${APP_URL:-http://localhost:8000}
-        FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
-        LOG_LEVEL: ${LOG_LEVEL:-debug}
-        DB_CONNECTION: ${DB_CONNECTION:-mysql}
-        DB_HOST: db
-        DB_PORT: ${DB_PORT:-3306}
-        DB_DATABASE: ${DB_DATABASE:-sheltra_db}
-        DB_USERNAME: ${DB_USERNAME:-sheltra}
-        DB_PASSWORD: ${DB_PASSWORD:-secret}
-        VITE_BACKEND_ENDPOINT: ${VITE_BACKEND_ENDPOINT:-http://localhost:8000}
     image: sheltra-backend:latest
     container_name: sheltra_backend
     ports:
-      - "8000:80"               # host:container  (Apache on 80)
+      - "8000:80"
+    environment:
+      APP_NAME: ${APP_NAME:-Sheltra}
+      APP_ENV: ${APP_ENV:-local}
+      APP_KEY: ${APP_KEY:-base64:xSomeRandomKeyHere=}
+      APP_DEBUG: ${APP_DEBUG:-true}
+      APP_URL: ${APP_URL:-http://localhost:8000}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
+      DB_CONNECTION: ${DB_CONNECTION:-mysql}
+      DB_HOST: db
+      DB_PORT: ${DB_PORT:-3306}
+      DB_DATABASE: ${DB_DATABASE:-sheltra_db}
+      DB_USERNAME: ${DB_USERNAME:-sheltra}
+      DB_PASSWORD: ${DB_PASSWORD:-secret}
     depends_on:
       db:
         condition: service_healthy
     restart: unless-stopped
     networks:
       - sheltra_network
-
-  # ──────────────────────────────────────────
-  # Frontend – React / Vite
-  # ──────────────────────────────────────────
-  frontend:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-      target: production        # change to "dev" for hot-reload development
-      args:
-        VITE_BACKEND_ENDPOINT: ${VITE_BACKEND_ENDPOINT:-http://localhost:8000}
-    image: sheltra-frontend:latest
-    container_name: sheltra_frontend
-    ports:
-      - "3000:80"               # host:container  (80 inside Nginx)
-    depends_on:
-      - backend
-    restart: unless-stopped
-    networks:
-      - sheltra_network
-
-  # ──────────────────────────────────────────
-  # Frontend – development mode (hot-reload)
-  # ──────────────────────────────────────────
-  frontend-dev:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-      target: dev
-      args:
-        VITE_BACKEND_ENDPOINT: ${VITE_BACKEND_ENDPOINT:-http://localhost:8000}
-    image: sheltra-frontend-dev:latest
-    container_name: sheltra_frontend_dev
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./client/src:/app/src        # live source sync
-      - ./client/public:/app/public
-    environment:
-      - VITE_BACKEND_ENDPOINT=${VITE_BACKEND_ENDPOINT:-http://localhost:8000}
-    depends_on:
-      - backend
-    restart: unless-stopped
-    networks:
-      - sheltra_network
-    profiles:
-      - dev                          # only started with: docker compose --profile dev up
 
 volumes:
   sheltra_db_data:

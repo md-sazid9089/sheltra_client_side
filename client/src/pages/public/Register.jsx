@@ -39,7 +39,8 @@ export default function Register() {
     setServerError('');
     setLoading(true);
     try {
-      const { confirmPassword, ...payload } = data;
+      const { confirmPassword, ...rest } = data;
+      const payload = { ...rest, password_confirmation: confirmPassword };
       const result = await authRegister(payload);
       const role = result?.user?.role || data.role;
       const dashboardMap = {

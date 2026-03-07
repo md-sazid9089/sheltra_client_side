@@ -1,2 +1,0 @@
--- Sheltra Database Schema
--- Tables will be added here as the project develops

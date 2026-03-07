@@ -60,7 +60,6 @@ export default function VirtualNIDCheck() {
             // Download the PDF
             pdf_.save(`Sheltra-NID-${nidData.nidNumber}.pdf`);
         } catch (err) {
-            console.error('Error generating PDF:', err);
             alert('Failed to generate PDF. Please try again.');
         }
     };

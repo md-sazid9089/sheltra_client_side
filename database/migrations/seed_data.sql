@@ -1,2 +1,0 @@
--- Sheltra Seed Data
--- Seed data will be added here as the project develops

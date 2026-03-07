@@ -87,7 +87,7 @@ export default function RefugeeDashboard() {
 
   const { data: profile } = useQuery({
     queryKey: ['refugee-profile'],
-    queryFn: () => api.get('/refugees/profile').then((r) => r.data),
+    queryFn: () => api.get('/refugee/profile').then((r) => r.data),
     retry: false,
   });
 

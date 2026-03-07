@@ -28,7 +28,7 @@ export default function ProfileForm() {
 
   const { data: profile } = useQuery({
     queryKey: ['refugee-profile'],
-    queryFn: () => api.get('/refugees/profile').then((r) => r.data),
+    queryFn: () => api.get('/refugee/profile').then((r) => r.data),
     retry: false,
   });
 
@@ -40,8 +40,8 @@ export default function ProfileForm() {
         languages: data.languages.split(',').map((l) => l.trim()),
       };
       return profile?.id
-        ? api.put('/refugees/profile', payload)
-        : api.post('/refugees/profile', payload);
+        ? api.put('/refugee/profile', payload)
+        : api.post('/refugee/profile', payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['refugee-profile'] });

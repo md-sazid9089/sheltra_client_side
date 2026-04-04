@@ -3,10 +3,93 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Exception;
 
 class RefugeeService
 {
+    /**
+     * Analyze CV text with Gemini and return a structured result.
+     *
+     * @param array $payload
+     * @return array
+     * @throws Exception
+     */
+    public function analyzeCv(array $payload)
+    {
+        $apiKey = config('services.google_ai.api_key');
+        $model = config('services.google_ai.model', 'gemini-2.0-flash');
+        $baseUrl = rtrim(config('services.google_ai.base_url', 'https://generativelanguage.googleapis.com/v1beta'), '/');
+
+        if (empty($apiKey)) {
+            throw new Exception('Gemini API key is not configured. Set GEMINI_API_KEY in the backend environment.');
+        }
+
+        $cvText = $payload['cv_text'];
+        $targetRole = $payload['target_role'] ?? 'Not specified';
+        $targetCountry = $payload['target_country'] ?? 'Not specified';
+
+        $prompt = "You are a CV analysis assistant for refugees and migrants. Analyze the CV and return STRICT JSON only with this schema: "
+            . "{\"score\": number 0-100, \"label\": \"Strong|Good|Fair|Needs Work\", \"summary\": string, "
+            . "\"suggestions\": string[], \"strengths\": string[], \"gaps\": string[]}. "
+            . "Keep suggestions practical and concise.\n\n"
+            . "Target role: {$targetRole}\n"
+            . "Target country: {$targetCountry}\n\n"
+            . "CV text:\n{$cvText}";
+
+        $response = Http::timeout(45)
+            ->withHeaders(['Content-Type' => 'application/json'])
+            ->post("{$baseUrl}/models/{$model}:generateContent?key={$apiKey}", [
+                'contents' => [
+                    [
+                        'parts' => [
+                            ['text' => $prompt],
+                        ],
+                    ],
+                ],
+            ]);
+
+        if (!$response->successful()) {
+            throw new Exception('Gemini request failed with status ' . $response->status());
+        }
+
+        $json = $response->json();
+        $rawText = $json['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+        if (!$rawText) {
+            throw new Exception('Gemini response did not contain analysis text.');
+        }
+
+        $decoded = json_decode($rawText, true);
+        if (!is_array($decoded)) {
+            $start = strpos($rawText, '{');
+            $end = strrpos($rawText, '}');
+            if ($start !== false && $end !== false && $end > $start) {
+                $maybeJson = substr($rawText, $start, $end - $start + 1);
+                $decoded = json_decode($maybeJson, true);
+            }
+        }
+
+        if (!is_array($decoded)) {
+            throw new Exception('Could not parse structured Gemini JSON output.');
+        }
+
+        $score = (int) ($decoded['score'] ?? 0);
+        $score = max(0, min(100, $score));
+        $label = $decoded['label'] ?? ($score >= 80 ? 'Strong' : ($score >= 60 ? 'Good' : ($score >= 45 ? 'Fair' : 'Needs Work')));
+        $labelVariant = $label === 'Strong' ? 'success' : ($label === 'Good' ? 'accent' : ($label === 'Fair' ? 'warning' : 'error'));
+
+        return [
+            'score' => $score,
+            'label' => $label,
+            'labelVariant' => $labelVariant,
+            'summary' => (string) ($decoded['summary'] ?? ''),
+            'suggestions' => array_values(array_filter($decoded['suggestions'] ?? [], 'is_string')),
+            'strengths' => array_values(array_filter($decoded['strengths'] ?? [], 'is_string')),
+            'gaps' => array_values(array_filter($decoded['gaps'] ?? [], 'is_string')),
+        ];
+    }
+
     /**
      * Get refugee profile by user ID.
      *

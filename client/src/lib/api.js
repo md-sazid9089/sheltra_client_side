@@ -33,3 +33,15 @@ api.interceptors.response.use(
 );
 
 export default api;
+
+export const refugeeApi = {
+  analyzeCv: async ({ cvText, targetRole, targetCountry }) => {
+    const response = await api.post('/refugee/cv-analyze', {
+      cv_text: cvText,
+      target_role: targetRole,
+      target_country: targetCountry,
+    });
+
+    return response.data;
+  },
+};

@@ -43,24 +43,31 @@ class RefugeeService
             . "CV text:\n{$cvText}";
 
         try {
-            $response = Http::retry(3, 1000, function ($exception, $request) {
-                    if (method_exists($exception, 'response') && $exception->response) {
-                        return in_array($exception->response->status(), [429, 500, 502, 503, 504], true);
-                    }
+            $response = null;
 
-                    return true;
-                })
-                ->timeout(45)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->post("{$baseUrl}/models/{$model}:generateContent?key={$apiKey}", [
-                    'contents' => [
-                        [
-                            'parts' => [
-                                ['text' => $prompt],
+            for ($attempt = 1; $attempt <= 3; $attempt++) {
+                $response = Http::timeout(45)
+                    ->withHeaders(['Content-Type' => 'application/json'])
+                    ->post("{$baseUrl}/models/{$model}:generateContent?key={$apiKey}", [
+                        'contents' => [
+                            [
+                                'parts' => [
+                                    ['text' => $prompt],
+                                ],
                             ],
                         ],
-                    ],
-                ]);
+                    ]);
+
+                if ($response->successful()) {
+                    break;
+                }
+
+                if (!in_array($response->status(), [429, 500, 502, 503, 504], true) || $attempt === 3) {
+                    break;
+                }
+
+                usleep(1000000);
+            }
 
             if (!$response->successful()) {
                 return $this->fallbackCvAnalysis(

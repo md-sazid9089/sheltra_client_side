@@ -1,0 +1,83 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy Application
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Trigger deployment
+      run: |
+        echo "🚀 Deployment triggered for Sheltra"
+        echo "Commit: ${{ github.sha }}"
+        echo "Branch: ${{ github.ref }}"
+        
+    - name: Build frontend for production
+      run: |
+        cd client
+        npm ci
+        npm run build
+      env:
+        VITE_API_URL: ${{ secrets.PRODUCTION_API_URL }}
+
+    - name: Prepare backend deployment
+      working-directory: server
+      run: |
+        composer install --prefer-dist --no-dev --optimize-autoloader
+        
+    - name: Create deployment package
+      run: |
+        mkdir -p dist
+        cp -r client/dist/* dist/ 2>/dev/null || true
+        cp -r server/* dist/ 2>/dev/null || true
+        echo "Deployment package created"
+
+    - name: Upload deployment artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: sheltra-production-build
+        path: dist/
+        retention-days: 30
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Sheltra Release ${{ github.ref }}
+        body: |
+          ## 📦 Sheltra Release
+          - **Version**: ${{ github.ref }}
+          - **Commit**: ${{ github.sha }}
+          - **Date**: ${{ github.event.head_commit.timestamp }}
+          
+          ### 🚀 What's New:
+          See commits for details: ${{ github.event.head_commit.url }}
+        draft: false
+        prerelease: false
+
+    - name: Notify deployment
+      run: |
+        echo "✅ Deployment artifacts ready"
+        echo "📦 Build: sheltra-production-build"
+        echo "🔗 Artifacts available in Actions tab"
+
+    - name: Send Slack notification
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        text: 'Sheltra Deployment: ${{ job.status }}'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        fields: repo,commit,author,action
+      continue-on-error: true

@@ -18,16 +18,21 @@ class RefugeeService
     public function analyzeCv(array $payload)
     {
         $apiKey = config('services.google_ai.api_key');
-        $model = config('services.google_ai.model', 'gemini-2.0-flash');
+        $model = config('services.google_ai.model', 'gemini-3-flash-preview');
         $baseUrl = rtrim(config('services.google_ai.base_url', 'https://generativelanguage.googleapis.com/v1beta'), '/');
-
-        if (empty($apiKey)) {
-            throw new Exception('Gemini API key is not configured. Set GEMINI_API_KEY in the backend environment.');
-        }
 
         $cvText = $payload['cv_text'];
         $targetRole = $payload['target_role'] ?? 'Not specified';
         $targetCountry = $payload['target_country'] ?? 'Not specified';
+
+        if (empty($apiKey)) {
+            return $this->fallbackCvAnalysis(
+                $cvText,
+                'AI provider key is missing. Returned local analysis so users can continue.',
+                $targetRole,
+                $targetCountry
+            );
+        }
 
         $prompt = "You are a CV analysis assistant for refugees and migrants. Analyze the CV and return STRICT JSON only with this schema: "
             . "{\"score\": number 0-100, \"label\": \"Strong|Good|Fair|Needs Work\", \"summary\": string, "
@@ -37,57 +42,240 @@ class RefugeeService
             . "Target country: {$targetCountry}\n\n"
             . "CV text:\n{$cvText}";
 
-        $response = Http::timeout(45)
-            ->withHeaders(['Content-Type' => 'application/json'])
-            ->post("{$baseUrl}/models/{$model}:generateContent?key={$apiKey}", [
-                'contents' => [
-                    [
-                        'parts' => [
-                            ['text' => $prompt],
+        try {
+            $response = Http::retry(3, 1000, function ($exception, $request) {
+                    if (method_exists($exception, 'response') && $exception->response) {
+                        return in_array($exception->response->status(), [429, 500, 502, 503, 504], true);
+                    }
+
+                    return true;
+                })
+                ->timeout(45)
+                ->withHeaders(['Content-Type' => 'application/json'])
+                ->post("{$baseUrl}/models/{$model}:generateContent?key={$apiKey}", [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt],
+                            ],
                         ],
                     ],
-                ],
-            ]);
+                ]);
 
-        if (!$response->successful()) {
-            throw new Exception('Gemini request failed with status ' . $response->status());
-        }
-
-        $json = $response->json();
-        $rawText = $json['candidates'][0]['content']['parts'][0]['text'] ?? null;
-
-        if (!$rawText) {
-            throw new Exception('Gemini response did not contain analysis text.');
-        }
-
-        $decoded = json_decode($rawText, true);
-        if (!is_array($decoded)) {
-            $start = strpos($rawText, '{');
-            $end = strrpos($rawText, '}');
-            if ($start !== false && $end !== false && $end > $start) {
-                $maybeJson = substr($rawText, $start, $end - $start + 1);
-                $decoded = json_decode($maybeJson, true);
+            if (!$response->successful()) {
+                return $this->fallbackCvAnalysis(
+                    $cvText,
+                    'Gemini request failed with status ' . $response->status() . '. Returned local analysis.',
+                    $targetRole,
+                    $targetCountry
+                );
             }
-        }
 
-        if (!is_array($decoded)) {
-            throw new Exception('Could not parse structured Gemini JSON output.');
-        }
+            $json = $response->json();
+            $rawText = $json['candidates'][0]['content']['parts'][0]['text'] ?? null;
 
-        $score = (int) ($decoded['score'] ?? 0);
+            if (!$rawText) {
+                return $this->fallbackCvAnalysis(
+                    $cvText,
+                    'Gemini response was empty. Returned local analysis.',
+                    $targetRole,
+                    $targetCountry
+                );
+            }
+
+            $decoded = json_decode($rawText, true);
+            if (!is_array($decoded)) {
+                $start = strpos($rawText, '{');
+                $end = strrpos($rawText, '}');
+                if ($start !== false && $end !== false && $end > $start) {
+                    $maybeJson = substr($rawText, $start, $end - $start + 1);
+                    $decoded = json_decode($maybeJson, true);
+                }
+            }
+
+            if (!is_array($decoded)) {
+                return $this->fallbackCvAnalysis(
+                    $cvText,
+                    'Gemini JSON output could not be parsed. Returned local analysis.',
+                    $targetRole,
+                    $targetCountry
+                );
+            }
+
+            $score = max(0, min(100, (int) ($decoded['score'] ?? 0)));
+            $label = $decoded['label'] ?? $this->labelFromScore($score);
+
+            return [
+                'score' => $score,
+                'label' => $label,
+                'labelVariant' => $this->labelVariantFromLabel($label),
+                'summary' => (string) ($decoded['summary'] ?? ''),
+                'suggestions' => array_values(array_filter($decoded['suggestions'] ?? [], 'is_string')),
+                'strengths' => array_values(array_filter($decoded['strengths'] ?? [], 'is_string')),
+                'gaps' => array_values(array_filter($decoded['gaps'] ?? [], 'is_string')),
+                'analysis_source' => 'gemini',
+                'fallback_used' => false,
+            ];
+        } catch (\Throwable $e) {
+            return $this->fallbackCvAnalysis(
+                $cvText,
+                'Gemini is temporarily unavailable (' . $e->getMessage() . '). Returned local analysis.',
+                $targetRole,
+                $targetCountry
+            );
+        }
+    }
+
+    /**
+     * Build deterministic local CV analysis when AI provider is unavailable.
+     *
+     * @param string $cvText
+     * @param string $reason
+     * @param string $targetRole
+     * @param string $targetCountry
+     * @return array
+     */
+    private function fallbackCvAnalysis($cvText, $reason, $targetRole = 'Not specified', $targetCountry = 'Not specified')
+    {
+        $wordCount = str_word_count($cvText);
+        $hasContact = (bool) preg_match('/email|phone|\+\d|@/i', $cvText);
+        $hasExperience = (bool) preg_match('/experience|work|worked|developer|engineer|analyst|manager|lead/i', $cvText);
+        $hasSkills = (bool) preg_match('/skills?|proficient|expertise|php|javascript|react|laravel|sql|python|excel|design/i', $cvText);
+        $hasEducation = (bool) preg_match('/education|university|college|degree|bachelor|master|diploma|certificate/i', $cvText);
+        $hasLanguages = (bool) preg_match('/language|english|arabic|french|swahili|hindi|spanish/i', $cvText);
+
+        $score = 30;
+        if ($wordCount >= 80) {
+            $score += 10;
+        }
+        if ($wordCount >= 180) {
+            $score += 10;
+        }
+        if ($hasContact) {
+            $score += 15;
+        }
+        if ($hasExperience) {
+            $score += 15;
+        }
+        if ($hasSkills) {
+            $score += 10;
+        }
+        if ($hasEducation) {
+            $score += 5;
+        }
+        if ($hasLanguages) {
+            $score += 5;
+        }
         $score = max(0, min(100, $score));
-        $label = $decoded['label'] ?? ($score >= 80 ? 'Strong' : ($score >= 60 ? 'Good' : ($score >= 45 ? 'Fair' : 'Needs Work')));
-        $labelVariant = $label === 'Strong' ? 'success' : ($label === 'Good' ? 'accent' : ($label === 'Fair' ? 'warning' : 'error'));
+
+        $strengths = [];
+        $gaps = [];
+        $suggestions = [];
+
+        if ($hasContact) {
+            $strengths[] = 'CV contains contact information.';
+        } else {
+            $gaps[] = 'Contact information is missing.';
+            $suggestions[] = 'Add email address and phone number in the header.';
+        }
+
+        if ($hasExperience) {
+            $strengths[] = 'CV includes experience details.';
+        } else {
+            $gaps[] = 'Work experience section is weak or missing.';
+            $suggestions[] = 'Add a work experience section with achievements and responsibilities.';
+        }
+
+        if ($hasSkills) {
+            $strengths[] = 'CV lists relevant skills.';
+        } else {
+            $gaps[] = 'Skills section is missing or vague.';
+            $suggestions[] = 'List technical and soft skills with concrete tools or competencies.';
+        }
+
+        if (!$hasEducation) {
+            $gaps[] = 'Education or certification details are missing.';
+            $suggestions[] = 'Add education, certifications, or training history.';
+        }
+
+        if (!$hasLanguages) {
+            $gaps[] = 'Language proficiency is not stated.';
+            $suggestions[] = 'Include languages and proficiency levels.';
+        }
+
+        if ($wordCount < 80) {
+            $gaps[] = 'CV is too short for strong evaluation.';
+            $suggestions[] = 'Increase detail to at least 300-500 words with measurable results.';
+        }
+
+        if (count($suggestions) === 0) {
+            $suggestions[] = 'Add measurable outcomes (for example, delivery speed, quality, or impact metrics).';
+        }
+
+        $label = $this->labelFromScore($score);
 
         return [
             'score' => $score,
             'label' => $label,
-            'labelVariant' => $labelVariant,
-            'summary' => (string) ($decoded['summary'] ?? ''),
-            'suggestions' => array_values(array_filter($decoded['suggestions'] ?? [], 'is_string')),
-            'strengths' => array_values(array_filter($decoded['strengths'] ?? [], 'is_string')),
-            'gaps' => array_values(array_filter($decoded['gaps'] ?? [], 'is_string')),
+            'labelVariant' => $this->labelVariantFromLabel($label),
+            'summary' => 'AI provider is currently unavailable. This is a local CV analysis focused on structure and completeness.',
+            'suggestions' => $suggestions,
+            'strengths' => $strengths,
+            'gaps' => $gaps,
+            'analysis_source' => 'local_fallback',
+            'fallback_used' => true,
+            'fallback_reason' => $reason,
+            'context' => [
+                'target_role' => $targetRole,
+                'target_country' => $targetCountry,
+            ],
         ];
+    }
+
+    /**
+     * Convert score to label.
+     *
+     * @param int $score
+     * @return string
+     */
+    private function labelFromScore($score)
+    {
+        if ($score >= 80) {
+            return 'Strong';
+        }
+
+        if ($score >= 60) {
+            return 'Good';
+        }
+
+        if ($score >= 45) {
+            return 'Fair';
+        }
+
+        return 'Needs Work';
+    }
+
+    /**
+     * Convert label to UI badge variant.
+     *
+     * @param string $label
+     * @return string
+     */
+    private function labelVariantFromLabel($label)
+    {
+        if ($label === 'Strong') {
+            return 'success';
+        }
+
+        if ($label === 'Good') {
+            return 'accent';
+        }
+
+        if ($label === 'Fair') {
+            return 'warning';
+        }
+
+        return 'error';
     }
 
     /**

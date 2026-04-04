@@ -55,6 +55,25 @@ services:
     networks:
       - sheltra_network
 
+  # ──────────────────────────────────────────
+  # phpMyAdmin – MySQL Web Interface
+  # ──────────────────────────────────────────
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: sheltra_phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_PASSWORD:-secret}
+      PMA_DATABASE: ${DB_DATABASE:-sheltra_db}
+    depends_on:
+      - db
+    restart: unless-stopped
+    networks:
+      - sheltra_network
+
 volumes:
   sheltra_db_data:
 

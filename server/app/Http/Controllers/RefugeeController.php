@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\RefugeeService;
 use App\Http\Requests\RefugeeProfileRequest;
+use App\Http\Requests\CvAnalyzeRequest;
 
 /**
  * RefugeeController - Sheltra Refugee Profile Management
@@ -180,6 +181,30 @@ class RefugeeController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch applications: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Analyze CV text with Gemini AI.
+     *
+     * @param CvAnalyzeRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function analyzeCv(CvAnalyzeRequest $request)
+    {
+        try {
+            $analysis = $this->refugeeService->analyzeCv($request->validated());
+
+            return response()->json([
+                'success' => true,
+                'message' => 'CV analyzed successfully.',
+                'data' => $analysis,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to analyze CV: ' . $e->getMessage(),
             ], 500);
         }
     }

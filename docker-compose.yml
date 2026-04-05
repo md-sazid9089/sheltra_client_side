@@ -48,6 +48,9 @@ services:
       DB_DATABASE: ${DB_DATABASE:-sheltra_db}
       DB_USERNAME: ${DB_USERNAME:-sheltra}
       DB_PASSWORD: ${DB_PASSWORD:-secret}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3-flash-preview}
+      GEMINI_BASE_URL: ${GEMINI_BASE_URL:-https://generativelanguage.googleapis.com/v1beta}
     depends_on:
       db:
         condition: service_healthy

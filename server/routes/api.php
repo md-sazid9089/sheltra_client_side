@@ -37,6 +37,7 @@ Route::middleware(['auth:sanctum', 'role:refugee'])->prefix('refugee')->group(fu
     Route::get('/verification-status', [RefugeeController::class, 'getVerificationStatus']);
     Route::post('/skills', [RefugeeController::class, 'updateSkills']);
     Route::get('/applications', [RefugeeController::class, 'getApplications']);
+    Route::post('/cv-analyze', [RefugeeController::class, 'analyzeCv']);
 });
 
 // NGO routes (ngo role required)

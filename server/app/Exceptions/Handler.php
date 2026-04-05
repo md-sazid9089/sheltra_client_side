@@ -91,9 +91,16 @@ class Handler extends ExceptionHandler
         }
 
         // Generic error response
-        return response()->json([
+        $response = [
             'success' => false,
             'message' => 'An error occurred. Please try again later.',
-        ], 500);
+        ];
+
+        if (config('app.debug')) {
+            $response['error'] = $exception->getMessage();
+            $response['trace'] = $exception->getTraceAsString();
+        }
+
+        return response()->json($response, 500);
     }
 }

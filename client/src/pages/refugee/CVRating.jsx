@@ -3,46 +3,10 @@ import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Textarea';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
+import { refugeeApi } from '@/lib/api';
 
 const AI_DISCLAIMER =
   'AI supports matching and recommendations only; it does not make legal or employment decisions.';
-
-// ── Simulated AI rating logic (deterministic mock) ────────────────────────────
-function mockRateCV(text) {
-  const wordCount = text.trim().split(/\s+/).length;
-  const hasContact = /email|phone|\+\d|\@/i.test(text);
-  const hasExperience = /experience|work|worked|developer|engineer|analyst|manager/i.test(text);
-  const hasSkills = /skills?|proficient|expertise|python|react|excel|data|design/i.test(text);
-  const hasEducation = /education|university|college|degree|bachelor|master|diploma/i.test(text);
-  const hasLanguages = /english|french|arabic|swahili|language/i.test(text);
-
-  let score = 30;
-  if (wordCount >= 80) score += 10;
-  if (wordCount >= 200) score += 10;
-  if (hasContact) score += 15;
-  if (hasExperience) score += 15;
-  if (hasSkills) score += 10;
-  if (hasEducation) score += 5;
-  if (hasLanguages) score += 5;
-  score = Math.min(score, 98);
-
-  const suggestions = [];
-  if (!hasContact) suggestions.push('Add your email address or phone number so employers can reach you.');
-  if (!hasExperience) suggestions.push('Include a work experience or project section with specific responsibilities.');
-  if (!hasSkills) suggestions.push('List your technical and soft skills — be specific (e.g., "Python", "team leadership").');
-  if (!hasEducation) suggestions.push('Add an education section, even if informal (courses, certifications count).');
-  if (!hasLanguages) suggestions.push('Mention the languages you speak and your proficiency level.');
-  if (wordCount < 80) suggestions.push('Your CV seems short. Aim for at least 300–500 words to give employers a complete picture.');
-  if (suggestions.length === 0) suggestions.push('Great structure! Consider adding measurable achievements (e.g., "Increased sales by 20%").');
-
-  let label = 'Needs Work';
-  let labelVariant = 'error';
-  if (score >= 80) { label = 'Strong'; labelVariant = 'success'; }
-  else if (score >= 60) { label = 'Good'; labelVariant = 'accent'; }
-  else if (score >= 45) { label = 'Fair'; labelVariant = 'warning'; }
-
-  return { score, label, labelVariant, suggestions };
-}
 
 // ── Score Ring ────────────────────────────────────────────────────────────────
 function ScoreRing({ score }) {
@@ -82,22 +46,33 @@ export default function CVRating() {
   const [cvText, setCvText] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [whyExpanded, setWhyExpanded] = useState(false);
 
-  const handleCheck = () => {
+  const handleCheck = async () => {
     if (!cvText.trim()) return;
     setLoading(true);
     setResult(null);
-    // Simulate async AI processing
-    setTimeout(() => {
-      setResult(mockRateCV(cvText));
+    setError('');
+
+    try {
+      const response = await refugeeApi.analyzeCv({ cvText });
+      if (!response?.success) {
+        throw new Error(response?.message || 'Analysis failed.');
+      }
+
+      setResult(response.data);
+    } catch (err) {
+      setError(err?.response?.data?.message || err?.message || 'Could not analyze CV right now.');
+    } finally {
       setLoading(false);
-    }, 1800);
+    }
   };
 
   const handleReset = () => {
     setCvText('');
     setResult(null);
+    setError('');
     setWhyExpanded(false);
   };
 
@@ -157,6 +132,9 @@ export default function CVRating() {
                 {loading ? 'Analysing…' : 'Check Rating'}
               </Button>
             </div>
+            {error && (
+              <p className="text-sm text-red-400 mt-3">{error}</p>
+            )}
           </Card.Body>
         </Card>
       ) : (
@@ -177,13 +155,13 @@ export default function CVRating() {
                     <span className="text-slate-400 text-sm">Overall strength</span>
                   </div>
                   <p className="text-sm text-slate-400 leading-relaxed">
-                    {result.score >= 80
+                    {result.summary || (result.score >= 80
                       ? 'Excellent! Your CV is well-structured and likely to attract recruiter attention.'
                       : result.score >= 60
                       ? 'Good foundation. A few targeted improvements could significantly boost your match rate.'
                       : result.score >= 45
                       ? 'Your CV needs some work. Address the suggestions below to improve visibility.'
-                      : 'Your CV needs significant improvement. Follow the tips below to get noticed.'}
+                      : 'Your CV needs significant improvement. Follow the tips below to get noticed.')}
                   </p>
                 </div>
               </div>
@@ -238,7 +216,7 @@ export default function CVRating() {
                   <strong className="text-slate-300">Length</strong> also matters — a thorough CV with sufficient detail scores higher than a sparse one.
                 </p>
                 <p className="text-xs text-slate-500 italic border-t border-white/6 pt-3">
-                  {AI_DISCLAIMER} This tool is for guidance only. Scores are illustrative and generated locally — your CV text is never sent to any server.
+                  {AI_DISCLAIMER} This tool is for guidance only. CV text is sent to Sheltra backend and Gemini API for analysis.
                 </p>
               </div>
             )}
@@ -250,7 +228,7 @@ export default function CVRating() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
             <p className="text-xs text-slate-500 leading-relaxed">
-              <strong className="text-slate-400">Privacy:</strong> Your CV text is processed entirely in your browser. No data is transmitted to Sheltra servers or any third party. You can clear your input at any time.
+              <strong className="text-slate-400">Privacy:</strong> Your CV text is transmitted to Sheltra backend and Gemini API for analysis. Avoid submitting highly sensitive personal data.
             </p>
           </div>
 

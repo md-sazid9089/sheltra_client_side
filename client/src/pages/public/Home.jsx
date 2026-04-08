@@ -18,12 +18,12 @@ export default function Home() {
     <div className="motion-safe-fade-in">
       {/* ─── 1. Hero Section ─── */}
       <section className="relative overflow-hidden min-h-[92vh] flex items-center -mt-20">
-        {/* Background image — displaced people on a hopeful journey */}
+        {/* Background image — diverse community, hope and opportunity */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&q=80')",
+              "url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80')",
           }}
         />
 

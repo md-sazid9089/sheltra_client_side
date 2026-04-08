@@ -19,8 +19,6 @@ class NGOController extends Controller
 
     public function __construct(NGOService $ngoService)
     {
-        $this->middleware('auth');
-        $this->middleware('role:ngo');
         $this->ngoService = $ngoService;
     }
 

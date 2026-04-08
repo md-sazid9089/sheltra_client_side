@@ -20,8 +20,6 @@ class RefugeeController extends Controller
 
     public function __construct(RefugeeService $refugeeService)
     {
-        $this->middleware('auth');
-        $this->middleware('role:refugee');
         $this->refugeeService = $refugeeService;
     }
 

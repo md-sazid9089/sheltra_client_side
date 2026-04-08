@@ -331,11 +331,14 @@ class RefugeeService
             $updated = array_merge([
                 'id' => $userId,
                 'full_name' => 'Updated Name',
-                'country_of_origin' => $data['country_of_origin'] ?? 'Syria',
-                'legal_status' => $data['legal_status'] ?? 'refugee',
-                'availability' => $data['availability'] ?? 'full_time',
+                'location' => $data['location'] ?? '',
+                'phone' => $data['phone'] ?? '',
+                'bio' => $data['bio'] ?? '',
+                'skills' => $data['skills'] ?? [],
+                'education' => $data['education'] ?? '',
+                'work_experience' => $data['work_experience'] ?? '',
+                'availability' => $data['availability'] ?? 'immediate',
                 'languages' => $data['languages'] ?? [],
-                'experience_summary' => $data['experience_summary'] ?? '',
             ], $data);
 
             return $updated;
@@ -467,6 +470,41 @@ class RefugeeService
             ];
         } catch (Exception $e) {
             throw new Exception('Failed to retrieve applications: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Generate Virtual NID for refugee.
+     *
+     * @param int $userId
+     * @param array $data
+     * @return array
+     * @throws Exception
+     */
+    public function generateNID($userId, $data)
+    {
+        try {
+            // Generate unique NID number
+            $date = now();
+            $dateStr = $date->format('Ymd');
+            $randomPart = strtoupper(substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 7));
+            $nidNumber = "NID-{$dateStr}-{$randomPart}";
+
+            // Create NID record (placeholder: in production, would save to database)
+            $nidData = [
+                'nidNumber' => $nidNumber,
+                'fullName' => $data['full_name'],
+                'country' => $data['country'],
+                'email' => $data['email'],
+                'status' => 'Verified',
+                'generatedAt' => now()->toIso8601String(),
+                'expiryDate' => now()->addYear()->toIso8601String(),
+                'qrCode' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+            ];
+
+            return $nidData;
+        } catch (Exception $e) {
+            throw new Exception('Failed to generate NID: ' . $e->getMessage());
         }
     }
 }

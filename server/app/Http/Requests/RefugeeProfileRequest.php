@@ -25,12 +25,14 @@ class RefugeeProfileRequest extends FormRequest
     {
         return [
             'full_name' => ['required', 'string', 'max:255'],
-            'alias_name' => ['nullable', 'string', 'max:255'],
+            'location' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'regex:/^\+?[0-9]{10,15}$/'],
-            'country_of_origin' => ['required', 'string', 'max:100'],
-            'legal_status' => ['required', 'in:refugee,asylum_seeker,internally_displaced'],
-            'availability' => ['required', 'in:full_time,part_time,flexible,not_available'],
-            'experience_summary' => ['nullable', 'string', 'max:1000'],
+            'bio' => ['nullable', 'string', 'max:500'],
+            'skills' => ['nullable', 'array'],
+            'skills.*' => ['string', 'max:100'],
+            'education' => ['nullable', 'string', 'max:1000'],
+            'work_experience' => ['nullable', 'string', 'max:2000'],
+            'availability' => ['nullable', 'string', 'in:immediate,2_weeks,1_month,not_available'],
             'languages' => ['nullable', 'array'],
             'languages.*' => ['string', 'max:50'],
         ];
@@ -45,12 +47,10 @@ class RefugeeProfileRequest extends FormRequest
     {
         return [
             'full_name.required' => 'Full name is required.',
-            'country_of_origin.required' => 'Country of origin is required.',
-            'legal_status.required' => 'Legal status is required.',
-            'legal_status.in' => 'Legal status must be one of: refugee, asylum_seeker, or internally_displaced.',
-            'availability.required' => 'Availability status is required.',
-            'availability.in' => 'Availability must be: full_time, part_time, flexible, or not_available.',
+            'location.required' => 'Location is required.',
             'phone.regex' => 'Phone number must be valid (international format acceptable).',
+            'skills.array' => 'Skills must be an array.',
+            'languages.array' => 'Languages must be an array.',
         ];
     }
 }

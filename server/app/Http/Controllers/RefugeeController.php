@@ -208,4 +208,35 @@ class RefugeeController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Generate Virtual NID for refugee.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function generateNID(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'full_name' => ['required', 'string', 'max:255'],
+                'country' => ['required', 'string', 'max:100'],
+                'email' => ['required', 'email'],
+            ]);
+
+            $refugeeId = Auth::id();
+            $nidData = $this->refugeeService->generateNID($refugeeId, $validated);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Virtual NID generated successfully.',
+                'data' => $nidData,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to generate NID: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }

@@ -329,7 +329,7 @@ async function comprehensiveHTTPTest() {
       experience_years: 5,
       num_positions: 2
     },
-    expectedStatus: 200,
+    expectedStatus: 201,
     type: 'post',
     results
   });

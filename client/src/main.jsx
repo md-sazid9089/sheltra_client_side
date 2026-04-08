@@ -4,12 +4,11 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/providers/AuthProvider';
 import { ToastProvider } from '@/components/ui/Toast';
-import { storage } from '@/lib/storage';
 import AppRoutes from '@/routes/AppRoutes';
 import './index.css';
 
-// Initialise theme before first paint
-storage.initTheme();
+// Force dark mode on app load
+document.documentElement.classList.add('dark');
 
 const queryClient = new QueryClient({
   defaultOptions: {

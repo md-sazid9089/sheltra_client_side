@@ -20,8 +20,6 @@ class EmployerController extends Controller
 
     public function __construct(EmployerService $employerService)
     {
-        $this->middleware('auth');
-        $this->middleware('role:employer');
         $this->employerService = $employerService;
     }
 

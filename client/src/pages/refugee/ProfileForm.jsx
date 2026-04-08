@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { Button } from '@/components/ui/Button';
@@ -25,6 +26,7 @@ const profileSchema = z.object({
 export default function ProfileForm() {
   const queryClient = useQueryClient();
   const toast = useToast();
+  const [serverErrors, setServerErrors] = useState({});
 
   const { data: profile } = useQuery({
     queryKey: ['refugee-profile'],
@@ -45,10 +47,19 @@ export default function ProfileForm() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['refugee-profile'] });
+      setServerErrors({});
       toast('Profile saved successfully!', 'success');
     },
-    onError: () => {
-      toast('Failed to save profile. Please try again.', 'error');
+    onError: (error) => {
+      // Handle validation errors from backend
+      if (error.response?.status === 422) {
+        const errors = error.response.data.errors || {};
+        setServerErrors(errors);
+        toast('Please fix the validation errors below.', 'error');
+      } else {
+        setServerErrors({});
+        toast(error.response?.data?.message || 'Failed to save profile. Please try again.', 'error');
+      }
     },
   });
 
@@ -121,11 +132,11 @@ export default function ProfileForm() {
       <Card>
         <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="space-y-5 p-2">
           <div className="grid sm:grid-cols-2 gap-5">
-            <Input label="Full Name" error={errors.full_name?.message} {...register('full_name')} />
-            <Input label="Location" placeholder="Nairobi, Kenya" error={errors.location?.message} {...register('location')} />
+            <Input label="Full Name" error={errors.full_name?.message || (serverErrors.full_name?.[0] ? `❌ ${serverErrors.full_name[0]}` : undefined)} {...register('full_name')} />
+            <Input label="Location" placeholder="Nairobi, Kenya" error={errors.location?.message || (serverErrors.location?.[0] ? `❌ ${serverErrors.location[0]}` : undefined)} {...register('location')} />
           </div>
           <div className="grid sm:grid-cols-2 gap-5">
-            <Input label="Phone (optional)" type="tel" placeholder="+254 700 000 000" {...register('phone')} />
+            <Input label="Phone (optional)" type="tel" placeholder="+254 700 000 000" error={serverErrors.phone?.[0] ? `❌ ${serverErrors.phone[0]}` : undefined} {...register('phone')} />
             <Select
               label="Availability"
               options={[

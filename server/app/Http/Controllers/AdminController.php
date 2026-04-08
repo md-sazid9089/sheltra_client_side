@@ -17,8 +17,6 @@ class AdminController extends Controller
 
     public function __construct(AdminService $adminService)
     {
-        $this->middleware('auth');
-        $this->middleware('check.admin');
         $this->adminService = $adminService;
     }
 

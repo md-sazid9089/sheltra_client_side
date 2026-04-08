@@ -29,6 +29,15 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
+     * The attributes that have default values.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'role' => 'refugee',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>

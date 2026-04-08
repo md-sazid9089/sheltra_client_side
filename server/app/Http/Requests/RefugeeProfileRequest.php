@@ -25,7 +25,7 @@ class RefugeeProfileRequest extends FormRequest
     {
         return [
             'full_name' => ['required', 'string', 'max:255'],
-            'location' => ['required', 'string', 'max:255'],
+            'location' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'regex:/^\+?[0-9]{10,15}$/'],
             'bio' => ['nullable', 'string', 'max:500'],
             'skills' => ['nullable', 'array'],

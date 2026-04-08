@@ -296,21 +296,13 @@ class RefugeeService
     public function getProfile($userId)
     {
         try {
-            // Placeholder: In production, query Refugee model
-            return [
-                'id' => $userId,
-                'full_name' => 'Refugee Name',
-                'country_of_origin' => 'Syria',
-                'legal_status' => 'refugee',
-                'availability' => 'full_time',
-                'languages' => ['Arabic', 'English'],
-                'skills' => ['Teaching', 'Carpentry'],
-                'experience_summary' => 'Summary of professional experience...',
-                'verified_skills' => ['Teaching'],
-                'profile_completion' => 75,
-                'created_at' => now()->toIso8601String(),
-                'updated_at' => now()->toIso8601String(),
-            ];
+            $profile = RefugeeProfile::where('user_id', $userId)->first();
+
+            if (!$profile) {
+                return null;
+            }
+
+            return $profile->toArray();
         } catch (Exception $e) {
             throw new Exception('Failed to retrieve refugee profile: ' . $e->getMessage());
         }
@@ -327,22 +319,14 @@ class RefugeeService
     public function updateProfile($userId, $data)
     {
         try {
-            // Placeholder: In production, update Refugee model
-            // Validate data passed from RefugeeProfileRequest
-            $updated = array_merge([
-                'id' => $userId,
-                'full_name' => 'Updated Name',
-                'location' => $data['location'] ?? '',
-                'phone' => $data['phone'] ?? '',
-                'bio' => $data['bio'] ?? '',
-                'skills' => $data['skills'] ?? [],
-                'education' => $data['education'] ?? '',
-                'work_experience' => $data['work_experience'] ?? '',
-                'availability' => $data['availability'] ?? 'immediate',
-                'languages' => $data['languages'] ?? [],
-            ], $data);
+            $profile = RefugeeProfile::where('user_id', $userId)->firstOrCreate(
+                ['user_id' => $userId],
+                array_merge($data, ['verification_status' => 'pending'])
+            );
 
-            return $updated;
+            $profile->update($data);
+
+            return $profile->toArray();
         } catch (Exception $e) {
             throw new Exception('Failed to update refugee profile: ' . $e->getMessage());
         }

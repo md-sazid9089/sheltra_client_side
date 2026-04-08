@@ -38,9 +38,16 @@ export default function ProfileForm() {
     mutationFn: (data) => {
       const payload = {
         ...data,
-        skills: data.skills.split(',').map((s) => s.trim()),
-        languages: data.languages.split(',').map((l) => l.trim()),
+        skills: data.skills
+          .split(',')
+          .map((s) => s.trim())
+          .filter((s) => s.length > 0),
+        languages: data.languages
+          .split(',')
+          .map((l) => l.trim())
+          .filter((l) => l.length > 0),
       };
+      console.log('Submitting payload:', payload);
       return profile?.id
         ? api.put('/refugee/profile', payload)
         : api.post('/refugee/profile', payload);
@@ -51,9 +58,11 @@ export default function ProfileForm() {
       toast('Profile saved successfully!', 'success');
     },
     onError: (error) => {
+      console.log('API Error Response:', error.response?.data);
       // Handle validation errors from backend
       if (error.response?.status === 422) {
         const errors = error.response.data.errors || {};
+        console.log('Validation errors:', errors);
         setServerErrors(errors);
         toast('Please fix the validation errors below.', 'error');
       } else {

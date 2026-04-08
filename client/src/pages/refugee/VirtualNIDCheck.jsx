@@ -3,6 +3,7 @@ import { useNIDVerification } from '@/hooks/useNIDVerification';
 import { NIDGenerationForm } from '@/components/nid/NIDGenerationForm';
 import { NIDVerificationStatus } from '@/components/nid/NIDVerificationStatus';
 import { NIDDocument } from '@/components/nid/NIDDocument';
+import { NIDDownloadPDF } from '@/components/nid/NIDDownloadPDF';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { FaShieldAlt, FaDownload, FaArrowLeft } from 'react-icons/fa';
@@ -208,14 +209,15 @@ export default function VirtualNIDCheck() {
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
                             <Button
                                 onClick={handleDownloadPDF}
                                 className="flex items-center justify-center gap-2 bg-brand-primary text-white hover:bg-brand-primary/90"
                             >
                                 <FaDownload size={18} />
-                                Download as PDF
+                                Download as PDF (Canvas)
                             </Button>
+                            <NIDDownloadPDF nidData={nidData} />
                             <Button
                                 onClick={resetVerification}
                                 variant="secondary"

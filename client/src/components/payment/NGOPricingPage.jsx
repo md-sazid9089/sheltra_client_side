@@ -83,11 +83,10 @@ export function NGOPricingPage({ onSelectPlan }) {
                 {PRICING_PLANS.map((plan) => (
                     <Card
                         key={plan.type}
-                        className={`relative flex flex-col h-full transition-all ${
-                            plan.highlighted
+                        className={`relative flex flex-col h-full transition-all ${plan.highlighted
                                 ? 'ring-2 ring-cyan-400 scale-105 shadow-2xl'
                                 : 'hover:shadow-lg'
-                        }`}
+                            }`}
                     >
                         {/* Popular Badge */}
                         {plan.highlighted && (

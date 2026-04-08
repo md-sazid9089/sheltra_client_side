@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
  */
 
 // Authentication routes (public + guest middleware)
-Route::prefix('auth')->group(base_path('routes/auth.php'));
+Route::prefix('auth')->middleware('throttle:5,1')->group(base_path('routes/auth.php'));
 
 // Session/auth state endpoint (requires authentication)
 Route::middleware(['auth:sanctum'])->get('/auth/me', [SessionController::class, 'currentUser']);

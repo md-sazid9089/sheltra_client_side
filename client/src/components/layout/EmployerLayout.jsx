@@ -1,6 +1,8 @@
 import { Outlet } from 'react-router-dom';
+import { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
+import { ChatBox } from '@/components/ui/ChatBox';
 
 const employerLinks = [
   {
@@ -27,15 +29,19 @@ const employerLinks = [
 ];
 
 export function EmployerLayout() {
+  const [chatOpen, setChatOpen] = useState(false);
+
   return (
     <div className="flex min-h-screen bg-surface-base dark:bg-surface-darkBase">
       <Sidebar links={employerLinks} />
       <div className="flex-1 flex flex-col">
-        <Topbar />
+        <Topbar onChatOpen={() => setChatOpen(true)} />
         <main className="flex-1 p-6 lg:p-8 max-w-6xl mx-auto w-full">
           <Outlet />
         </main>
       </div>
+      {/* Chat box component */}
+      <ChatBox isOpen={chatOpen} onClose={() => setChatOpen(false)} />
     </div>
   );
 }

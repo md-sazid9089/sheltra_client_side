@@ -5,6 +5,7 @@ use App\Http\Controllers\RefugeeController;
 use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\NGOController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,20 @@ Route::prefix('auth')->middleware('throttle:5,1')->group(base_path('routes/auth.
 // Session/auth state endpoint (requires authentication)
 Route::middleware(['auth:sanctum'])->get('/auth/me', [SessionController::class, 'currentUser']);
 Route::middleware(['auth:sanctum'])->post('/auth/validate', [SessionController::class, 'validateSession']);
+
+// ──────────────────────────────────────────────────────────────────────────
+// CHAT ROUTES — Polling-Based Real-Time Chat Feature
+// ──────────────────────────────────────────────────────────────────────────
+// Description:
+//   - Uses HTTP polling (no WebSocket) — client polls every 3 seconds
+//   - Stores messages in database for persistence
+//   - Prevents duplicates using lastMessageId filter
+//   - Available to all authenticated users regardless of role
+// ──────────────────────────────────────────────────────────────────────────
+Route::middleware(['auth:sanctum'])->prefix('chat')->group(function () {
+    Route::post('/send-message', [ChatController::class, 'sendMessage']);
+    Route::get('/get-messages', [ChatController::class, 'getMessages']);
+});
 
 // Refugee routes (refugee role required)
 Route::middleware(['auth:sanctum', 'role:refugee'])->prefix('refugee')->group(function () {

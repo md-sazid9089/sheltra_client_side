@@ -5,6 +5,7 @@ import { storage } from '@/lib/storage';
 import { cn } from '@/lib/cn';
 import { FaSun, FaMoon, FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { Footer } from './Footer';
+import { ChatBox } from '@/components/ui/ChatBox';
 
 // ── Nav link definitions ──────────────────────────────────────────────────────
 const NAV_LINKS = [
@@ -249,7 +250,7 @@ function MobileDrawer({ open, onClose, user, onLogout, onSettings, dark, onToggl
 }
 
 // ── RefugeeNavbar ─────────────────────────────────────────────────────────────
-function RefugeeNavbar({ dark, onToggleTheme }) {
+function RefugeeNavbar({ dark, onToggleTheme, onChatOpen }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -331,6 +332,18 @@ function RefugeeNavbar({ dark, onToggleTheme }) {
                 {dark ? <FaSun className="w-4 h-4 text-amber-400" /> : <FaMoon className="w-4 h-4" />}
               </button>
 
+              {/* Chat button — new chat feature */}
+              <button
+                onClick={onChatOpen}
+                aria-label="Open chat"
+                title="Open live chat"
+                className="p-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/8 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
+                </svg>
+              </button>
+
               {/* Separator */}
               <div className="w-px h-6 bg-white/10 mx-1 hidden sm:block" aria-hidden="true" />
 
@@ -359,6 +372,7 @@ function RefugeeNavbar({ dark, onToggleTheme }) {
 // ── RefugeeLayout (exported) ──────────────────────────────────────────────────
 export function RefugeeLayout() {
   const [dark, setDark] = useState(document.documentElement.classList.contains('dark'));
+  const [chatOpen, setChatOpen] = useState(false); // NEW: Chat visibility state
 
   const toggleTheme = () => {
     const next = dark ? 'light' : 'dark';
@@ -369,12 +383,15 @@ export function RefugeeLayout() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      <RefugeeNavbar dark={dark} onToggleTheme={toggleTheme} />
+      <RefugeeNavbar dark={dark} onToggleTheme={toggleTheme} onChatOpen={() => setChatOpen(true)} />
 
       {/* Page content — pt accounts for fixed floating navbar + gap */}
       <main className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">
         <Outlet />
       </main>
+
+      {/* NEW: Chat box component — polls for messages every 3 seconds */}
+      <ChatBox isOpen={chatOpen} onClose={() => setChatOpen(false)} />
 
       <Footer />
     </div>

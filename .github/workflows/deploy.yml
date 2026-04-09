@@ -19,7 +19,7 @@ jobs:
         echo "🚀 Deployment triggered for Sheltra"
         echo "Commit: ${{ github.sha }}"
         echo "Branch: ${{ github.ref }}"
-        
+
     - name: Build frontend for production
       run: |
         cd client
@@ -39,6 +39,7 @@ jobs:
         cp -r client/dist/* dist/ 2>/dev/null || true
         cp -r server/* dist/ 2>/dev/null || true
         echo "Deployment package created"
+        
     - name: Upload deployment artifacts
       uses: actions/upload-artifact@v2  # UPDATED to v2
       with:
@@ -70,6 +71,7 @@ jobs:
         echo "✅ Deployment artifacts ready"
         echo "📦 Build: sheltra-production-build"
         echo "🔗 Artifacts available in Actions tab"
+        
     - name: Send Slack notification
       if: always()
       uses: 8398a7/action-slack@v3

@@ -51,6 +51,12 @@ services:
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3-flash-preview}
       GEMINI_BASE_URL: ${GEMINI_BASE_URL:-https://generativelanguage.googleapis.com/v1beta}
+    volumes:
+      - ./server:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/storage/framework/cache
+      - /var/www/html/storage/framework/sessions
+      - /var/www/html/storage/framework/views
     depends_on:
       db:
         condition: service_healthy
@@ -74,6 +80,9 @@ services:
       - "3000:3000"
     environment:
       VITE_BACKEND_ENDPOINT: ${VITE_BACKEND_ENDPOINT:-http://localhost:8000}
+    volumes:
+      - ./client:/app
+      - /app/node_modules
     depends_on:
       - backend
     restart: unless-stopped

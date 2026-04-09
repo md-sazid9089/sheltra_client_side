@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\NGOController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -88,6 +89,19 @@ Route::middleware(['auth:sanctum', 'check.admin'])->prefix('admin')->group(funct
     Route::post('/users/{userId}/suspend', [AdminController::class, 'suspendUser']);
     Route::post('/users/{userId}/reactivate', [AdminController::class, 'reactivateUser']);
     Route::get('/analytics', [AdminController::class, 'getAnalytics']);
+});
+
+// Payment routes (Stripe integration for NGO verification)
+Route::prefix('payment')->group(function () {
+    // Public endpoint: get Stripe publishable key
+    Route::get('/stripe-key', [PaymentController::class, 'getStripeKey']);
+    
+    // Authenticated routes: payment processing
+    Route::middleware(['auth:sanctum', 'role:ngo'])->group(function () {
+        Route::post('/create-intent', [PaymentController::class, 'createPaymentIntent']);
+        Route::post('/confirm', [PaymentController::class, 'confirmPayment']);
+        Route::get('/history', [PaymentController::class, 'paymentHistory']);
+    });
 });
 
 // Fallback: user endpoint (authenticated, returns current user with role)

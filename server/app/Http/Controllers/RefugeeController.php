@@ -76,7 +76,11 @@ class RefugeeController extends Controller
     }
 
     /**
-     * Get AI-matched opportunities for refugee.
+     * Get AI-matched opportunities for refugee with pagination.
+     * 
+     * Query Parameters:
+     * - page: Page number (default: 1)
+     * - per_page: Items per page (default: 15, max: 50)
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -84,8 +88,16 @@ class RefugeeController extends Controller
     public function getOpportunities(Request $request)
     {
         try {
+            $validated = $request->validate([
+                'page' => 'sometimes|numeric|min:1',
+                'per_page' => 'sometimes|numeric|min:1|max:50',
+            ]);
+
+            $page = $validated['page'] ?? 1;
+            $perPage = $validated['per_page'] ?? 15;
+
             $refugeeId = Auth::id();
-            $opportunities = $this->refugeeService->getMatchedOpportunities($refugeeId);
+            $opportunities = $this->refugeeService->getMatchedOpportunities($refugeeId, $page, $perPage);
 
             return response()->json([
                 'success' => true,

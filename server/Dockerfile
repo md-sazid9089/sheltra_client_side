@@ -26,9 +26,14 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 # Get Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy only backend files (exclude frontend, client, database, etc.)
-# This assumes Render uses server/ as the build context, or uses root with .dockerignore
+# Copy Laravel backend files only (exclude frontend and unnecessary files)
+# Copy everything first, then delete known non-backend directories
 COPY . /var/www/html/
+
+# Remove frontend and other unnecessary directories that might have been copied
+RUN rm -rf /var/www/html/client /var/www/html/node_modules /var/www/html/database \
+    /var/www/html/docker /var/www/html/.git /var/www/html/.github \
+    /var/www/html/public/assets /var/www/html/public/index.html 2>/dev/null || true
 
 WORKDIR /var/www/html
 

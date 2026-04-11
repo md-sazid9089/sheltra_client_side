@@ -44,4 +44,4 @@ EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost/api/health || exit 1
 
-CMD ["/bin/sh", "-c", "php artisan config:clear 2>/dev/null || true && php artisan cache:clear 2>/dev/null || true && exec apache2-foreground"]
+CMD ["apache2-foreground"]

@@ -2,13 +2,13 @@ name: CI - Frontend Only
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, dev]
     paths:
       - 'client/**'
       - '.github/workflows/frontend-ci.yml'
       - '.nvmrc'
   pull_request:
-    branches: [main, develop]
+    branches: [main, dev]
     paths:
       - 'client/**'
       - '.github/workflows/frontend-ci.yml'
@@ -41,7 +41,8 @@ jobs:
 
       - name: Check code formatting with Prettier
         working-directory: client
-        run: npx prettier --check . || echo "Warning: Some files need formatting (non-blocking)"
+        run: |
+          npx prettier --check . || echo "Warning: Some files need formatting (non-blocking)"
         continue-on-error: true
 
       - name: Run ESLint (if configured)

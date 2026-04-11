@@ -2,14 +2,14 @@ name: CI - Backend Only
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, dev]
     paths:
       - 'server/**'
       - 'database/migrations/**'
       - 'database/seeders/**'
       - '.github/workflows/backend-ci.yml'
   pull_request:
-    branches: [main, develop]
+    branches: [main, dev]
     paths:
       - 'server/**'
       - 'database/migrations/**'

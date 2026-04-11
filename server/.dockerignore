@@ -2,3 +2,15 @@ vendor/
 node_modules/
 .env
 storage/logs/*.log
+../client/
+../database/
+../docker/
+../.git
+../.gitignore
+../package.json
+../package-lock.json
+../README.md
+../Procfile
+../.dockerignore
+../sheltra_presentation_slide.pdf
+*.md

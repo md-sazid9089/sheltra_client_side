@@ -1,44 +1,42 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense, lazy } from 'react';
 import { PublicLayout, RefugeeLayout, NGOLayout, EmployerLayout, AdminLayout } from '@/components/layout';
 import { ProtectedRoute } from '@/components/routing/ProtectedRoute';
 import { PageLoader } from '@/components/ui/Loader';
 
-// Public pages
+// Public pages (eagerly loaded - essential for app startup)
 import Home from '@/pages/public/Home';
 import About from '@/pages/public/About';
 import Contact from '@/pages/public/Contact';
 import Login from '@/pages/public/Login';
 import Register from '@/pages/public/Register';
 import Unauthorized from '@/pages/public/Unauthorized';
-
-// Shared
 import Settings from '@/pages/shared/Settings';
 
-// Refugee pages
-import RefugeeDashboard from '@/pages/refugee/Dashboard';
-import RefugeeProfile from '@/pages/refugee/ProfileForm';
-import Opportunities from '@/pages/refugee/Opportunities';
-import Blogs from '@/pages/refugee/Blogs';
-import CVRating from '@/pages/refugee/CVRating';
-import VirtualNIDCheck from '@/pages/refugee/VirtualNIDCheck';
+// Refugee pages (lazy loaded)
+const RefugeeDashboard = lazy(() => import('@/pages/refugee/Dashboard'));
+const RefugeeProfile = lazy(() => import('@/pages/refugee/ProfileForm'));
+const Opportunities = lazy(() => import('@/pages/refugee/Opportunities'));
+const Blogs = lazy(() => import('@/pages/refugee/Blogs'));
+const CVRating = lazy(() => import('@/pages/refugee/CVRating'));
+const VirtualNIDCheck = lazy(() => import('@/pages/refugee/VirtualNIDCheck'));
 
-// NGO pages
-import NGODashboard from '@/pages/ngo/Dashboard';
-import Cases from '@/pages/ngo/Cases';
-import CaseDetail from '@/pages/ngo/CaseDetail';
+// NGO pages (lazy loaded)
+const NGODashboard = lazy(() => import('@/pages/ngo/Dashboard'));
+const Cases = lazy(() => import('@/pages/ngo/Cases'));
+const CaseDetail = lazy(() => import('@/pages/ngo/CaseDetail'));
 
-// Employer pages
-import EmployerDashboard from '@/pages/employer/Dashboard';
-import EmployerProfile from '@/pages/employer/Profile';
-import Jobs from '@/pages/employer/Jobs';
-import Talent from '@/pages/employer/Talent';
+// Employer pages (lazy loaded)
+const EmployerDashboard = lazy(() => import('@/pages/employer/Dashboard'));
+const EmployerProfile = lazy(() => import('@/pages/employer/Profile'));
+const Jobs = lazy(() => import('@/pages/employer/Jobs'));
+const Talent = lazy(() => import('@/pages/employer/Talent'));
 
-// Admin pages
-import AdminDashboard from '@/pages/admin/Dashboard';
-import Users from '@/pages/admin/Users';
-import NGOs from '@/pages/admin/NGOs';
-import AuditLogs from '@/pages/admin/AuditLogs';
+// Admin pages (lazy loaded)
+const AdminDashboard = lazy(() => import('@/pages/admin/Dashboard'));
+const Users = lazy(() => import('@/pages/admin/Users'));
+const NGOs = lazy(() => import('@/pages/admin/NGOs'));
+const AuditLogs = lazy(() => import('@/pages/admin/AuditLogs'));
 
 function NavigationSpinner() {
   const location = useLocation();
@@ -57,89 +55,91 @@ export default function AppRoutes() {
   return (
     <>
       <NavigationSpinner />
-      <Routes>
-        {/* ── Public routes ── */}
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="/settings" element={<Settings />} />
-        </Route>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* ── Public routes ── */}
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
 
-        {/* ── Refugee routes ── */}
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={['refugee']}>
-              <RefugeeLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/refugee/dashboard" element={<RefugeeDashboard />} />
-          <Route path="/refugee/profile" element={<RefugeeProfile />} />
-          <Route path="/refugee/opportunities" element={<Opportunities />} />
-          <Route path="/refugee/blogs" element={<Blogs />} />
-          <Route path="/refugee/cv-rating" element={<CVRating />} />
-          <Route path="/refugee/nid-check" element={<VirtualNIDCheck />} />
-        </Route>
+          {/* ── Refugee routes (lazy-loaded) ── */}
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={['refugee']}>
+                <RefugeeLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/refugee/dashboard" element={<Suspense fallback={<PageLoader />}><RefugeeDashboard /></Suspense>} />
+            <Route path="/refugee/profile" element={<Suspense fallback={<PageLoader />}><RefugeeProfile /></Suspense>} />
+            <Route path="/refugee/opportunities" element={<Suspense fallback={<PageLoader />}><Opportunities /></Suspense>} />
+            <Route path="/refugee/blogs" element={<Suspense fallback={<PageLoader />}><Blogs /></Suspense>} />
+            <Route path="/refugee/cv-rating" element={<Suspense fallback={<PageLoader />}><CVRating /></Suspense>} />
+            <Route path="/refugee/nid-check" element={<Suspense fallback={<PageLoader />}><VirtualNIDCheck /></Suspense>} />
+          </Route>
 
-        {/* ── NGO routes ── */}
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={['ngo']}>
-              <NGOLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/ngo/dashboard" element={<NGODashboard />} />
-          <Route path="/ngo/cases" element={<Cases />} />
-          <Route path="/ngo/cases/:id" element={<CaseDetail />} />
-        </Route>
+          {/* ── NGO routes (lazy-loaded) ── */}
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={['ngo']}>
+                <NGOLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/ngo/dashboard" element={<Suspense fallback={<PageLoader />}><NGODashboard /></Suspense>} />
+            <Route path="/ngo/cases" element={<Suspense fallback={<PageLoader />}><Cases /></Suspense>} />
+            <Route path="/ngo/cases/:id" element={<Suspense fallback={<PageLoader />}><CaseDetail /></Suspense>} />
+          </Route>
 
-        {/* ── Employer routes ── */}
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={['employer']}>
-              <EmployerLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/employer/dashboard" element={<EmployerDashboard />} />
-          <Route path="/employer/profile" element={<EmployerProfile />} />
-          <Route path="/employer/jobs" element={<Jobs />} />
-          <Route path="/employer/talent" element={<Talent />} />
-        </Route>
+          {/* ── Employer routes (lazy-loaded) ── */}
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={['employer']}>
+                <EmployerLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/employer/dashboard" element={<Suspense fallback={<PageLoader />}><EmployerDashboard /></Suspense>} />
+            <Route path="/employer/profile" element={<Suspense fallback={<PageLoader />}><EmployerProfile /></Suspense>} />
+            <Route path="/employer/jobs" element={<Suspense fallback={<PageLoader />}><Jobs /></Suspense>} />
+            <Route path="/employer/talent" element={<Suspense fallback={<PageLoader />}><Talent /></Suspense>} />
+          </Route>
 
-        {/* ── Admin routes ── */}
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <AdminLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/users" element={<Users />} />
-          <Route path="/admin/ngos" element={<NGOs />} />
-          <Route path="/admin/audit-logs" element={<AuditLogs />} />
-        </Route>
+          {/* ── Admin routes (lazy-loaded) ── */}
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/admin/dashboard" element={<Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>} />
+            <Route path="/admin/users" element={<Suspense fallback={<PageLoader />}><Users /></Suspense>} />
+            <Route path="/admin/ngos" element={<Suspense fallback={<PageLoader />}><NGOs /></Suspense>} />
+            <Route path="/admin/audit-logs" element={<Suspense fallback={<PageLoader />}><AuditLogs /></Suspense>} />
+          </Route>
 
-        {/* Catch-all */}
-        <Route path="*" element={
-          <PublicLayout />
-        }>
+          {/* Catch-all */}
           <Route path="*" element={
-            <div className="min-h-[60vh] flex items-center justify-center">
-              <div className="text-center">
-                <h1 className="text-4xl font-bold text-text-primary dark:text-text-darkPrimary mb-2">404</h1>
-                <p className="text-text-secondary dark:text-text-darkSecondary">Page not found</p>
+            <PublicLayout />
+          }>
+            <Route path="*" element={
+              <div className="min-h-[60vh] flex items-center justify-center">
+                <div className="text-center">
+                  <h1 className="text-4xl font-bold text-text-primary dark:text-text-darkPrimary mb-2">404</h1>
+                  <p className="text-text-secondary dark:text-text-darkSecondary">Page not found</p>
+                </div>
               </div>
-            </div>
-          } />
-        </Route>
-      </Routes>
+            } />
+          </Route>
+        </Routes>
+      </Suspense>
     </>
   );
 }

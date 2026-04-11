@@ -232,8 +232,7 @@ server/
 ├── routes/
 │   ├── api.php              # API routes
 │   ├── auth.php             # Authentication routes
-│   ├── web.php              # Web routes
-│   └── console.php          # Console commands
+│   └── web.php              # Web routes
 ├── database/
 │   ├── migrations/          # Database schema files
 │   └── seeders/             # Test data seeders

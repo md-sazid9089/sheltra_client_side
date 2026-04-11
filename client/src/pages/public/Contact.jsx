@@ -105,9 +105,13 @@ export default function Contact() {
       <section className="relative overflow-hidden min-h-[52vh] flex items-center -mt-20">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1920&q=80')" }}
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1920&q=80')",
+            filter: 'brightness(0.85) contrast(1.05)',
+          }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/97 via-cyan-950/88 to-teal-900/60" />
+        {/* Darker overlay for improved contrast (rgba(0,0,0,0.65-0.75)) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/70 to-black/60" />
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/4 w-72 h-72 rounded-full bg-teal-600/10 blur-3xl pointer-events-none" />
         <div
@@ -121,16 +125,19 @@ export default function Contact() {
               <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
               Get in Touch
             </div>
-            <h1 className="text-hero text-white leading-tight">
+            <h1 className="text-hero text-white leading-tight font-black drop-shadow-lg">
               We'd Love to{' '}
               <span
                 className="text-transparent bg-clip-text"
-                style={{ backgroundImage: 'linear-gradient(135deg, #5eead4 0%, #67e8f9 50%, #22d3ee 100%)' }}
+                style={{
+                  backgroundImage: 'linear-gradient(135deg, #5eead4 0%, #67e8f9 50%, #22d3ee 100%)',
+                  textShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
+                }}
               >
                 Hear From You
               </span>
             </h1>
-            <p className="mt-5 text-lg text-slate-300 max-w-xl leading-relaxed">
+            <p className="mt-5 text-lg text-white max-w-xl leading-relaxed drop-shadow-md">
               Whether you're a refugee seeking help, an NGO exploring partnership, or an employer
               looking to hire verified talent — our team is ready to assist.
             </p>

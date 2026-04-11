@@ -2,13 +2,13 @@ name: CI - Frontend Only
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, dev]
     paths:
       - 'client/**'
       - '.github/workflows/frontend-ci.yml'
       - '.nvmrc'
   pull_request:
-    branches: [main, develop]
+    branches: [main, dev]
     paths:
       - 'client/**'
       - '.github/workflows/frontend-ci.yml'

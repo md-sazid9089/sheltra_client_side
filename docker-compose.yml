@@ -1,29 +1,5 @@
 services:
   # ──────────────────────────────────────────
-  # Database – MySQL
-  # ──────────────────────────────────────────
-  db:
-    image: mysql:8.0
-    container_name: sheltra_db
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - sheltra_db_data:/var/lib/mysql
-    restart: unless-stopped
-    networks:
-      - sheltra_network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # ──────────────────────────────────────────
   # Backend – Laravel / PHP / Apache
   # ──────────────────────────────────────────
   backend:
@@ -34,38 +10,14 @@ services:
     container_name: sheltra_backend
     ports:
       - "8000:80"
-    environment:
-      APP_NAME: ${APP_NAME}
-      APP_ENV: ${APP_ENV}
-      APP_KEY: ${APP_KEY}
-      APP_DEBUG: ${APP_DEBUG}
-      APP_URL: ${APP_URL}
-      FRONTEND_URL: ${FRONTEND_URL}
-      LOG_LEVEL: ${LOG_LEVEL}
-      DB_CONNECTION: ${DB_CONNECTION}
-      DB_HOST: db
-      DB_PORT: ${DB_PORT}
-      DB_DATABASE: ${DB_DATABASE}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      GEMINI_API_KEY: ${GEMINI_API_KEY}
-      GEMINI_MODEL: ${GEMINI_MODEL}
-      GEMINI_BASE_URL: ${GEMINI_BASE_URL}
-    volumes:
-      - ./server:/var/www/html
-      - /var/www/html/vendor
-      - /var/www/html/storage/framework/cache
-      - /var/www/html/storage/framework/sessions
-      - /var/www/html/storage/framework/views
-    depends_on:
-      db:
-        condition: service_healthy
+    env_file:
+      - .env
     restart: unless-stopped
     networks:
       - sheltra_network
 
   # ──────────────────────────────────────────
-  # Frontend – React / Vite
+  # Frontend – React + Nginx
   # ──────────────────────────────────────────
   frontend:
     build:
@@ -78,38 +30,31 @@ services:
     container_name: sheltra_frontend
     ports:
       - "3000:3000"
-    environment:
-      VITE_BACKEND_ENDPOINT: ${VITE_BACKEND_ENDPOINT}
-    volumes:
-      - ./client:/app
-      - /app/node_modules
+    env_file:
+      - .env
     depends_on:
       - backend
     restart: unless-stopped
     networks:
       - sheltra_network
+    volumes:
+      - ./client/src:/app/src
 
   # ──────────────────────────────────────────
-  # phpMyAdmin – MySQL Web Interface
+  # phpMyAdmin – MySQL Web Interface (Optional)
   # ──────────────────────────────────────────
   phpmyadmin:
     image: phpmyadmin:latest
     container_name: sheltra_phpmyadmin
     ports:
       - "8080:80"
-    environment:
-      PMA_HOST: db
-      PMA_USER: root
-      PMA_PASSWORD: ${DB_PASSWORD}
-      PMA_DATABASE: ${DB_DATABASE}
-    depends_on:
-      - db
+    env_file:
+      - .env
     restart: unless-stopped
     networks:
       - sheltra_network
 
-volumes:
-  sheltra_db_data:
+volumes: {}
 
 networks:
   sheltra_network:

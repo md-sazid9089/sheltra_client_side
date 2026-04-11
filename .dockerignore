@@ -3,3 +3,17 @@
 **/dist
 .env
 .env.local
+client/
+node_modules/
+database/
+docker/
+.git
+.gitignore
+README.md
+Procfile
+*.md
+LICENSE
+.nvmrc
+.prettierrc
+package.json
+package-lock.json

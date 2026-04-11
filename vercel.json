@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd client && npm run build",
+  "outputDirectory": "client/dist",
+  "framework": "vite",
+  "env": {
+    "VITE_BACKEND_ENDPOINT": "@vite_backend_endpoint",
+    "VITE_API_URL": "@vite_api_url",
+    "VITE_APP_ENV": "production"
+  }
+}

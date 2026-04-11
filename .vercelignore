@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+server
+database
+docker
+docker-compose.yml
+Dockerfile
+.env
+.git
+.gitignore
+LICENSE

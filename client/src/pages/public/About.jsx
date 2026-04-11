@@ -100,10 +100,11 @@ export default function About() {
           style={{
             backgroundImage:
               "url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1920&q=80')",
+            filter: 'brightness(0.85) contrast(1.05)',
           }}
         />
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/96 via-cyan-950/85 to-teal-900/55" />
+        {/* Darker overlay for improved contrast (rgba(0,0,0,0.65-0.75)) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/70 to-black/60" />
         {/* Glow blobs */}
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/4 w-72 h-72 rounded-full bg-cyan-600/10 blur-3xl pointer-events-none" />
@@ -124,20 +125,21 @@ export default function About() {
               Our Mission & People
             </div>
 
-            <h1 className="text-hero text-white leading-tight">
+            <h1 className="text-hero text-white leading-tight font-black drop-shadow-lg">
               Redefining the Journey{' '}
               <br className="hidden sm:block" />
               <span
                 className="text-transparent bg-clip-text"
                 style={{
                   backgroundImage: 'linear-gradient(135deg, #5eead4 0%, #67e8f9 50%, #22d3ee 100%)',
+                  textShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
                 }}
               >
                 Across Refugees
               </span>
             </h1>
 
-            <p className="mt-6 text-lg text-slate-300 max-w-2xl leading-relaxed">
+            <p className="mt-6 text-lg text-white max-w-2xl leading-relaxed drop-shadow-md">
               Sheltra was built on a single belief: that displacement does not erase capability.
               We are a team of technologists, humanitarians, and former refugees working to
               restore economic dignity — one verified profile at a time.

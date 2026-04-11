@@ -24,11 +24,12 @@ export default function Home() {
           style={{
             backgroundImage:
               "url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80')",
+            filter: 'brightness(0.85) contrast(1.05)',
           }}
         />
 
-        {/* Multi-stop gradient overlay: dark left to translucent right */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/97 via-cyan-950/88 to-teal-900/60" />
+        {/* Darker, more consistent overlay for better text contrast (rgba(0,0,0,0.65-0.75)) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/70 to-black/60" />
 
         {/* Ambient glow blobs */}
         <div className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
@@ -57,19 +58,20 @@ export default function Home() {
                 Trusted by 156 NGO Partners Worldwide
               </div>
 
-              <h1 className="text-hero text-white leading-tight">
+              <h1 className="text-hero text-white leading-tight font-black drop-shadow-lg">
                 From Displacement to{' '}
                 <span
                   className="text-transparent bg-clip-text"
                   style={{
                     backgroundImage: 'linear-gradient(135deg, #5eead4 0%, #67e8f9 50%, #22d3ee 100%)',
+                    textShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
                   }}
                 >
                   Dignified Employment
                 </span>
               </h1>
 
-              <p className="mt-6 text-lg text-slate-300 max-w-lg leading-relaxed">
+              <p className="mt-6 text-lg text-white max-w-lg leading-relaxed drop-shadow-md">
                 Sheltra connects displaced individuals with verified opportunities through
                 skill-based matching, NGO verification, and ethical AI — creating trust-first
                 pathways to economic independence.
@@ -79,7 +81,7 @@ export default function Home() {
                 {/* Create Skill Profile — cyan sweep */}
                 <button
                   onClick={() => navigate('/register')}
-                  className="flex justify-center gap-2 items-center shadow-xl text-base lg:font-semibold isolation-auto border-white/30 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-cyan-500 hover:text-white before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-3 overflow-hidden border-2 rounded-full group text-white bg-white/10 backdrop-blur-sm"
+                  className="flex justify-center gap-2 items-center shadow-2xl text-base lg:font-semibold isolation-auto border-white/50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-cyan-500 hover:text-white before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-3 overflow-hidden border-2 rounded-full group text-white bg-cyan-500/20 backdrop-blur-md hover:bg-cyan-500/30 transition-all"
                 >
                   Create Skill Profile
                   <svg
@@ -97,7 +99,7 @@ export default function Home() {
                 {/* Partner as NGO — teal sweep */}
                 <button
                   onClick={() => navigate('/register')}
-                  className="flex justify-center gap-2 items-center shadow-xl text-base lg:font-semibold isolation-auto border-teal-400/40 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-teal-500 hover:text-white before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-3 overflow-hidden border-2 rounded-full group text-teal-300 bg-teal-500/10 backdrop-blur-sm"
+                  className="flex justify-center gap-2 items-center shadow-2xl text-base lg:font-semibold isolation-auto border-teal-400/60 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-teal-500 hover:text-white before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-3 overflow-hidden border-2 rounded-full group text-white bg-teal-500/25 backdrop-blur-md hover:bg-teal-500/35 transition-all"
                 >
                   Partner as NGO
                   <svg
@@ -141,8 +143,8 @@ export default function Home() {
 
             {/* ── Right: Glassmorphism card stack ── */}
             <div className="motion-safe-slide-up" style={{ animationDelay: '200ms' }}>
-              {/* Main profile card */}
-              <div className="relative bg-white/8 backdrop-blur-xl border border-white/15 rounded-2xl p-6 shadow-2xl shadow-black/40">
+              {/* Main profile card — enhanced visibility with stronger shadow and backdrop */}
+              <div className="relative bg-white/12 backdrop-blur-xl border border-white/25 rounded-2xl p-6 shadow-2xl" style={{ boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5), 0 10px 20px rgba(0, 0, 0, 0.3)' }}>
                 <div className="absolute top-3 right-3">
                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-500/20 border border-green-400/25 text-green-300">
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -153,12 +155,12 @@ export default function Home() {
                 </div>
 
                 <div className="flex items-center gap-4 mb-5">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-teal-500/30 to-cyan-600/30 border border-teal-400/25 flex items-center justify-center text-xl font-bold text-teal-200">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-teal-500/40 to-cyan-600/40 border border-teal-400/40 flex items-center justify-center text-xl font-bold text-teal-100">
                     AM
                   </div>
                   <div>
-                    <p className="font-semibold text-white">Amara M.</p>
-                    <p className="text-sm text-slate-400">Software Developer · Nairobi, Kenya</p>
+                    <p className="font-bold text-white">Amara M.</p>
+                    <p className="text-sm text-slate-300">Software Developer · Nairobi, Kenya</p>
                   </div>
                 </div>
 
@@ -166,14 +168,14 @@ export default function Home() {
                   {['Python', 'React', 'Data Analysis', 'Fluent English'].map((skill) => (
                     <span
                       key={skill}
-                      className="px-2.5 py-1 text-xs font-medium rounded-full bg-cyan-500/15 border border-cyan-400/20 text-cyan-300"
+                      className="px-2.5 py-1 text-xs font-semibold rounded-full bg-cyan-500/25 border border-cyan-400/40 text-cyan-100"
                     >
                       {skill}
                     </span>
                   ))}
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-green-400">
+                <div className="flex items-center gap-2 text-sm text-green-300 font-medium">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
@@ -181,17 +183,17 @@ export default function Home() {
                 </div>
 
                 {/* Quote */}
-                <div className="mt-5 pt-5 border-t border-white/10">
-                  <p className="text-sm text-slate-300 italic leading-relaxed">
+                <div className="mt-5 pt-5 border-t border-white/20">
+                  <p className="text-sm text-white/90 italic leading-relaxed font-medium">
                     "Sheltra gave me a way to prove my skills after I lost everything.
                     I found a job within three weeks."
                   </p>
-                  <p className="mt-2 text-xs text-slate-500">— Amara M., Software Developer, Kenya</p>
+                  <p className="mt-2 text-xs text-slate-300">\u2014 Amara M., Software Developer, Kenya</p>
                 </div>
               </div>
 
-              {/* Floating notification badge */}
-              <div className="mt-3 ml-4 inline-flex items-center gap-3 bg-white/8 backdrop-blur-sm border border-white/15 rounded-xl px-4 py-3 shadow-lg">
+              {/* Floating notification badge — with enhanced visibility */}
+              <div className="mt-3 ml-4 inline-flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/30 rounded-xl px-4 py-3 shadow-xl" style={{ boxShadow: '0 10px 25px rgba(0, 0, 0, 0.4)' }}>
                 <div className="w-9 h-9 rounded-full bg-brand-primary/30 border border-brand-primary/25 flex items-center justify-center">
                   <FaHandshake className="w-4 h-4 text-cyan-400" />
                 </div>

@@ -31,15 +31,9 @@ Route::middleware(['auth:sanctum'])->get('/auth/me', [SessionController::class, 
 Route::middleware(['auth:sanctum'])->post('/auth/validate', [SessionController::class, 'validateSession']);
 
 // ──────────────────────────────────────────────────────────────────────────
-// CHAT ROUTES — Polling-Based Real-Time Chat Feature
+// CHAT ROUTES — Polling-Based Real-Time Chat Feature (Rate Limited)
 // ──────────────────────────────────────────────────────────────────────────
-// Description:
-//   - Uses HTTP polling (no WebSocket) — client polls every 3 seconds
-//   - Stores messages in database for persistence
-//   - Prevents duplicates using lastMessageId filter
-//   - Available to all authenticated users regardless of role
-// ──────────────────────────────────────────────────────────────────────────
-Route::middleware(['auth:sanctum'])->prefix('chat')->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:30,1'])->prefix('chat')->group(function () {
     Route::post('/send-message', [ChatController::class, 'sendMessage']);
     Route::get('/get-messages', [ChatController::class, 'getMessages']);
 });
@@ -53,15 +47,22 @@ Route::middleware(['auth:sanctum', 'role:refugee'])->prefix('refugee')->group(fu
     Route::get('/verification-status', [RefugeeController::class, 'getVerificationStatus']);
     Route::post('/skills', [RefugeeController::class, 'updateSkills']);
     Route::get('/applications', [RefugeeController::class, 'getApplications']);
-    Route::post('/cv-analyze', [RefugeeController::class, 'analyzeCv']);
-    Route::post('/generate-nid', [RefugeeController::class, 'generateNID']);
+    
+    // Expensive AI operations - strict rate limiting
+    Route::middleware('throttle:5,1')->group(function () {
+        Route::post('/cv-analyze', [RefugeeController::class, 'analyzeCv']);
+        Route::post('/generate-nid', [RefugeeController::class, 'generateNID']);
+    });
 });
 
 // NGO routes (ngo role required)
 Route::middleware(['auth:sanctum', 'role:ngo'])->prefix('ngo')->group(function () {
     Route::get('/cases', [NGOController::class, 'getCases']);
     Route::get('/cases/{caseId}', [NGOController::class, 'getCaseDetail']);
-    Route::post('/cases/{caseId}/verify/{refugeeId}', [NGOController::class, 'submitVerification']);
+    
+    // Critical verification endpoint - rate limited
+    Route::middleware('throttle:20,1')->post('/cases/{caseId}/verify/{refugeeId}', [NGOController::class, 'submitVerification']);
+    
     Route::post('/cases/{caseId}/notes', [NGOController::class, 'addCaseNote']);
     Route::get('/cases/{caseId}/notes', [NGOController::class, 'getCaseNotes']);
     Route::get('/metrics', [NGOController::class, 'getMetrics']);
@@ -96,8 +97,8 @@ Route::prefix('payment')->group(function () {
     // Public endpoint: get Stripe publishable key
     Route::get('/stripe-key', [PaymentController::class, 'getStripeKey']);
     
-    // Authenticated routes: payment processing
-    Route::middleware(['auth:sanctum', 'role:ngo'])->group(function () {
+    // Authenticated routes: payment processing (rate limited)
+    Route::middleware(['auth:sanctum', 'role:ngo', 'throttle:10,1'])->group(function () {
         Route::post('/create-intent', [PaymentController::class, 'createPaymentIntent']);
         Route::post('/confirm', [PaymentController::class, 'confirmPayment']);
         Route::get('/history', [PaymentController::class, 'paymentHistory']);

@@ -90,13 +90,28 @@ class EmployerController extends Controller
     }
 
     /**
-     * Get all job postings by employer.
+     * Get all job postings by employer with pagination.
+     * 
+     * Query Parameters:
+     * - page: Page number (default: 1)
+     * - per_page: Items per page (default: 20, max: 50)
+     * - status: Filter by status (open, closed)
      */
     public function getJobs(Request $request)
     {
         try {
+            $validated = $request->validate([
+                'page' => 'sometimes|numeric|min:1',
+                'per_page' => 'sometimes|numeric|min:1|max:50',
+                'status' => 'sometimes|string|in:open,closed',
+            ]);
+
             $employerId = Auth::id();
-            $jobs = $this->employerService->getJobs($employerId);
+            $page = $validated['page'] ?? 1;
+            $perPage = $validated['per_page'] ?? 20;
+            $status = $validated['status'] ?? null;
+
+            $jobs = $this->employerService->getJobs($employerId, $page, $perPage, $status);
 
             return response()->json([
                 'success' => true,
@@ -112,14 +127,32 @@ class EmployerController extends Controller
     }
 
     /**
-     * Browse verified talents matching employer needs.
+     * Browse verified talents matching employer needs with pagination.
+     * 
+     * Query Parameters:
+     * - page: Page number (default: 1)
+     * - per_page: Items per page (default: 20, max: 50)
+     * - skills: Comma-separated skills to filter
+     * - location: Filter by location
+     * - availability: Filter by availability
      */
     public function getTalent(Request $request)
     {
         try {
+            $validated = $request->validate([
+                'page' => 'sometimes|numeric|min:1',
+                'per_page' => 'sometimes|numeric|min:1|max:50',
+                'skills' => 'sometimes|string',
+                'location' => 'sometimes|string',
+                'availability' => 'sometimes|string',
+            ]);
+
             $employerId = Auth::id();
-            $filters = $request->query();
-            $talent = $this->employerService->getTalent($employerId, $filters);
+            $page = $validated['page'] ?? 1;
+            $perPage = $validated['per_page'] ?? 20;
+            $filters = $validated;
+
+            $talent = $this->employerService->getTalent($employerId, $page, $perPage, $filters);
 
             return response()->json([
                 'success' => true,
@@ -157,13 +190,28 @@ class EmployerController extends Controller
     }
 
     /**
-     * Get all job applications for employer's postings.
+     * Get all job applications for employer's postings with pagination.
+     * 
+     * Query Parameters:
+     * - page: Page number (default: 1)
+     * - per_page: Items per page (default: 25, max: 50)
+     * - status: Filter by application status (pending, reviewed, accepted, rejected)
      */
     public function getJobApplications(Request $request)
     {
         try {
+            $validated = $request->validate([
+                'page' => 'sometimes|numeric|min:1',
+                'per_page' => 'sometimes|numeric|min:1|max:50',
+                'status' => 'sometimes|string|in:pending,reviewed,accepted,rejected',
+            ]);
+
             $employerId = Auth::id();
-            $applications = $this->employerService->getJobApplications($employerId);
+            $page = $validated['page'] ?? 1;
+            $perPage = $validated['per_page'] ?? 25;
+            $status = $validated['status'] ?? null;
+
+            $applications = $this->employerService->getJobApplications($employerId, $page, $perPage, $status);
 
             return response()->json([
                 'success' => true,

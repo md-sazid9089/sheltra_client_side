@@ -171,7 +171,12 @@ class RefugeeController extends Controller
     }
 
     /**
-     * Get refugee's application status to all opportunities.
+     * Get refugee's application status to all opportunities with pagination.
+     * 
+     * Query Parameters:
+     * - page: Page number (default: 1)
+     * - per_page: Items per page (default: 20, max: 50)
+     * - status: Filter by status (pending, accepted, rejected)
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -179,8 +184,18 @@ class RefugeeController extends Controller
     public function getApplications(Request $request)
     {
         try {
+            $validated = $request->validate([
+                'page' => 'sometimes|numeric|min:1',
+                'per_page' => 'sometimes|numeric|min:1|max:50',
+                'status' => 'sometimes|string|in:pending,accepted,rejected',
+            ]);
+
+            $page = $validated['page'] ?? 1;
+            $perPage = $validated['per_page'] ?? 20;
+            $status = $validated['status'] ?? null;
+
             $refugeeId = Auth::id();
-            $applications = $this->refugeeService->getApplications($refugeeId);
+            $applications = $this->refugeeService->getApplications($refugeeId, $page, $perPage, $status);
 
             return response()->json([
                 'success' => true,

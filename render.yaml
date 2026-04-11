@@ -9,15 +9,15 @@ services:
   - type: web
     name: sheltra-api
     env: docker
-    rootDir: server
-    repo: https://github.com/your-org/sheltra_client_side
+    rootDir: .
+    repo: https://github.com/md-sazid9089/sheltra_client_side
     branch: main
     
-    # Build configuration
-    buildCommand: docker build -t sheltra-api .
+    # Build configuration - uses Dockerfile from server directory
+    buildCommand: docker build -f server/Dockerfile -t sheltra-api server/
     
-    # Start command - only web server, no background jobs (separate services below)
-    startCommand: php artisan serve --host=0.0.0.0 --port=8000
+    # Start command - Apache handles the web server via Dockerfile
+    startCommand: /usr/local/bin/start.sh
     
     # Resource sizing
     plan: starter
@@ -42,11 +42,11 @@ services:
       - key: DB_CONNECTION
         value: mysql
       - key: CACHE_DRIVER
-        value: redis
+        value: file
       - key: QUEUE_CONNECTION
-        value: redis
+        value: sync
       - key: SESSION_DRIVER
-        value: redis
+        value: cookie
     
     # Secrets - sensitive values from environment
     secrets:
@@ -94,12 +94,13 @@ services:
     # Auto-deploy on main branch
     autoDeploy: on_push
     
-    # Pre-start commands (migrations, cache clearing)
-    preStartCommands:
-      - php artisan migrate --force --env=production
-      - php artisan config:cache
-      - php artisan route:cache
-      - php artisan view:cache
+    # Note: Pre-start commands can fail if database is not accessible
+    # Run migrations manually after first deployment if needed
+    # preStartCommands:
+    #   - php artisan migrate --force --env=production
+    #   - php artisan config:cache
+    #   - php artisan route:cache
+    #   - php artisan view:cache
 
   # ======================================
   # SECONDARY: Background Job Queue Worker
@@ -108,14 +109,14 @@ services:
   - type: background_worker
     name: sheltra-queue-worker
     env: docker
-    rootDir: server
-    repo: https://github.com/your-org/sheltra_client_side
+    rootDir: .
+    repo: https://github.com/md-sazid9089/sheltra_client_side
     branch: main
     
-    buildCommand: docker build -t sheltra-api .
+    buildCommand: docker build -f server/Dockerfile -t sheltra-api server/
     
     # Command to process background jobs
-    startCommand: php artisan queue:work --queue=default,high --timeout=60 --tries=3 --max-attempts=3
+    startCommand: /usr/local/bin/start.sh && php artisan queue:work --queue=default,high --timeout=60 --tries=3 --max-attempts=3
     
     plan: starter
     numInstances: 1  # Scale to 2+ for production

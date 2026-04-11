@@ -28,9 +28,12 @@ return [
         'http://127.0.0.1:5173',
         'http://127.0.0.1:3000',
         'http://127.0.0.1:3001',
+        'https://sheltra-client-side.vercel.app',
+        'https://www.sheltra.social',
     ],
 
     'allowed_origins_patterns' => [
+        '/^https:\/\/.*\.vercel\.app$/',  // Allow all Vercel preview URLs
         env('APP_URL') ? parse_url(env('APP_URL'), PHP_URL_HOST) : null,
     ],
 

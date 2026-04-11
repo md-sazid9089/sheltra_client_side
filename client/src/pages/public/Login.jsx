@@ -69,7 +69,8 @@ export default function Login() {
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Dark overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950/90 via-slate-900/80 to-cyan-950/70" />
+        <div className="absolute inset-0 bg-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/75 via-slate-900/65 to-cyan-950/60" />
 
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center text-center px-12 max-w-lg">
@@ -81,11 +82,11 @@ export default function Login() {
             <span className="text-3xl font-extrabold text-white tracking-tight">Sheltra</span>
           </div>
 
-          <h2 className="text-4xl font-bold text-white leading-snug mb-4">
+          <h2 className="text-4xl font-black text-white leading-snug mb-4 drop-shadow-lg">
             Redefining the<br />
-            <span className="text-cyan-400">Refugee Journey</span>
+            <span className="text-cyan-300">Refugee Journey</span>
           </h2>
-          <p className="text-slate-300 text-base leading-relaxed mb-10">
+          <p className="text-white text-base leading-relaxed mb-10 font-medium drop-shadow">
             Connecting displaced individuals with verified opportunities, trusted NGOs, and compassionate employers worldwide.
           </p>
 

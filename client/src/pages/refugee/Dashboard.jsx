@@ -95,38 +95,40 @@ export default function RefugeeDashboard() {
     <div className="space-y-10 motion-safe-fade-in">
 
       {/* â”€â”€ Hero welcome banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <div className="relative rounded-2xl overflow-hidden border border-white/6 bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/40 px-6 py-8 sm:px-10 sm:py-10">
+      <div className="relative rounded-2xl overflow-hidden border border-cyan-500/20 bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950/60 px-6 py-8 sm:px-10 sm:py-10 shadow-xl shadow-black/50">
+        {/* Strong dark overlay */}
+        <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
         {/* Subtle grid overlay */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 31px,#fff 31px,#fff 32px),repeating-linear-gradient(90deg,transparent,transparent 31px,#fff 31px,#fff 32px)' }} aria-hidden="true" />
+        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 31px,#fff 31px,#fff 32px),repeating-linear-gradient(90deg,transparent,transparent 31px,#fff 31px,#fff 32px)' }} aria-hidden="true" />
 
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-cyan-500 mb-2">Your portal</p>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            <p className="text-xs font-semibold uppercase tracking-widest text-cyan-400 mb-3">Your portal</p>
+            <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight drop-shadow-lg">
               Welcome back,{' '}
-              <span className="text-cyan-400">{user?.name?.split(' ')[0] || 'there'}</span>
+              <span className="text-cyan-300 font-extrabold">{user?.name?.split(' ')[0] || 'there'}</span>
             </h1>
-            <p className="mt-2 text-slate-400 text-base max-w-lg">
+            <p className="mt-3 text-slate-200 text-base max-w-lg leading-relaxed font-medium">
               Here&apos;s an overview of your journey on Sheltra. Keep building â€” every step forward matters.
             </p>
           </div>
 
           {/* Verification pill */}
-          <div className={`shrink-0 flex items-center gap-2.5 px-4 py-2.5 rounded-xl border ${profile?.verified ? 'bg-green-500/8 border-green-500/20' : 'bg-amber-500/8 border-amber-500/20'}`}>
+          <div className={`shrink-0 flex items-center gap-2.5 px-5 py-3 rounded-xl border backdrop-blur-md shadow-lg ${profile?.verified ? 'bg-green-500/15 border-green-500/40' : 'bg-amber-500/15 border-amber-500/40'}`}>
             {profile?.verified ? (
-              <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-5 h-5 text-green-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
             ) : (
-              <svg className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-5 h-5 text-amber-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
             )}
             <div>
-              <p className={`text-xs font-semibold ${profile?.verified ? 'text-green-400' : 'text-amber-400'}`}>
+              <p className={`text-xs font-bold ${profile?.verified ? 'text-green-200' : 'text-amber-200'}`}>
                 {profile?.verified ? 'NGO Verified' : 'Pending Verification'}
               </p>
-              <p className="text-xs text-slate-500 leading-tight">
+              <p className="text-xs text-slate-300 leading-tight font-medium">
                 {profile?.verified ? 'Visible to employers' : 'NGO review in progress'}
               </p>
             </div>
@@ -136,7 +138,7 @@ export default function RefugeeDashboard() {
 
       {/* â”€â”€ Stats row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section aria-label="Your statistics">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">Your progress</h2>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-200 mb-4">Your progress</h2>
         <div className="grid sm:grid-cols-3 gap-4">
           <StatCard
             label="Profile Status"
@@ -172,17 +174,17 @@ export default function RefugeeDashboard() {
 
       {/* â”€â”€ Quick actions grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section aria-label="Quick actions">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">Quick actions</h2>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-200 mb-4">Quick actions</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {QUICK_LINKS.map((item) => (
-            <Card key={item.to} className="flex flex-col gap-4 hover-lift group">
+            <Card key={item.to} className="flex flex-col gap-4 hover-lift group shadow-lg">
               <div className="flex items-start gap-4">
                 {item.icon}
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-slate-100 group-hover:text-cyan-400 transition-colors">
+                  <h3 className="font-bold text-white group-hover:text-cyan-300 transition-colors text-lg">
                     {item.title}
                   </h3>
-                  <p className="text-sm text-slate-400 mt-1 leading-relaxed">
+                  <p className="text-sm text-slate-300 mt-1 leading-relaxed font-medium">
                     {item.description}
                   </p>
                 </div>
@@ -204,25 +206,25 @@ export default function RefugeeDashboard() {
 
       {/* â”€â”€ Verification status detail â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section aria-label="Verification status">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">Verification status</h2>
-        <Card>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-200 mb-4">Verification status</h2>
+        <Card className="shadow-lg">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${profile?.verified ? 'bg-green-500/12 text-green-400' : 'bg-amber-500/12 text-amber-400'}`}>
+            <div className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 shadow-md ${profile?.verified ? 'bg-green-500/20 text-green-300' : 'bg-amber-500/20 text-amber-300'}`}>
               {profile?.verified ? (
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               ) : (
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                 </svg>
               )}
             </div>
             <div className="flex-1">
-              <p className="font-medium text-slate-100">
+              <p className="font-bold text-white text-lg">
                 {profile?.verified ? 'Profile Verified by NGO Partner' : 'Awaiting NGO Verification'}
               </p>
-              <p className="text-sm text-slate-400 mt-0.5">
+              <p className="text-sm text-slate-300 mt-1 font-medium">
                 {profile?.verified
                   ? 'Your identity and credentials have been verified. Employers can now view your full profile.'
                   : 'An NGO partner will review your profile and verify your identity and credentials. This usually takes 1â€“3 business days.'}

@@ -107,7 +107,8 @@ export default function Contact() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1920&q=80')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/97 via-cyan-950/88 to-teal-900/60" />
+        <div className="absolute inset-0 bg-black/65" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-slate-900/60 to-slate-950/50" />
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/4 w-72 h-72 rounded-full bg-teal-600/10 blur-3xl pointer-events-none" />
         <div
@@ -121,16 +122,16 @@ export default function Contact() {
               <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
               Get in Touch
             </div>
-            <h1 className="text-hero text-white leading-tight">
+            <h1 className="text-hero font-black text-white leading-tight drop-shadow-lg">
               We'd Love to{' '}
               <span
-                className="text-transparent bg-clip-text"
+                className="text-transparent bg-clip-text font-black"
                 style={{ backgroundImage: 'linear-gradient(135deg, #5eead4 0%, #67e8f9 50%, #22d3ee 100%)' }}
               >
                 Hear From You
               </span>
             </h1>
-            <p className="mt-5 text-lg text-slate-300 max-w-xl leading-relaxed">
+            <p className="mt-5 text-lg text-white max-w-xl leading-relaxed font-medium drop-shadow">
               Whether you're a refugee seeking help, an NGO exploring partnership, or an employer
               looking to hire verified talent — our team is ready to assist.
             </p>

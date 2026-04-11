@@ -73,7 +73,8 @@ export default function Register() {
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950/92 via-slate-900/80 to-teal-950/70" />
+        <div className="absolute inset-0 bg-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/75 via-slate-900/65 to-teal-950/60" />
 
         <div className="relative z-10 flex flex-col items-center text-center px-12 max-w-lg">
           <div className="flex items-center gap-3 mb-8">
@@ -83,11 +84,11 @@ export default function Register() {
             <span className="text-3xl font-extrabold text-white tracking-tight">Sheltra</span>
           </div>
 
-          <h2 className="text-4xl font-bold text-white leading-snug mb-4">
+          <h2 className="text-4xl font-black text-white leading-snug mb-4 drop-shadow-lg">
             Start Your<br />
-            <span className="text-cyan-400">New Chapter</span>
+            <span className="text-cyan-300">New Chapter</span>
           </h2>
-          <p className="text-slate-300 text-base leading-relaxed mb-10">
+          <p className="text-white text-base leading-relaxed mb-10 font-medium drop-shadow">
             Whether you&apos;re seeking employment, supporting refugees, or hiring talent — Sheltra is your platform.
           </p>
 

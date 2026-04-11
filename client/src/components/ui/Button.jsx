@@ -2,17 +2,17 @@ import { cn } from '@/lib/cn';
 
 const variants = {
   primary:
-    'bg-brand-primary text-white hover:bg-brand-primary-hover focus-ring',
+    'bg-cyan-500 text-white hover:bg-cyan-600 focus-ring shadow-2xl shadow-cyan-500/40 hover:shadow-cyan-500/50',
   secondary:
-    'bg-white text-brand-primary border border-brand-primary hover:bg-cyan-50 dark:bg-surface-darkCard dark:text-brand-accent dark:border-brand-accent dark:hover:bg-surface-darkBase focus-ring',
+    'bg-white text-brand-primary border border-brand-primary hover:bg-cyan-50 dark:bg-surface-darkCard dark:text-brand-accent dark:border-brand-accent dark:hover:bg-surface-darkBase focus-ring shadow-lg',
   accent:
-    'bg-brand-accent text-white hover:bg-brand-accent-hover focus-ring',
+    'bg-teal-500 text-white hover:bg-teal-600 focus-ring shadow-2xl shadow-teal-500/40 hover:shadow-teal-500/50',
   amber:
-    'bg-brand-amber text-white hover:bg-brand-amber-hover focus-ring',
+    'bg-amber-500 text-white hover:bg-amber-600 focus-ring shadow-2xl shadow-amber-500/40 hover:shadow-amber-500/50',
   ghost:
     'bg-transparent text-text-secondary hover:bg-gray-100 dark:text-text-darkSecondary dark:hover:bg-surface-darkCard focus-ring',
   danger:
-    'bg-semantic-error text-white hover:bg-red-600 focus-ring',
+    'bg-red-600 text-white hover:bg-red-700 focus-ring shadow-2xl shadow-red-600/40 hover:shadow-red-600/50',
 };
 
 const sizes = {
@@ -33,7 +33,7 @@ export function Button({
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center gap-2 font-semibold rounded-btn transition-colors duration-200 hover-lift disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
+        'inline-flex items-center justify-center gap-2 font-bold rounded-btn transition-all duration-200 hover-lift disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
         variants[variant],
         sizes[size],
         className

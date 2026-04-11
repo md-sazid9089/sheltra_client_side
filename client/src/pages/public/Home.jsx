@@ -13,6 +13,7 @@ import {
 
 export default function Home() {
   const navigate = useNavigate();
+  console.log('HOME_PAGE_LOADED_WITH_IMPROVEMENTS_V2');
 
   return (
     <div className="motion-safe-fade-in">
@@ -27,8 +28,10 @@ export default function Home() {
           }}
         />
 
-        {/* Multi-stop gradient overlay: dark left to translucent right */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/97 via-cyan-950/88 to-teal-900/60" />
+        {/* Dark overlay for strong text contrast */}
+        <div className="absolute inset-0 bg-black/65" />
+        {/* Subtle directional gradient for depth */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-slate-900/60 to-slate-950/50" />
 
         {/* Ambient glow blobs */}
         <div className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
@@ -57,10 +60,10 @@ export default function Home() {
                 Trusted by 156 NGO Partners Worldwide
               </div>
 
-              <h1 className="text-hero text-white leading-tight">
+              <h1 className="text-hero font-black text-white leading-tight drop-shadow-lg">
                 From Displacement to{' '}
                 <span
-                  className="text-transparent bg-clip-text"
+                  className="text-transparent bg-clip-text font-black"
                   style={{
                     backgroundImage: 'linear-gradient(135deg, #5eead4 0%, #67e8f9 50%, #22d3ee 100%)',
                   }}
@@ -69,7 +72,7 @@ export default function Home() {
                 </span>
               </h1>
 
-              <p className="mt-6 text-lg text-slate-300 max-w-lg leading-relaxed">
+              <p className="mt-6 text-lg text-white max-w-lg leading-relaxed font-medium drop-shadow">
                 Sheltra connects displaced individuals with verified opportunities through
                 skill-based matching, NGO verification, and ethical AI — creating trust-first
                 pathways to economic independence.
@@ -79,7 +82,7 @@ export default function Home() {
                 {/* Create Skill Profile — cyan sweep */}
                 <button
                   onClick={() => navigate('/register')}
-                  className="flex justify-center gap-2 items-center shadow-xl text-base lg:font-semibold isolation-auto border-white/30 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-cyan-500 hover:text-white before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-3 overflow-hidden border-2 rounded-full group text-white bg-white/10 backdrop-blur-sm"
+                  className="flex justify-center gap-2 items-center shadow-2xl text-base lg:font-semibold isolation-auto border-white/40 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-cyan-500 hover:text-white before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-3 overflow-hidden border-2 rounded-full group text-white bg-white/15 backdrop-blur-md drop-shadow-lg"
                 >
                   Create Skill Profile
                   <svg
@@ -97,7 +100,7 @@ export default function Home() {
                 {/* Partner as NGO — teal sweep */}
                 <button
                   onClick={() => navigate('/register')}
-                  className="flex justify-center gap-2 items-center shadow-xl text-base lg:font-semibold isolation-auto border-teal-400/40 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-teal-500 hover:text-white before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-3 overflow-hidden border-2 rounded-full group text-teal-300 bg-teal-500/10 backdrop-blur-sm"
+                  className="flex justify-center gap-2 items-center shadow-2xl text-base lg:font-semibold isolation-auto border-teal-400/50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-teal-500 hover:text-white before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-3 overflow-hidden border-2 rounded-full group text-teal-100 bg-teal-500/20 backdrop-blur-md drop-shadow-lg"
                 >
                   Partner as NGO
                   <svg

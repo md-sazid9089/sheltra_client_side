@@ -117,7 +117,7 @@ class ChatController extends Controller
 
             # Fetch messages with user relationship, ordered by creation time
             $messages = $query
-                ->with('user:id,name,email,role')
+                ->with('user')
                 ->orderBy('created_at', 'asc')
                 ->limit($limit)
                 ->get();
@@ -129,6 +129,7 @@ class ChatController extends Controller
             ], 200);
 
         } catch (\Exception $e) {
+            \Log::error('Chat getMessages error: ' . $e->getMessage() . ' Stack: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch messages: ' . $e->getMessage(),

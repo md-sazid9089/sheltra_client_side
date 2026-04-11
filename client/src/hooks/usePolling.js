@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { storage } from '@/lib/storage';
 
 /**
  * usePolling Hook - HTTP Polling for Real-Time Data
@@ -62,8 +63,8 @@ export function usePolling(
         }
       });
 
-      // Fetch with authentication token
-      const token = localStorage.getItem('auth_token');
+      // Fetch with authentication token from storage (uses sheltra_token key)
+      const token = storage.getToken();
       const response = await fetch(urlObj.toString(), {
         method: 'GET',
         headers: {

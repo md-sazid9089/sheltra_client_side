@@ -1,9 +1,8 @@
 import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/providers/AuthProvider';
-import { storage } from '@/lib/storage';
 import { cn } from '@/lib/cn';
-import { FaSun, FaMoon, FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
+import { FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { Footer } from './Footer';
 import { ChatBox } from '@/components/ui/ChatBox';
 
@@ -126,7 +125,7 @@ function UserMenuDropdown({ user, onLogout, onSettings }) {
 }
 
 // ── MobileDrawer ──────────────────────────────────────────────────────────────
-function MobileDrawer({ open, onClose, user, onLogout, onSettings, dark, onToggleTheme }) {
+function MobileDrawer({ open, onClose, user, onLogout, onSettings }) {
   const initials = user?.name
     ? user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
     : '?';
@@ -207,13 +206,6 @@ function MobileDrawer({ open, onClose, user, onLogout, onSettings, dark, onToggl
 
         {/* Footer actions */}
         <div className="px-4 py-4 border-t border-white/8 space-y-2">
-          <button
-            onClick={onToggleTheme}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-300 hover:bg-white/8 hover:text-white transition-colors"
-          >
-            {dark ? <FaSun className="w-4 h-4 text-amber-400" /> : <FaMoon className="w-4 h-4 text-slate-400" />}
-            {dark ? 'Light Mode' : 'Dark Mode'}
-          </button>
           <Link
             to="/refugee/profile"
             onClick={onClose}
@@ -250,7 +242,7 @@ function MobileDrawer({ open, onClose, user, onLogout, onSettings, dark, onToggl
 }
 
 // ── RefugeeNavbar ─────────────────────────────────────────────────────────────
-function RefugeeNavbar({ dark, onToggleTheme, onChatOpen }) {
+function RefugeeNavbar({ onChatOpen }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -323,15 +315,6 @@ function RefugeeNavbar({ dark, onToggleTheme, onChatOpen }) {
 
             {/* ── Right: actions + user ── */}
             <div className="flex items-center gap-1 shrink-0">
-              {/* Theme toggle */}
-              <button
-                onClick={onToggleTheme}
-                aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-                className="p-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/8 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
-              >
-                {dark ? <FaSun className="w-4 h-4 text-amber-400" /> : <FaMoon className="w-4 h-4" />}
-              </button>
-
               {/* Chat button — new chat feature */}
               <button
                 onClick={onChatOpen}
@@ -362,8 +345,6 @@ function RefugeeNavbar({ dark, onToggleTheme, onChatOpen }) {
         user={user}
         onLogout={handleLogout}
         onSettings={handleSettings}
-        dark={dark}
-        onToggleTheme={onToggleTheme}
       />
     </>
   );
@@ -371,19 +352,11 @@ function RefugeeNavbar({ dark, onToggleTheme, onChatOpen }) {
 
 // ── RefugeeLayout (exported) ──────────────────────────────────────────────────
 export function RefugeeLayout() {
-  const [dark, setDark] = useState(document.documentElement.classList.contains('dark'));
-  const [chatOpen, setChatOpen] = useState(false); // NEW: Chat visibility state
-
-  const toggleTheme = () => {
-    const next = dark ? 'light' : 'dark';
-    document.documentElement.classList.toggle('dark', next === 'dark');
-    storage.setTheme(next);
-    setDark(!dark);
-  };
+  const [chatOpen, setChatOpen] = useState(false); // Chat visibility state
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
-      <RefugeeNavbar dark={dark} onToggleTheme={toggleTheme} onChatOpen={() => setChatOpen(true)} />
+    <div className="min-h-screen bg-surface-darkBase text-text-darkPrimary">
+      <RefugeeNavbar onChatOpen={() => setChatOpen(true)} />
 
       {/* Page content — pt accounts for fixed floating navbar + gap */}
       <main className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">

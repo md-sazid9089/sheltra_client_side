@@ -7,7 +7,7 @@ import { ToastProvider } from '@/components/ui/Toast';
 import AppRoutes from '@/routes/AppRoutes';
 import './index.css';
 
-// Force dark mode on app load
+// Force dark mode
 document.documentElement.classList.add('dark');
 
 const queryClient = new QueryClient({

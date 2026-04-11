@@ -1,0 +1,91 @@
+services:
+  - type: web
+    name: sheltra-backend
+    runtime: docker
+    region: singapore
+    plan: free
+    branch: main
+    
+    # Build configuration
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    
+    # Environment variables
+    envVars:
+      - key: APP_NAME
+        value: Sheltra
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        fromFile: .env
+      - key: APP_URL
+        value: https://sheltra-backend.onrender.com
+      - key: FRONTEND_URL
+        value: https://sheltra.vercel.app
+      - key: LOG_LEVEL
+        value: info
+      
+      # Database - Use Render PostgreSQL or external MySQL
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromFile: .env
+      - key: DB_PORT
+        fromFile: .env
+      - key: DB_DATABASE
+        fromFile: .env
+      - key: DB_USERNAME
+        fromFile: .env
+      - key: DB_PASSWORD
+        fromFile: .env
+      
+      # Cache & Session
+      - key: CACHE_DRIVER
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      
+      # Gemini AI
+      - key: GEMINI_API_KEY
+        fromFile: .env
+      - key: GEMINI_MODEL
+        value: gemini-2-flash
+      - key: GEMINI_BASE_URL
+        value: https://generativelanguage.googleapis.com/v1beta
+      
+      # Stripe
+      - key: STRIPE_PUBLIC_KEY
+        fromFile: .env
+      - key: STRIPE_SECRET_KEY
+        fromFile: .env
+      - key: STRIPE_CURRENCY
+        value: usd
+      
+      # Mail
+      - key: MAIL_MAILER
+        value: smtp
+      - key: MAIL_HOST
+        fromFile: .env
+      - key: MAIL_PORT
+        fromFile: .env
+      - key: MAIL_USERNAME
+        fromFile: .env
+      - key: MAIL_PASSWORD
+        fromFile: .env
+    
+    # Health check
+    healthCheckPath: /api/health
+    
+    # Build and start commands
+    buildCommand: |
+      cd /var/www/html && \
+      composer install --no-dev --optimize-autoloader && \
+      php artisan migrate --force && \
+      php artisan config:cache && \
+      php artisan view:cache
+    
+    startCommand: apache2-foreground

@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  # Database – MySQL 5.7
+  database:
+    image: mysql:5.7
+    container_name: sheltra_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_DATABASE:-sheltra_local}
+      MYSQL_USER: ${DB_USERNAME:-sheltra}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
+    ports:
+      - "3306:3306"
+    volumes:
+      - sheltra_db_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - sheltra_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Backend – Laravel / PHP
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: sheltra-backend:latest
+    container_name: sheltra_backend
+    ports:
+      - "8000:80"
+    env_file:
+      - .env
+    environment:
+      DB_HOST: database
+      DB_PORT: 3306
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - sheltra_network
+    volumes:
+      - ./server:/app
+
+  # Frontend – React + Vite
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: dev
+      args:
+        VITE_BACKEND_ENDPOINT: ${VITE_BACKEND_ENDPOINT:-http://localhost:8000}
+    image: sheltra-frontend:latest
+    container_name: sheltra_frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - sheltra_network
+    volumes:
+      - ./client/src:/app/src
+
+  # phpMyAdmin – MySQL Web Interface
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: sheltra_phpmyadmin
+    environment:
+      PMA_HOST: database
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_PASSWORD:-root}
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
+    restart: unless-stopped
+    networks:
+      - sheltra_network
+
+volumes:
+  sheltra_db_data:
+    driver: local
+
+networks:
+  sheltra_network:
+    driver: bridge

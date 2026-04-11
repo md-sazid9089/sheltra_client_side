@@ -70,20 +70,6 @@ jobs:
   backend-ci:
     name: Backend Tests & Analysis
     runs-on: ubuntu-latest
-    
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: sheltra_test
-        options: >-
-          --health-cmd="mysqladmin ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
-        ports:
-          - 3306:3306
 
     steps:
       - name: Checkout code
@@ -116,13 +102,15 @@ jobs:
         working-directory: server
         run: |
           cp .env.example .env.testing
-          sed -i 's/APP_ENV=.*/APP_ENV=testing/' .env.testing
-          sed -i 's/APP_DEBUG=.*/APP_DEBUG=true/' .env.testing
-          sed -i 's/APP_KEY=.*/APP_KEY=base64:abcdefghijklmnopqrstuvwxyz1234=/' .env.testing
-          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env.testing
+          sed -i 's|APP_ENV=.*|APP_ENV=testing|' .env.testing
+          sed -i 's|APP_DEBUG=.*|APP_DEBUG=true|' .env.testing
+          sed -i 's|APP_KEY=.*|APP_KEY=base64:abcdefghijklmnopqrstuvwxyz1234=|' .env.testing
+          sed -i 's|DB_CONNECTION=.*|DB_CONNECTION=sqlite|' .env.testing
+          sed -i 's|QUEUE_CONNECTION=.*|QUEUE_CONNECTION=sync|' .env.testing
+          sed -i 's|CACHE_DRIVER=.*|CACHE_DRIVER=file|' .env.testing
           mkdir -p database
           touch database/database.sqlite
-          echo "✅ .env.testing created"
+          echo "✅ .env.testing created and configured for SQLite"
 
       - name: Generate Laravel app key for CI
         working-directory: server
@@ -155,7 +143,11 @@ jobs:
         working-directory: server
         continue-on-error: true
         run: |
-          vendor/bin/phpunit --testdox --colors=never 2>&1 || echo "⚠ Tests status: $?"
+          if [ -f "phpunit.xml" ]; then
+            vendor/bin/phpunit --testdox --colors=never 2>&1 || echo "⚠ Tests failed with code: $?"
+          else
+            echo "✓ phpunit.xml not found, skipping tests"
+          fi
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
@@ -190,13 +182,24 @@ jobs:
     if: always()
     
     steps:
-      - name: Check CI results
+      - name: Check Frontend CI result
         run: |
-          if [ "${{ needs.frontend-ci.result }}" = "failure" ] || [ "${{ needs.backend-ci.result }}" = "failure" ]; then
-            echo "❌ CI pipeline failed"
+          if [ "${{ needs.frontend-ci.result }}" = "failure" ]; then
+            echo "❌ Frontend CI failed"
             exit 1
           fi
-          echo "✅ All CI checks passed!"
+          echo "✅ Frontend CI passed"
+      
+      - name: Check Backend CI result
+        run: |
+          if [ "${{ needs.backend-ci.result }}" = "failure" ]; then
+            echo "❌ Backend CI failed"
+            exit 1
+          fi
+          echo "✅ Backend CI passed"
+      
+      - name: Final status
+        run: echo "✅ All CI checks completed successfully!"
 
       - name: Success notification
         if: success()

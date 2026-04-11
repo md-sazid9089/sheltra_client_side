@@ -1,0 +1,79 @@
+{
+  "projectId": "YOUR_VERCEL_PROJECT_ID",
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rootDirectory": "client",
+  
+  "framework": "react",
+  
+  "env": {
+    "VITE_API_URL": "@vite_api_url",
+    "VITE_BACKEND_ENDPOINT": "@vite_backend_endpoint",
+    "VITE_STRIPE_PUBLIC_KEY": "@vite_stripe_public_key",
+    "VITE_APP_ENV": "@vite_app_env"
+  },
+  
+  "envCompile": {
+    "VITE_API_URL": "@vite_api_url",
+    "VITE_BACKEND_ENDPOINT": "@vite_backend_endpoint",
+    "VITE_STRIPE_PUBLIC_KEY": "@vite_stripe_public_key",
+    "VITE_APP_ENV": "@vite_app_env"
+  },
+  
+  "nodeVersion": "20.x",
+  
+  "headers": [
+    {
+      "source": "/api/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=60, stale-while-revalidate=120"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ],
+  
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
+  ],
+  
+  "redirects": [
+    {
+      "source": "/old-page",
+      "destination": "/new-page",
+      "permanent": true
+    }
+  ],
+  
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 60
+    }
+  }
+}

@@ -23,6 +23,14 @@ use Illuminate\Support\Facades\Route;
  * All endpoints return JSON responses with { success, message, data } structure.
  */
 
+// Health check endpoint for monitoring (Render, Docker healthchecks)
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'ok',
+        'timestamp' => now(),
+    ], 200);
+});
+
 // Authentication routes (public + guest middleware)
 Route::prefix('auth')->middleware('throttle:5,1')->group(base_path('routes/auth.php'));
 

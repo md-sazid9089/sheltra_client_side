@@ -25,6 +25,7 @@ const VirtualNIDCheck = lazy(() => import('@/pages/refugee/VirtualNIDCheck'));
 const NGODashboard = lazy(() => import('@/pages/ngo/Dashboard'));
 const Cases = lazy(() => import('@/pages/ngo/Cases'));
 const CaseDetail = lazy(() => import('@/pages/ngo/CaseDetail'));
+const NGOUpgrade = lazy(() => import('@/pages/ngo/Upgrade'));
 
 // Employer pages (lazy loaded)
 const EmployerDashboard = lazy(() => import('@/pages/employer/Dashboard'));
@@ -93,6 +94,7 @@ export default function AppRoutes() {
             }
           >
             <Route path="/ngo/dashboard" element={<Suspense fallback={<PageLoader />}><NGODashboard /></Suspense>} />
+            <Route path="/ngo/upgrade" element={<Suspense fallback={<PageLoader />}><NGOUpgrade /></Suspense>} />
             <Route path="/ngo/cases" element={<Suspense fallback={<PageLoader />}><Cases /></Suspense>} />
             <Route path="/ngo/cases/:id" element={<Suspense fallback={<PageLoader />}><CaseDetail /></Suspense>} />
           </Route>

@@ -101,20 +101,45 @@ class PaymentController extends Controller
             if ($paymentIntent->status === 'succeeded') {
                 $user = auth()->user();
 
-                // Update user with verification status
-                if ($user) {
-                    $user->update([
-                        'verified' => true,
+                if (!$user) {
+                    return response()->json([
+                        'success' => false,
+                        'error' => 'User not authenticated',
+                    ], 401);
+                }
+
+                // Update NGOProfile with verification status
+                $ngoProfile = \App\Models\NGOProfile::where('user_id', $user->id)->first();
+
+                if ($ngoProfile) {
+                    $ngoProfile->update([
                         'verification_status' => 'verified',
-                        'verification_date' => now(),
+                        'verified_at' => now(),
+                        'plan_type' => $paymentIntent->metadata['plan_type'] ?? 'basic',
                     ]);
                 }
+
+                // Record payment in database
+                \App\Models\Payment::create([
+                    'user_id' => $user->id,
+                    'stripe_payment_intent_id' => $paymentIntent->id,
+                    'stripe_customer_id' => $paymentIntent->customer,
+                    'plan_type' => $paymentIntent->metadata['plan_type'] ?? 'basic',
+                    'amount' => $paymentIntent->amount / 100,
+                    'currency' => $paymentIntent->currency,
+                    'status' => 'succeeded',
+                    'organization_id' => $paymentIntent->metadata['organization_id'] ?? null,
+                    'organization_name' => $paymentIntent->metadata['organization_name'] ?? null,
+                    'metadata' => $paymentIntent->metadata,
+                    'paid_at' => now(),
+                ]);
 
                 return response()->json([
                     'success' => true,
                     'message' => 'Payment successful. NGO verification upgraded.',
                     'payment_intent_id' => $paymentIntent->id,
                     'amount_received' => $paymentIntent->amount_received / 100,
+                    'organization_name' => $ngoProfile->organization_name ?? 'Your Organization',
                 ]);
             }
 

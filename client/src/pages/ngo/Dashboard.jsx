@@ -3,6 +3,7 @@ import api from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { StatCard } from '@/components/ui/StatCard';
 import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
 import { useAuth } from '@/providers/AuthProvider';
 import { Link } from 'react-router-dom';
 
@@ -19,6 +20,9 @@ export default function NGODashboard() {
   const pending = cases?.filter((c) => !c.verified)?.length || 0;
   const verified = cases?.filter((c) => c.verified)?.length || 0;
 
+  // Check if NGO is verified (mock - in production this would come from API)
+  const isNGOVerified = user?.verification_status === 'verified';
+
 
 
   return (
@@ -31,6 +35,54 @@ export default function NGODashboard() {
           Welcome back, {user?.name || 'Partner'}. Manage verifications and cases.
         </p>
       </div>
+
+      {/* Verification Status Banner */}
+      {!isNGOVerified && (
+        <Card className="border-l-4 border-l-amber-500 bg-amber-50 dark:bg-amber-950/20">
+          <Card.Body className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4v2m0 4v2M12 3a9 9 0 100 18 9 9 0 000-18z" />
+              </svg>
+              <div>
+                <h3 className="font-semibold text-amber-900 dark:text-amber-100">
+                  Your organization is not yet verified
+                </h3>
+                <p className="text-sm text-amber-800 dark:text-amber-200">
+                  Upgrade your plan to start verifying refugee skills
+                </p>
+              </div>
+            </div>
+            <Link to="/ngo/upgrade">
+              <Button size="sm" variant="primary">
+                Upgrade Now
+              </Button>
+            </Link>
+          </Card.Body>
+        </Card>
+      )}
+
+      {/* Verification Status Badge */}
+      {isNGOVerified && (
+        <Card className="border-l-4 border-l-green-500 bg-green-50 dark:bg-green-950/20">
+          <Card.Body className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div>
+                <h3 className="font-semibold text-green-900 dark:text-green-100">
+                  Your organization is verified
+                </h3>
+                <p className="text-sm text-green-800 dark:text-green-200">
+                  You can now verify refugee skills and manage cases
+                </p>
+              </div>
+            </div>
+            <Badge variant="success">Active</Badge>
+          </Card.Body>
+        </Card>
+      )}
 
       <div className="grid sm:grid-cols-3 gap-4">
         <StatCard

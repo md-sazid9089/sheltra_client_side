@@ -19,6 +19,13 @@ class NGOProfile extends Model
         'organization_name',
         'country',
         'contact_email',
+        'verification_status',
+        'verified_at',
+        'plan_type',
+    ];
+
+    protected $casts = [
+        'verified_at' => 'datetime',
     ];
 
     public function user()
@@ -29,5 +36,10 @@ class NGOProfile extends Model
     public function cases()
     {
         return $this->hasMany(Verification::class, 'ngo_id');
+    }
+
+    public function isVerified()
+    {
+        return $this->verification_status === 'verified';
     }
 }

@@ -35,10 +35,10 @@ export function ChatBox({ isOpen, onClose }) {
 
   // ─────────────────────────────────────────────────────────────────────────
   // Hook: Poll for new messages every 3 seconds
-  // Uses relative path - will be proxied to backend by Vite dev server
+  // Uses centralized api client baseURL (VITE_API_URL already includes /api)
   // ─────────────────────────────────────────────────────────────────────────
   const { data: polledMessages, loading: isPolling, error: pollError } = usePolling(
-    '/api/chat/get-messages',
+    '/chat/get-messages',
     {
       lastMessageId: lastMessageId,
       limit: 50,

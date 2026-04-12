@@ -2,6 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\Job;
+use App\Models\EmployerProfile;
+use App\Models\RefugeeProfile;
+use App\Models\Verification;
+use App\Models\Placement;
+use Illuminate\Support\Facades\Auth;
 use Exception;
 
 class EmployerService
@@ -16,21 +22,39 @@ class EmployerService
     public function getProfile($userId)
     {
         try {
-            // Placeholder: In production, query Employer model
+            // Verify ownership
+            if (Auth::id() !== $userId) {
+                throw new Exception('Unauthorized access to employer profile');
+            }
+
+            $employer = EmployerProfile::where('user_id', $userId)->first();
+
+            if (!$employer) {
+                throw new Exception('Employer profile not found');
+            }
+
+            $hired = Placement::where('employer_id', $userId)
+                ->where('status', 'active')
+                ->count();
+
+            $retention = Placement::where('employer_id', $userId)->count();
+            $retentionRate = $retention > 0 ? round(($hired / $retention) * 100) : 0;
+
             return [
-                'id' => $userId,
-                'company_name' => 'Tech Company Inc.',
-                'industry' => 'Technology',
-                'company_size' => '51-200',
-                'location' => 'Berlin, Germany',
-                'website' => 'https://techcompany.com',
-                'description' => 'Leading tech company committed to inclusive hiring.',
-                'ethical_hiring_pledge' => true,
-                'verified_status' => 'verified',
-                'employees_hired' => 5,
-                'retention_rate' => 95,
-                'created_at' => now()->toIso8601String(),
-                'updated_at' => now()->toIso8601String(),
+                'id' => $employer->id,
+                'user_id' => $employer->user_id,
+                'company_name' => $employer->company_name,
+                'industry' => $employer->industry,
+                'company_size' => $employer->company_size,
+                'location' => $employer->location,
+                'website' => $employer->website,
+                'description' => $employer->description,
+                'ethical_hiring_pledge' => $employer->ethical_hiring_pledge,
+                'verified_status' => $employer->verified_status,
+                'employees_hired' => $hired,
+                'retention_rate' => $retentionRate,
+                'created_at' => $employer->created_at->toIso8601String(),
+                'updated_at' => $employer->updated_at->toIso8601String(),
             ];
         } catch (Exception $e) {
             throw new Exception('Failed to retrieve employer profile: ' . $e->getMessage());
@@ -48,17 +72,15 @@ class EmployerService
     public function updateProfile($userId, $data)
     {
         try {
-            // Placeholder: In production, update Employer model
-            return array_merge([
-                'id' => $userId,
-                'company_name' => 'Tech Company Inc.',
-                'industry' => 'Technology',
-                'company_size' => '51-200',
-                'location' => 'Berlin, Germany',
-                'website' => 'https://techcompany.com',
-                'description' => 'Updated description.',
-                'ethical_hiring_pledge' => true,
-            ], $data);
+            // Verify ownership
+            if (Auth::id() !== $userId) {
+                throw new Exception('Unauthorized to update this profile');
+            }
+
+            $employer = EmployerProfile::where('user_id', $userId)->firstOrFail();
+            $employer->update($data);
+
+            return $employer->toArray();
         } catch (Exception $e) {
             throw new Exception('Failed to update employer profile: ' . $e->getMessage());
         }
@@ -75,21 +97,23 @@ class EmployerService
     public function createJob($userId, $jobData)
     {
         try {
-            // Placeholder: In production, create Job model
-            return [
-                'id' => 1,
-                'employer_id' => $userId,
-                'title' => $jobData['title'] ?? 'Job Title',
-                'description' => $jobData['description'] ?? '',
-                'role_type' => $jobData['role_type'] ?? 'full_time',
-                'location' => $jobData['location'] ?? '',
-                'salary_min' => $jobData['salary_min'] ?? null,
-                'salary_max' => $jobData['salary_max'] ?? null,
+            // Verify ownership
+            if (Auth::id() !== $userId) {
+                throw new Exception('Unauthorized to create job');
+            }
+
+            $employer = EmployerProfile::where('user_id', $userId)->firstOrFail();
+
+            $job = Job::create([
+                'employer_profile_id' => $employer->id,
+                'title' => $jobData['title'],
+                'description' => $jobData['description'],
+                'location' => $jobData['location'],
+                'status' => 'open',
                 'required_skills' => $jobData['required_skills'] ?? [],
-                'num_positions' => $jobData['num_positions'] ?? 1,
-                'status' => 'active',
-                'created_at' => now()->toIso8601String(),
-            ];
+            ]);
+
+            return $job->toArray();
         } catch (Exception $e) {
             throw new Exception('Failed to create job posting: ' . $e->getMessage());
         }
@@ -105,23 +129,26 @@ class EmployerService
     public function getJobs($userId)
     {
         try {
-            // Placeholder: In production, query Job model
-            return [
-                [
-                    'id' => 1,
-                    'title' => 'Teaching Assistant',
-                    'status' => 'active',
-                    'applications' => 12,
-                    'posted_at' => now()->subDays(5)->toIso8601String(),
-                ],
-                [
-                    'id' => 2,
-                    'title' => 'Carpenter',
-                    'status' => 'closed',
-                    'applications' => 8,
-                    'posted_at' => now()->subDays(30)->toIso8601String(),
-                ],
-            ];
+            // Verify ownership
+            if (Auth::id() !== $userId) {
+                throw new Exception('Unauthorized to view these jobs');
+            }
+
+            $employer = EmployerProfile::where('user_id', $userId)->firstOrFail();
+
+            $jobs = Job::where('employer_profile_id', $employer->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return $jobs->map(function ($job) {
+                return [
+                    'id' => $job->id,
+                    'title' => $job->title,
+                    'status' => $job->status,
+                    'applications' => 0,
+                    'posted_at' => $job->created_at->toIso8601String(),
+                ];
+            })->toArray();
         } catch (Exception $e) {
             throw new Exception('Failed to retrieve jobs: ' . $e->getMessage());
         }
@@ -138,27 +165,36 @@ class EmployerService
     public function getTalent($userId, $filters = [])
     {
         try {
-            // Placeholder: In production, query verified Refugee profiles
-            return [
-                [
-                    'id' => 1,
-                    'name' => 'Ahmed Hassan',
-                    'top_skills' => ['Teaching', 'English'],
-                    'verified_skills' => ['Teaching'],
-                    'country_of_origin' => 'Syria',
-                    'availability' => 'full_time',
+            // Verify ownership
+            if (Auth::id() !== $userId) {
+                throw new Exception('Unauthorized to view talent');
+            }
+
+            $query = RefugeeProfile::whereHas('user', function ($q) {
+                $q->where('verified', true);
+            });
+
+            if (!empty($filters['skills'])) {
+                $query->where(function ($q) use ($filters) {
+                    foreach ($filters['skills'] as $skill) {
+                        $q->orWhereJsonContains('skills', $skill);
+                    }
+                });
+            }
+
+            $refugees = $query->with('user')->get();
+
+            return $refugees->map(function ($refugee) {
+                return [
+                    'id' => $refugee->user_id,
+                    'name' => $refugee->full_name,
+                    'top_skills' => $refugee->skills ?? [],
+                    'verified_skills' => $refugee->skills ?? [],
+                    'country_of_origin' => $refugee->country,
+                    'availability' => $refugee->availability,
                     'match_percentage' => 85,
-                ],
-                [
-                    'id' => 2,
-                    'name' => 'Mariam Ali',
-                    'top_skills' => ['Carpentry'],
-                    'verified_skills' => [],
-                    'country_of_origin' => 'Iraq',
-                    'availability' => 'part_time',
-                    'match_percentage' => 70,
-                ],
-            ];
+                ];
+            })->toArray();
         } catch (Exception $e) {
             throw new Exception('Failed to retrieve talent: ' . $e->getMessage());
         }
@@ -176,7 +212,13 @@ class EmployerService
     public function submitFeedback($userId, $refugeeId, $feedbackData)
     {
         try {
-            // Placeholder: In production, create Feedback model
+            // Verify ownership
+            if (Auth::id() !== $userId) {
+                throw new Exception('Unauthorized to submit feedback');
+            }
+
+            // Log feedback as audit entry or feedback model
+            // For now, just validate and return
             return [
                 'id' => 1,
                 'refugee_id' => $refugeeId,
@@ -201,25 +243,17 @@ class EmployerService
     public function getJobApplications($userId)
     {
         try {
-            // Placeholder: In production, query Application model
-            return [
-                [
-                    'id' => 1,
-                    'refugee_name' => 'Ahmed Hassan',
-                    'job_title' => 'Teaching Assistant',
-                    'status' => 'under_review',
-                    'verified_percentage' => 100,
-                    'applied_at' => now()->subDays(3)->toIso8601String(),
-                ],
-                [
-                    'id' => 2,
-                    'refugee_name' => 'Mariam Ali',
-                    'job_title' => 'Teaching Assistant',
-                    'status' => 'rejected',
-                    'verified_percentage' => 50,
-                    'applied_at' => now()->subDays(10)->toIso8601String(),
-                ],
-            ];
+            // Verify ownership
+            if (Auth::id() !== $userId) {
+                throw new Exception('Unauthorized to view applications');
+            }
+
+            $employer = EmployerProfile::where('user_id', $userId)->firstOrFail();
+
+            $jobs = Job::where('employer_profile_id', $employer->id)->pluck('id');
+
+            // Note: Application model not yet created, returning empty for now
+            return [];
         } catch (Exception $e) {
             throw new Exception('Failed to retrieve job applications: ' . $e->getMessage());
         }
@@ -235,19 +269,40 @@ class EmployerService
     public function getMetrics($userId)
     {
         try {
-            // Placeholder: In production, calculate from models
+            // Verify ownership
+            if (Auth::id() !== $userId) {
+                throw new Exception('Unauthorized to view metrics');
+            }
+
+            $employer = EmployerProfile::where('user_id', $userId)->firstOrFail();
+
+            $totalJobs = Job::where('employer_profile_id', $employer->id)->count();
+            $activeJobs = Job::where('employer_profile_id', $employer->id)
+                ->where('status', 'open')
+                ->count();
+
+            $hired = Placement::where('employer_id', $userId)
+                ->where('status', 'active')
+                ->count();
+
+            $totalPlacements = Placement::where('employer_id', $userId)->count();
+            $retention = $totalPlacements > 0 ? round(($hired / $totalPlacements) * 100) : 0;
+
             return [
-                'total_jobs_posted' => 5,
-                'active_jobs' => 2,
-                'total_applications' => 23,
-                'under_review' => 8,
-                'hired_count' => 5,
-                'retention_rate' => 95,
-                'average_hiring_days' => 25,
-                'verified_talent_browsed' => 47,
+                'total_jobs_posted' => $totalJobs,
+                'active_jobs' => $activeJobs,
+                'total_applications' => 0,
+                'under_review' => 0,
+                'hired_count' => $hired,
+                'retention_rate' => $retention,
+                'average_hiring_days' => 0,
+                'verified_talent_browsed' => 0,
             ];
         } catch (Exception $e) {
             throw new Exception('Failed to retrieve metrics: ' . $e->getMessage());
+        }
+    }
+}
         }
     }
 }

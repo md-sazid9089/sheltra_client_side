@@ -2,6 +2,14 @@
 
 namespace App\Services;
 
+use App\Models\User;
+use App\Models\NGOProfile;
+use App\Models\EmployerProfile;
+use App\Models\RefugeeProfile;
+use App\Models\Verification;
+use App\Models\Placement;
+use App\Models\AuditLog;
+use Illuminate\Support\Facades\Auth;
 use Exception;
 
 class AdminService
@@ -15,18 +23,27 @@ class AdminService
     public function getImpactMetrics()
     {
         try {
-            // Placeholder: In production, aggregate from all models
+            $totalRefugees = User::where('role', 'refugee')->count();
+            $totalEmployers = User::where('role', 'employer')->count();
+            $totalNgos = User::where('role', 'ngo')->count();
+            $totalJobs = \App\Models\Job::count();
+            $verifications = Verification::where('status', 'approved')->count();
+            $placements = Placement::where('status', 'active')->count();
+            $countries = RefugeeProfile::distinct('country')->count();
+
+            $placementRate = $totalRefugees > 0 ? round(($placements / $totalRefugees) * 100) : 0;
+
             return [
-                'total_refugees_registered' => 147,
-                'refugees_with_verified_skills' => 89,
-                'total_employers_registered' => 23,
-                'total_ngos_registered' => 5,
-                'jobs_posted' => 45,
-                'successful_placements' => 31,
-                'placement_success_rate' => 67,
-                'average_time_to_employment' => 23,
-                'skills_verified' => 156,
-                'geographic_coverage' => 8,
+                'total_refugees_registered' => $totalRefugees,
+                'refugees_with_verified_skills' => $verifications,
+                'total_employers_registered' => $totalEmployers,
+                'total_ngos_registered' => $totalNgos,
+                'jobs_posted' => $totalJobs,
+                'successful_placements' => $placements,
+                'placement_success_rate' => $placementRate,
+                'average_time_to_employment' => 0,
+                'skills_verified' => $verifications,
+                'geographic_coverage' => $countries,
             ];
         } catch (Exception $e) {
             throw new Exception('Failed to retrieve impact metrics: ' . $e->getMessage());
@@ -43,33 +60,27 @@ class AdminService
     public function getUsers($filters = [])
     {
         try {
-            // Placeholder: In production, query User model
-            return [
-                [
-                    'id' => 1,
-                    'name' => 'Ahmed Hassan',
-                    'email' => 'ahmed@example.com',
-                    'role' => 'refugee',
-                    'status' => 'active',
-                    'created_at' => now()->subDays(30)->toIso8601String(),
-                ],
-                [
-                    'id' => 2,
-                    'name' => 'Tech Company Inc.',
-                    'email' => 'hr@techcompany.com',
-                    'role' => 'employer',
-                    'status' => 'active',
-                    'created_at' => now()->subDays(60)->toIso8601String(),
-                ],
-                [
-                    'id' => 3,
-                    'name' => 'Mariam Al-rashid',
-                    'email' => 'mariam@example.com',
-                    'role' => 'refugee',
-                    'status' => 'suspended',
-                    'created_at' => now()->subDays(90)->toIso8601String(),
-                ],
-            ];
+            $query = User::select('id', 'name', 'email', 'role', 'verified', 'created_at')
+                ->orderBy('created_at', 'desc');
+
+            if (!empty($filters['role'])) {
+                $query->where('role', $filters['role']);
+            }
+
+            if (!empty($filters['status'])) {
+                $query->where('verified', $filters['status'] === 'active');
+            }
+
+            return $query->get()->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'status' => $user->verified ? 'active' : 'suspended',
+                    'created_at' => $user->created_at->toIso8601String(),
+                ];
+            })->toArray();
         } catch (Exception $e) {
             throw new Exception('Failed to retrieve users: ' . $e->getMessage());
         }
@@ -84,27 +95,26 @@ class AdminService
     public function getNGOs()
     {
         try {
-            // Placeholder: In production, query NGO model
-            return [
-                [
-                    'id' => 1,
-                    'name' => 'Refugee Support Network',
-                    'email' => 'contact@refugeesupport.org',
-                    'verification_cases_completed' => 45,
-                    'accuracy_rate' => 97,
-                    'status' => 'active',
-                    'created_at' => now()->subDays(120)->toIso8601String(),
-                ],
-                [
-                    'id' => 2,
-                    'name' => 'International Refugee Council',
-                    'email' => 'info@intlrefugeecouncil.org',
-                    'verification_cases_completed' => 32,
-                    'accuracy_rate' => 94,
-                    'status' => 'active',
-                    'created_at' => now()->subDays(180)->toIso8601String(),
-                ],
-            ];
+            $ngos = NGOProfile::with('user')->get();
+
+            return $ngos->map(function ($ngo) {
+                $caseCount = Verification::where('ngo_id', $ngo->id)->count();
+                $approved = Verification::where('ngo_id', $ngo->id)
+                    ->where('status', 'approved')
+                    ->count();
+
+                $accuracy = $caseCount > 0 ? round(($approved / $caseCount) * 100) : 0;
+
+                return [
+                    'id' => $ngo->id,
+                    'name' => $ngo->organization_name,
+                    'email' => $ngo->contact_email,
+                    'verification_cases_completed' => $caseCount,
+                    'accuracy_rate' => $accuracy,
+                    'status' => $ngo->user->verified ? 'active' : 'inactive',
+                    'created_at' => $ngo->created_at->toIso8601String(),
+                ];
+            })->toArray();
         } catch (Exception $e) {
             throw new Exception('Failed to retrieve NGOs: ' . $e->getMessage());
         }
@@ -120,33 +130,25 @@ class AdminService
     public function getAuditLogs($filters = [])
     {
         try {
-            // Placeholder: In production, query AuditLog model
-            return [
-                [
-                    'id' => 1,
-                    'action' => 'user_created',
-                    'user_id' => 1,
-                    'user_role' => 'refugee',
-                    'description' => 'New refugee user registered: Ahmed Hassan',
-                    'timestamp' => now()->subHours(2)->toIso8601String(),
-                ],
-                [
-                    'id' => 2,
-                    'action' => 'verification_submitted',
-                    'user_id' => 3,
-                    'user_role' => 'ngo',
-                    'description' => 'Skill verification submitted for refugee #5',
-                    'timestamp' => now()->subHours(5)->toIso8601String(),
-                ],
-                [
-                    'id' => 3,
-                    'action' => 'job_posted',
-                    'user_id' => 2,
-                    'user_role' => 'employer',
-                    'description' => 'New job posting: Teaching Assistant',
-                    'timestamp' => now()->subDays(1)->toIso8601String(),
-                ],
-            ];
+            $query = AuditLog::with('user')
+                ->orderBy('created_at', 'desc');
+
+            if (!empty($filters['action'])) {
+                $query->where('action', $filters['action']);
+            }
+
+            $logs = $query->limit(50)->get();
+
+            return $logs->map(function ($log) {
+                return [
+                    'id' => $log->id,
+                    'action' => $log->action,
+                    'user_id' => $log->user_id,
+                    'user_role' => $log->user_role,
+                    'description' => $log->description,
+                    'timestamp' => $log->created_at->toIso8601String(),
+                ];
+            })->toArray();
         } catch (Exception $e) {
             throw new Exception('Failed to retrieve audit logs: ' . $e->getMessage());
         }
@@ -162,7 +164,21 @@ class AdminService
     public function suspendUser($userId)
     {
         try {
-            // Placeholder: In production, update User model status
+            // Prevent admin from suspending themselves
+            if (Auth::id() === $userId && Auth::user()->role === 'admin') {
+                throw new Exception('Admins cannot suspend themselves');
+            }
+
+            $user = User::findOrFail($userId);
+            $user->update(['verified' => false]);
+
+            AuditLog::create([
+                'action' => 'user_suspended',
+                'user_id' => Auth::id(),
+                'user_role' => Auth::user()->role,
+                'description' => "User {$user->name} suspended",
+            ]);
+
             return [
                 'success' => true,
                 'message' => 'User account suspended successfully.',
@@ -185,7 +201,16 @@ class AdminService
     public function reactivateUser($userId)
     {
         try {
-            // Placeholder: In production, update User model status
+            $user = User::findOrFail($userId);
+            $user->update(['verified' => true]);
+
+            AuditLog::create([
+                'action' => 'user_reactivated',
+                'user_id' => Auth::id(),
+                'user_role' => Auth::user()->role,
+                'description' => "User {$user->name} reactivated",
+            ]);
+
             return [
                 'success' => true,
                 'message' => 'User account reactivated successfully.',
@@ -208,19 +233,46 @@ class AdminService
     public function getAnalytics($period = 'month')
     {
         try {
-            // Placeholder: In production, calculate from models with date filters
+            $startDate = match ($period) {
+                'week' => now()->subWeek(),
+                'month' => now()->subMonth(),
+                'year' => now()->subYear(),
+                default => now()->subMonth(),
+            };
+
+            $newRefugees = User::where('role', 'refugee')
+                ->where('created_at', '>=', $startDate)
+                ->count();
+
+            $newEmployers = User::where('role', 'employer')
+                ->where('created_at', '>=', $startDate)
+                ->count();
+
+            $newJobs = \App\Models\Job::where('created_at', '>=', $startDate)->count();
+
+            $newVerifications = Verification::where('created_at', '>=', $startDate)->count();
+
+            $successfulPlacements = Placement::where('created_at', '>=', $startDate)
+                ->where('status', 'active')
+                ->count();
+
+            $activeUsers = User::where('verified', true)->count();
+
             return [
                 'period' => $period,
-                'new_refugees' => 23,
-                'new_employers' => 3,
-                'new_jobs' => 12,
-                'new_verifications' => 18,
-                'successful_placements' => 7,
-                'active_users' => 142,
-                'refugee_engagement_rate' => 78,
-                'employer_engagement_rate' => 85,
-                'top_countries' => ['Syria', 'Iraq', 'Afghanistan'],
-                'top_skills' => ['Teaching', 'Nursing', 'Engineering'],
+                'new_refugees' => $newRefugees,
+                'new_employers' => $newEmployers,
+                'new_jobs' => $newJobs,
+                'new_verifications' => $newVerifications,
+                'successful_placements' => $successfulPlacements,
+                'active_users' => $activeUsers,
+                'refugee_engagement_rate' => 0,
+                'employer_engagement_rate' => 0,
+                'top_countries' => RefugeeProfile::distinct('country')
+                    ->limit(3)
+                    ->pluck('country')
+                    ->toArray(),
+                'top_skills' => [],
             ];
         } catch (Exception $e) {
             throw new Exception('Failed to retrieve analytics: ' . $e->getMessage());

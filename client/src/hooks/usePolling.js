@@ -56,7 +56,10 @@ export function usePolling(
 
     try {
       // Build URL with query parameters
-      const urlObj = new URL(url, window.location.origin); // Use current origin as base
+      // Use VITE_API_URL for backend API calls (not frontend origin)
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+      const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`;
+      const urlObj = new URL(fullUrl);
       Object.entries(queryParams).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
           urlObj.searchParams.append(key, value);
